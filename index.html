@@ -1,0 +1,1953 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>말하기 성찰일지</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+:root{
+  --bg:#EBEEF1; --sf:#FFFFFF; --ink:#15222D; --mut:#64747F;
+  --line:#D4DBE1; --teal:#24645F; --amber:#C98A0E; --plum:#8A4E7B;
+  --tealsoft:#E9F2F1; --ambersoft:#FBF3E2; --plumsoft:#F4ECF2;
+  color-scheme:light;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--bg);}
+body{
+  color:var(--ink); min-height:100vh;
+  padding:0 18px calc(70px + env(safe-area-inset-bottom));
+  font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  font-size:14px; -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+[hidden]{display:none !important}
+#app{max-width:660px;margin:0 auto;}
+.sf{font-family:'Noto Serif KR','Nanum Myeongjo',serif;font-weight:700;letter-spacing:-.01em;}
+
+/* ── 공통 타이포 ── */
+.hero{font-size:clamp(30px,7.6vw,46px);line-height:1.24;margin:18px 0 8px;}
+.sub{font-size:15px;color:var(--mut);margin:0 0 20px;}
+.lede{font-size:15px;line-height:1.92;color:var(--mut);max-width:47ch;}
+.note{font-size:13.5px;line-height:1.85;color:var(--mut);
+  border-left:3px solid var(--teal);padding:3px 0 3px 14px;margin:24px 0;}
+.note strong{color:var(--ink);}
+.warn{border-left:3px solid var(--plum);padding:3px 0 3px 14px;margin:18px 0;
+  font-size:13.5px;line-height:1.85;color:var(--mut);}
+.card{background:var(--sf);border:1px solid var(--line);border-radius:14px;padding:22px;}
+h2.h,h3.h{font-size:17px;margin:38px 0 14px;}
+h4.h{font-size:15px;margin:26px 0 10px;}
+.body{font-size:14.5px;line-height:1.95;color:var(--mut);}
+.body strong{color:var(--ink);font-weight:700;}
+.phase{font-size:13px;font-weight:700;color:var(--teal);}
+.cnt{font-size:13px;color:var(--mut);}
+.rowb{display:flex;justify-content:space-between;align-items:baseline;}
+.hint{font-size:12.5px;color:var(--mut);margin-top:16px;}
+
+/* ── 버튼 ── */
+.btn{font-family:inherit;font-size:15px;font-weight:700;color:#fff;background:var(--teal);
+  border:none;border-radius:10px;padding:15px 30px;cursor:pointer;}
+.btn:hover{background:#1B4F4B;}
+.btn:disabled{background:var(--line);color:#94A1AB;cursor:not-allowed;}
+.btn.sm{padding:12px 22px;font-size:14px;}
+.ghost{font-family:inherit;font-size:14px;font-weight:500;color:var(--mut);background:none;
+  border:1px solid var(--line);border-radius:9px;padding:11px 18px;cursor:pointer;}
+.ghost:hover{color:var(--ink);border-color:var(--mut);}
+:focus-visible{outline:2.5px solid var(--amber);outline-offset:3px;}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:20px;}
+
+/* ── 단계 내비게이션 ── */
+.topbar{position:sticky;top:0;z-index:40;background:var(--bg);
+  padding:14px 0 10px;margin:0 -18px;padding-left:18px;padding-right:18px;
+  border-bottom:1px solid var(--line);}
+.topbar-in{max-width:660px;margin:0 auto;}
+.steps{display:flex;gap:6px;}
+.stepbtn{flex:1;font-family:inherit;font-size:12px;font-weight:700;color:var(--mut);
+  background:var(--sf);border:1px solid var(--line);border-radius:9px;
+  padding:9px 4px 8px;cursor:pointer;line-height:1.35;text-align:center;}
+.stepbtn b{display:block;font-size:15px;font-family:'Noto Serif KR',serif;}
+.stepbtn:hover{border-color:var(--mut);color:var(--ink);}
+.stepbtn.now{background:var(--teal);border-color:var(--teal);color:#fff;}
+.stepbtn.done{border-color:var(--teal);color:var(--teal);}
+.goalbar{margin-top:9px;background:var(--tealsoft);border:1px solid #C3DAD6;
+  border-radius:9px;padding:9px 13px;font-size:12.5px;line-height:1.7;color:#1B4F4B;}
+.goalbar b{font-weight:700;}
+.goalbar ol{margin:3px 0 0;padding-left:17px;}
+.savebar{margin-top:8px;font-size:11.5px;color:var(--mut);display:flex;
+  justify-content:space-between;gap:8px;align-items:center;}
+.savebar button{font-family:inherit;font-size:11.5px;color:var(--mut);background:none;
+  border:none;border-bottom:1px solid var(--line);padding:0 0 1px;cursor:pointer;}
+.savebar button:hover{color:var(--teal);border-color:var(--teal);}
+
+/* ── 검사 화면 ── */
+.track{display:flex;gap:3px;margin-bottom:24px;}
+.seg{height:5px;flex:1;border-radius:3px;background:var(--line);}
+.seg.on{background:var(--teal);}
+.q{font-size:clamp(19px,4.6vw,23px);line-height:1.62;margin:16px 0 24px;font-weight:500;}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font-family:inherit;
+  background:var(--sf);border:1px solid var(--line);border-radius:10px;padding:12px 15px;
+  margin-bottom:7px;cursor:pointer;}
+.opt:hover{border-color:var(--teal);}
+.opt.sel{border-color:var(--teal);background:var(--tealsoft);}
+.face{font-size:21px;line-height:1;flex:none;}
+.olab{font-size:15px;color:var(--ink);font-weight:500;}
+.opt.sel .olab{font-weight:700;}
+.osub{font-size:12px;color:var(--mut);margin-top:2px;display:block;}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:20px;}
+
+/* ── 결과 화면 ── */
+.icon{font-size:56px;line-height:1;}
+.tname{font-size:clamp(26px,6.2vw,36px);line-height:1.32;margin:10px 0 6px;}
+.tag{font-size:16px;color:var(--ink);margin:0 0 6px;}
+.voice{font-size:14px;color:var(--mut);margin:0 0 18px;}
+.grow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px;}
+.gname{font-size:14.5px;font-weight:700;}
+.gdesc{font-size:12.5px;color:var(--mut);font-weight:400;margin-left:6px;}
+.bar{height:9px;background:var(--line);border-radius:5px;overflow:hidden;}
+.fill{height:100%;border-radius:5px;}
+.bar.lg{height:24px;border-radius:12px;overflow:visible;position:relative;}
+.bar.lg .fill{border-radius:12px;display:flex;align-items:center;justify-content:flex-end;}
+.bnum{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;}
+.bnum.in{color:#fff;padding-right:11px;}
+.bnum.out{position:absolute;top:0;line-height:24px;}
+.grow-wrap{margin-bottom:19px;}
+.rx{background:var(--sf);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:12px;}
+.rxh{font-size:14px;font-weight:700;color:var(--amber);margin-bottom:2px;}
+.rxt{font-size:15px;font-weight:700;margin-bottom:12px;}
+.rxpick{display:block;width:100%;text-align:left;font-family:inherit;font-size:14.5px;
+  line-height:1.8;color:var(--ink);background:var(--sf);border:1px solid var(--line);
+  border-radius:10px;padding:11px 13px 11px 40px;margin-bottom:7px;cursor:pointer;position:relative;}
+.rxpick:hover{border-color:var(--teal);}
+.rxpick::before{content:"";position:absolute;left:14px;top:14px;width:15px;height:15px;
+  border:1.5px solid var(--line);border-radius:4px;background:var(--sf);}
+.rxpick.sel{border-color:var(--teal);background:var(--tealsoft);font-weight:500;}
+.rxpick.sel::before{background:var(--teal);border-color:var(--teal);}
+.rxpick.sel::after{content:"";position:absolute;left:18px;top:18px;width:7px;height:4px;
+  border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg);}
+.rxpick:disabled{opacity:.45;cursor:not-allowed;}
+
+/* ── 입력 ── */
+.plan,.ta{width:100%;font-family:inherit;font-size:14.5px;line-height:1.8;color:var(--ink);
+  background:var(--sf);border:1px solid var(--line);border-radius:10px;padding:14px;
+  resize:vertical;min-height:92px;}
+.ta.sm{min-height:62px;font-size:14px;padding:11px 13px;}
+.plan::placeholder,.ta::placeholder,.inp::placeholder{color:#A4AFB7;}
+.inp{width:100%;font-family:inherit;font-size:14.5px;
+  padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--sf);color:var(--ink);}
+label.fl{display:block;font-size:13.5px;font-weight:700;margin:16px 0 7px;}
+label.fl span{font-weight:400;color:var(--mut);margin-left:6px;font-size:12.5px;}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:4px;}
+.chip{font-family:inherit;font-size:13.5px;color:var(--ink);background:var(--sf);
+  border:1px solid var(--line);border-radius:20px;padding:8px 15px;cursor:pointer;}
+.chip:hover{border-color:var(--teal);}
+.chip.sel{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:700;}
+.chip.am.sel{background:var(--amber);border-color:var(--amber);}
+.chip.pl.sel{background:var(--plum);border-color:var(--plum);}
+.grade{display:flex;gap:6px;}
+.grade button{flex:1;font-family:inherit;font-size:13.5px;background:var(--sf);
+  border:1px solid var(--line);border-radius:9px;padding:10px 4px;cursor:pointer;color:var(--ink);}
+.grade button.sel{background:var(--amber);border-color:var(--amber);color:#fff;font-weight:700;}
+
+/* ── 단계 패널 (전/중/후) ── */
+.panel{background:var(--sf);border:1px solid var(--line);border-radius:14px;
+  padding:20px 22px;margin-bottom:14px;border-left:5px solid var(--line);}
+.panel.pre{border-left-color:var(--teal);}
+.panel.dur{border-left-color:var(--amber);}
+.panel.post{border-left-color:var(--plum);}
+.ph{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;}
+.ph h3{font-size:18px;margin:0;font-family:'Noto Serif KR',serif;font-weight:700;}
+.when{font-size:11.5px;font-weight:700;border-radius:20px;padding:4px 11px;white-space:nowrap;}
+.when.a{background:var(--tealsoft);color:#1B4F4B;}
+.when.b{background:var(--ambersoft);color:#8A6008;}
+.when.c{background:var(--plumsoft);color:#6B3A5E;}
+.plede{font-size:13.5px;line-height:1.85;color:var(--mut);margin:9px 0 4px;}
+.tip{background:var(--tealsoft);border-radius:9px;padding:11px 14px;font-size:13px;
+  line-height:1.8;color:#1B4F4B;margin:10px 0 0;}
+.tip.am{background:var(--ambersoft);color:#7A5507;}
+.sub3{border-top:1px solid var(--line);margin-top:22px;padding-top:6px;}
+
+/* ── 3P ── */
+.pcol{font-family:'Noto Serif KR',serif;font-weight:700;font-size:13px;
+  color:var(--teal);letter-spacing:.04em;}
+
+/* ── 대본 / 키워드 ── */
+.meter{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:9px;font-size:13px;color:var(--mut);}
+.meter b{font-size:20px;font-family:'Noto Serif KR',serif;color:var(--ink);font-variant-numeric:tabular-nums;}
+.gauge{height:7px;background:var(--line);border-radius:4px;margin-top:9px;position:relative;overflow:hidden;}
+.gauge i{display:block;height:100%;border-radius:4px;background:var(--teal);}
+.gauge.lo i{background:var(--line);}
+.gauge.hi i{background:var(--plum);}
+.kwrow{display:flex;gap:9px;flex-wrap:wrap;margin-top:6px;}
+.kwcard{flex:1 1 150px;background:var(--sf);border:1px solid var(--line);
+  border-radius:12px;padding:14px 15px;}
+.kwn{font-size:11.5px;font-weight:700;color:var(--amber);}
+.kwv{font-family:'Noto Serif KR',serif;font-weight:700;font-size:21px;margin-top:3px;
+  word-break:keep-all;line-height:1.35;}
+.kwe{width:100%;font-family:'Noto Serif KR',serif;font-weight:700;font-size:19px;
+  border:none;border-bottom:1.5px solid var(--line);background:none;color:var(--ink);
+  padding:2px 0 4px;margin-top:3px;}
+.kwe:focus{outline:none;border-color:var(--teal);}
+
+/* ── 슬라이드 ── */
+#deck{position:fixed;inset:0;z-index:100;background:#0E1A22;color:#fff;
+  display:flex;flex-direction:column;}
+#deck.off{display:none;}
+.dstage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:30px 24px;cursor:pointer;}
+.dnum{font-size:14px;letter-spacing:.3em;color:#7E93A0;margin-bottom:22px;}
+.dkw{font-family:'Noto Serif KR',serif;font-weight:700;
+  font-size:clamp(46px,15vw,124px);line-height:1.12;word-break:keep-all;}
+.dtitle{font-family:'Noto Serif KR',serif;font-weight:700;
+  font-size:clamp(28px,7vw,56px);line-height:1.3;word-break:keep-all;}
+.dwho{font-size:16px;color:#9FB2BD;margin-top:20px;}
+.dfoot{border-top:1px solid #23343F;padding:13px 20px calc(13px + env(safe-area-inset-bottom));
+  display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;}
+.dcues{font-size:13.5px;color:#C9D6DE;line-height:1.6;}
+.dcues span{color:var(--amber);font-weight:700;}
+.dtime{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:19px;font-weight:700;
+  font-variant-numeric:tabular-nums;color:#8FB3AE;}
+.dtime.warn{color:var(--amber);}
+.dtime.over{color:#E08C9E;}
+.dx{font-family:inherit;font-size:13px;color:#9FB2BD;background:none;
+  border:1px solid #2C3F4B;border-radius:8px;padding:8px 14px;cursor:pointer;}
+.dx:hover{color:#fff;border-color:#4A6070;}
+.ddots{display:flex;gap:6px;}
+.ddots i{width:7px;height:7px;border-radius:50%;background:#2C3F4B;display:block;}
+.ddots i.on{background:var(--amber);}
+
+/* ── 말하기 계획 카드 (패들렛에 올릴 한 장) ── */
+#pcard{position:fixed;inset:0;z-index:100;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:16px 14px calc(8px + env(safe-area-inset-bottom));}
+#pcard.off{display:none;}
+/* 캡처해서 패들렛에 올리는 그림이므로, 화면을 넉넉히 채워야
+   썸네일에서 여백만 보이지 않는다. 넘치지는 않게 vh로 묶어 둔다. */
+.pc{width:100%;max-width:min(620px,100%);min-height:min(560px,80vh);
+  display:flex;flex-direction:column;
+  background:var(--sf);border:1px solid var(--line);
+  border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(21,34,45,.10);}
+.pc-head{background:var(--teal);color:#fff;padding:13px 18px;
+  display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.pc-who{font-size:14px;font-weight:700;}
+.pc-type{font-size:12.5px;color:#BBD8D3;white-space:nowrap;}
+.pc-type b{color:#fff;font-weight:700;}
+.pc-body{padding:17px 18px 19px;flex:1;display:flex;flex-direction:column;}
+.pc-topic{font-family:'Noto Serif KR','Nanum Myeongjo',serif;font-weight:700;
+  font-size:clamp(21px,5.6vw,27px);line-height:1.34;word-break:keep-all;}
+.pc-why{font-size:12.5px;line-height:1.72;color:var(--mut);margin-top:5px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.pc-goal{margin-top:13px;background:var(--tealsoft);border:1px solid #C3DAD6;
+  border-radius:11px;padding:11px 14px;}
+.pc-goal .lab{font-size:11px;font-weight:700;color:var(--teal);letter-spacing:.04em;}
+.pc-goal .txt{font-size:14.5px;line-height:1.62;color:#15303A;margin-top:3px;font-weight:500;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.pc-rows{margin-top:14px;border-top:1px solid var(--line);}
+.pc-row{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--line);}
+/* 남는 세로 공간은 여기 한 곳으로 모은다 (줄 사이가 벌어지지 않도록) */
+.pc-gap{flex:1;min-height:10px;}
+.pc-key{flex:none;width:52px;font-size:11px;font-weight:700;color:var(--teal);
+  letter-spacing:.03em;padding-top:2px;}
+.pc-val{flex:1;font-size:13px;line-height:1.66;color:var(--ink);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.pc-val em{font-style:normal;color:var(--mut);}
+.pc-val .none{color:#A4AFB7;}
+.pc-hook{margin-top:13px;font-family:'Noto Serif KR',serif;font-weight:700;
+  font-size:14.5px;line-height:1.6;color:var(--ink);
+  border-left:3px solid var(--amber);padding-left:11px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.pc-foot{margin-top:14px;display:flex;justify-content:space-between;align-items:center;
+  gap:10px;font-size:11.5px;color:var(--mut);border-top:1px solid var(--line);padding-top:10px;}
+.pc-nerve{white-space:nowrap;}
+.pc-nerve b{color:var(--plum);font-size:13px;}
+.pcbar{margin-top:12px;display:flex;gap:9px;align-items:center;flex-wrap:wrap;
+  justify-content:center;font-size:12px;color:var(--mut);}
+.pcbar button{font-family:inherit;font-size:12.5px;color:var(--mut);background:var(--sf);
+  border:1px solid var(--line);border-radius:8px;padding:8px 14px;cursor:pointer;}
+.pcbar button:hover{color:var(--ink);border-color:var(--mut);}
+.pcseg{display:flex;gap:0;}
+.pcseg button{border-radius:0;margin-left:-1px;}
+.pcseg button:first-child{border-radius:8px 0 0 8px;margin-left:0;}
+.pcseg button:last-child{border-radius:0 8px 8px 0;}
+.pcseg button.on{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:700;}
+.pcseg button.on:hover{color:#fff;border-color:var(--teal);}
+
+/* ── 청중용 : 어디를 보고 들어야 하는지만 ── */
+.pc-aud{flex:1;display:flex;flex-direction:column;justify-content:center;
+  padding:26px 26px 24px;text-align:center;}
+.pc-aud-label{font-size:12px;font-weight:700;color:var(--mut);letter-spacing:.06em;}
+.pc-aud-topic{font-family:'Noto Serif KR','Nanum Myeongjo',serif;font-weight:700;
+  font-size:clamp(25px,6.6vw,34px);line-height:1.32;word-break:keep-all;margin-top:7px;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.pc-aud-goal{margin-top:26px;background:var(--tealsoft);border:1px solid #C3DAD6;
+  border-radius:14px;padding:19px 20px;}
+.pc-aud-goal .lab{font-size:11.5px;font-weight:700;color:var(--teal);letter-spacing:.05em;}
+.pc-aud-goal .txt{font-family:'Noto Serif KR','Nanum Myeongjo',serif;font-weight:700;
+  font-size:clamp(17px,4.4vw,22px);line-height:1.58;color:#15303A;margin-top:8px;
+  word-break:keep-all;
+  display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;}
+.pc-aud-ask{margin-top:22px;font-size:13px;line-height:1.75;color:var(--mut);}
+.pc-aud-ask b{color:var(--ink);}
+
+/* ── 피드백 ── */
+.modes{display:flex;gap:7px;margin:18px 0 22px;}
+.modes button{flex:1;font-family:inherit;font-size:14px;font-weight:700;color:var(--mut);
+  background:var(--sf);border:1px solid var(--line);border-radius:10px;padding:13px 6px;cursor:pointer;}
+.modes button.on{background:var(--plum);border-color:var(--plum);color:#fff;}
+.fbitem{background:var(--sf);border:1px solid var(--line);border-radius:12px;
+  padding:14px 16px;margin-bottom:9px;}
+.fbtop{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.fbname{font-weight:700;font-size:15px;}
+.fbmark{font-size:13px;font-weight:700;}
+.fbmark.o{color:var(--teal);} .fbmark.t{color:var(--amber);} .fbmark.x{color:var(--plum);}
+.fbl{font-size:13.5px;line-height:1.8;color:var(--mut);margin-top:7px;}
+.fbl b{color:var(--ink);font-weight:700;}
+.del{font-family:inherit;font-size:12px;color:var(--mut);background:none;border:none;
+  border-bottom:1px solid var(--line);cursor:pointer;padding:0;}
+.del:hover{color:var(--plum);border-color:var(--plum);}
+.empty{border:1px dashed var(--line);border-radius:12px;padding:26px 20px;text-align:center;
+  font-size:13.5px;color:var(--mut);line-height:1.8;}
+.rules{list-style:none;padding:0;margin:10px 0 0;}
+.rules li{position:relative;padding-left:22px;font-size:13.5px;line-height:1.8;color:var(--mut);margin-bottom:5px;}
+.rules li::before{content:"\2022";position:absolute;left:6px;color:var(--plum);font-weight:700;}
+.cmp2{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
+.cmp2 div{flex:1 1 130px;background:var(--sf);border:1px solid var(--line);
+  border-radius:12px;padding:14px 16px;}
+.cmp2 .k{font-size:12.5px;color:var(--mut);}
+.cmp2 .v{font-family:'Noto Serif KR',serif;font-weight:700;font-size:20px;margin-top:4px;}
+
+.fade{animation:in .34s ease both;}
+@keyframes in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+@media (prefers-reduced-motion:reduce){.fade{animation:none;}}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:200;
+  background:var(--ink);color:#fff;padding:12px 22px;border-radius:24px;font-size:13.5px;
+  font-weight:700;opacity:0;pointer-events:none;transition:opacity .25s;}
+.toast.on{opacity:1;}
+
+/* ── 인쇄 : 전 단계를 한 장의 일지로 ── */
+#sheet{display:none;}
+@media print{
+  body{background:#fff;padding:0;font-size:11pt;}
+  .topbar,#app,#deck,.toast{display:none !important;}
+  #sheet{display:block;}
+  #sheet h1{font-family:'Noto Serif KR',serif;font-size:19pt;margin:0 0 2pt;}
+  #sheet .who{font-size:10pt;color:#444;margin-bottom:14pt;}
+  #sheet section{break-inside:avoid;margin-bottom:15pt;}
+  #sheet h2{font-family:'Noto Serif KR',serif;font-size:13pt;border-bottom:1pt solid #999;
+    padding-bottom:3pt;margin:0 0 7pt;}
+  #sheet h3{font-size:11pt;margin:9pt 0 3pt;}
+  #sheet p{margin:0 0 4pt;line-height:1.7;}
+  #sheet .k{font-weight:700;}
+  #sheet .blank{color:#aaa;}
+  #sheet table{width:100%;border-collapse:collapse;font-size:10pt;}
+  #sheet td,#sheet th{border:.5pt solid #bbb;padding:4pt 6pt;text-align:left;vertical-align:top;}
+  #sheet th{white-space:nowrap;width:1%;background:#f2f2f2;}
+  #sheet tr:first-child th{width:auto;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar" id="topbar"><div class="topbar-in" id="topbarIn"></div></div>
+<div id="app"></div>
+<div id="deck" class="off"></div>
+<div id="pcard" class="off"></div>
+<div id="sheet"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===========================================================
+   말하기 성찰일지
+   1단계 나만의 발표 목표 수립  (나의 발표 성향 검사 통합)
+   2단계 1~3분 말하기 계획 세우기 (말하기 전 / 중 / 후)
+   3단계 1~3분 말하기            (대본 -> 키워드 3개 -> 발표 자료)
+   4단계 듣기.말하기 성찰하기     (청중 피드백 주고받기)
+   성취기준 [9국01-11]
+   =========================================================== */
+
+/* =================== 검사 문항 : 4영역 x 5문항 =================== */
+var ITEMS = [
+  {id:"a1",dim:"anx",phase:"pre",text:"발표해야 한다는 말을 들으면 그 순간부터 마음이 무거워진다."},
+  {id:"a2",dim:"anx",phase:"pre",rev:true,text:"발표를 앞두고도 내 생각을 자신 있게 말할 수 있다고 느낀다."},
+  {id:"a3",dim:"anx",phase:"during",text:"여러 사람의 시선이 모이면 심장이 빠르게 뛰거나 몸이 굳는다."},
+  {id:"a4",dim:"anx",phase:"during",text:"발표 도중에 준비한 내용을 잊어버릴까 봐 걱정된다."},
+  {id:"a5",dim:"anx",phase:"post",text:"발표가 끝난 뒤에도 내가 한 실수가 계속 떠오른다."},
+
+  {id:"p1",dim:"prep",text:"발표 전에 주제와 목적을 정하고, 듣는 사람이 누구인지 먼저 파악한다."},
+  {id:"p2",dim:"prep",text:"주제와 관련된 자료를 여러 곳에서 찾아 모은다."},
+  {id:"p3",dim:"prep",text:"모은 자료를 듣는 사람이 이해하기 쉽게 고쳐서 쓴다."},
+  {id:"p4",dim:"prep",text:"도입-전개-정리로 나누어 말할 순서를 짜 둔다."},
+  {id:"p5",dim:"prep",text:"듣는 사람의 흥미를 끌고 이해를 돕는 설명 방법(예시, 비교, 그림 등)을 골라 쓴다."},
+
+  {id:"g1",dim:"reg",text:"긴장될 때 마음을 가라앉히는 나만의 방법이 있다."},
+  {id:"g2",dim:"reg",text:"듣는 사람의 반응을 살피며 속도나 설명 방식을 바꾼다."},
+  {id:"g3",dim:"reg",text:"말이 막히거나 내용을 잊어도 다른 말로 바꾸어 이어 갈 수 있다."},
+  {id:"g4",dim:"reg",text:"목소리 크기와 빠르기, 시선과 몸동작을 의식하며 조절한다."},
+  {id:"g5",dim:"reg",text:"발표가 끝나면 잘된 점과 고칠 점을 정리해 다음 발표에 반영한다."},
+
+  {id:"l1",dim:"lis",text:"친구가 발표할 때 딴생각이 들면 알아차리고 다시 집중한다."},
+  {id:"l2",dim:"lis",text:"잘 이해되지 않는 부분이 있으면 질문하거나 되묻는다."},
+  {id:"l3",dim:"lis",text:"친구의 발표에서 좋았던 점을 구체적으로 말해 줄 수 있다."},
+  {id:"l4",dim:"lis",rev:true,text:"내 발표에 대한 지적을 들으면 기분이 상해서 제대로 듣지 못한다."},
+  {id:"l5",dim:"lis",text:"받은 피드백 중 내 목표에 맞는 것을 골라 다음 발표에 반영한다."}
+];
+
+var ORDER = ["a1","p1","l1","g1","a3","p2","g2","l4","a2","p4",
+             "g3","l2","a4","p3","g4","l3","a5","p5","g5","l5"];
+var SEQ = ORDER.map(function(id){
+  var f=null,i;
+  for(i=0;i<ITEMS.length;i++) if(ITEMS[i].id===id) f=ITEMS[i];
+  return f;
+});
+
+var SCALE = [
+  {v:1,face:"😶",label:"전혀 그렇지 않다",sub:"나와 거의 관계없다"},
+  {v:2,face:"🙁",label:"그렇지 않다",sub:"별로 그렇지 않다"},
+  {v:3,face:"😐",label:"보통이다",sub:"반반이다"},
+  {v:4,face:"🙂",label:"그렇다",sub:"대체로 그렇다"},
+  {v:5,face:"😎",label:"매우 그렇다",sub:"나와 정말 비슷하다"}
+];
+
+var DIM = {
+  anx:{name:"발표 불안도",desc:"발표 상황에서 얼마나 긴장하는가",color:"#8A4E7B",good:"low",
+    hi:"긴장이 크게 올라오는 편입니다. 특히 무엇을 걱정하는지 알면 다룰 수 있습니다.",
+    mid:"적당히 긴장하는 편입니다. 이 정도 긴장은 집중을 돕기도 합니다.",
+    lo:"발표 상황에서 크게 떨지 않는 편입니다."},
+  prep:{name:"발표 준비력",desc:"주제·자료·구성을 어떻게 준비하는가",color:"#24645F",good:"high",
+    hi:"목적과 청중을 정하고 내용을 짜임새 있게 구성하는 힘이 있습니다.",
+    mid:"준비는 하지만 그때그때 달라지는 편입니다. 절차를 정해 두면 안정됩니다.",
+    lo:"준비 없이 발표에 들어가는 일이 많습니다. 여기가 가장 크게 달라질 수 있는 지점입니다."},
+  reg:{name:"발표 조절력",desc:"어려움이 생겼을 때 어떻게 바꾸는가",color:"#24645F",good:"high",
+    hi:"청중 반응을 살펴 말을 바꾸고, 끝난 뒤 점검까지 해내는 편입니다.",
+    mid:"조절을 시도하지만 방법이 몇 가지로 한정되어 있습니다.",
+    lo:"어려움이 생기면 그대로 밀고 나가는 편입니다. 성취기준이 기르려는 힘이 바로 이것입니다."},
+  lis:{name:"경청·피드백",desc:"들을 때와 피드백을 받을 때 어떻게 하는가",color:"#C98A0E",good:"high",
+    hi:"듣는 사람일 때도 자기 상태를 점검하고, 받은 피드백을 다음 발표로 연결합니다.",
+    mid:"듣기는 하지만 질문하거나 피드백을 활용하는 데까지는 잘 가지 않습니다.",
+    lo:"듣는 쪽에서는 점검이 거의 일어나지 않고, 지적을 들으면 마음이 먼저 닫힙니다. 말하기만큼 듣기도 연습이 필요합니다."}
+};
+var DIM_ORDER = ["anx","prep","reg","lis"];
+
+var TYPES = {
+  dolphin:{icon:"🐬",name:"소통 즐거움형",tagline:"사람과 이야기하는 게 즐거운 발표자",
+    voice:"“친구들과 이야기하듯 발표하는 게 편해요.”",
+    read:"긴장이 크지 않고, 준비하고 조절하는 힘도 갖춰져 있습니다. 발표를 부담이 아니라 생각을 나누는 자리로 받아들이는 편입니다.",
+    next:"지금 필요한 것은 더 어려운 조건입니다. 낯선 청중, 더 긴 시간, 즉석 질문이 있는 상황으로 난이도를 올려 보세요. 배운 방법을 긴장이 높은 친구에게 설명해 주는 것도 자신의 전략을 정리하는 좋은 연습입니다."},
+  lion:{icon:"🦁",name:"자신감 돌진형",tagline:"일단 말하고 보는 발표자",
+    voice:"“틀려도 일단 말할 수 있어요.”",
+    read:"무대 자체는 편안합니다. 다만 준비와 조절은 그때그때 달라지는 편이라, 발표가 잘 풀린 날과 아쉬웠던 날의 차이가 큽니다.",
+    next:"떨지 않는다는 것은 큰 강점이지만, 편안함이 준비를 대신해 주지는 않습니다. 도입-전개-정리로 순서를 짜고 시간을 재서 연습해 보세요. 지금의 여유에 구조가 더해지면 기복이 줄어듭니다."},
+  hamster:{icon:"🐹",name:"긴장 극복 도전형",tagline:"떨리지만 해내는 발표자",
+    voice:"“긴장은 하지만, 긴장한다고 발표를 못하는 건 아니에요.”",
+    read:"긴장이 높게 올라오지만 준비력과 조절력이 함께 높습니다. 긴장의 크기가 발표의 결과를 정하지 않는다는 것을 이미 몸으로 알고 있는 유형입니다.",
+    next:"긴장을 없애는 쪽으로 애쓰지 마세요. 이미 효과를 본 방법이 무엇이었는지 골라내 순서를 고정하는 편이 낫습니다. 호흡 → 시선 → 첫 문장 → 천천히 시작, 이 흐름을 자기 방식으로 다듬어 보세요."},
+  turtle:{icon:"🐢",name:"준비 철저형",tagline:"준비하면 강해지는 발표자",
+    voice:"“발표가 싫은 건 아닌데, 준비가 부족하면 불안해져요.”",
+    read:"긴장이 높은 편이지만 준비하는 힘이 그것을 받쳐 줍니다. 다만 준비한 대로 흘러가지 않을 때 바꿔 나갈 방법은 아직 적어서, 준비를 많이 할수록 부담도 함께 커지는 경향이 있습니다.",
+    next:"필요한 것은 더 많이 외우기가 아니라 덜 외우고 핵심어로 말하는 연습입니다. 대본을 문장으로 외우면 잊을 것이 늘어납니다. 핵심어 세 개만 남기고, 나머지는 그 자리에서 말로 채우는 연습을 해 보세요."},
+  owl:{icon:"🦉",name:"분석 관찰형",tagline:"머릿속에서 이미 발표를 끝낸 발표자",
+    voice:"“이렇게 말하면 이상하지 않을까를 많이 생각해요.”",
+    read:"상황을 살피고 스스로를 점검하는 힘이 뛰어납니다. 그런데 준비 절차는 상대적으로 얇아서, 그 점검이 발표 전에는 걱정으로, 발표 후에는 되새김으로 이어질 때가 많습니다.",
+    next:"생각을 줄이라는 조언은 잘 통하지 않습니다. 대신 생각을 절차로 바꾸세요. 주제와 목적을 한 줄로 적고, 도입-전개-정리로 칸을 나눠 채우는 것만으로 막연한 걱정이 할 일 목록으로 바뀝니다."},
+  rabbit:{icon:"🐰",name:"귀 밝은 관찰형",tagline:"잘 듣지만 말할 차례가 어려운 발표자",
+    voice:"“친구 발표는 잘 보이는데, 제 차례가 되면 달라져요.”",
+    read:"듣는 쪽에서는 힘이 분명합니다. 친구의 발표에서 좋았던 점을 짚어내고, 받은 피드백도 흘려보내지 않습니다. 다만 그 좋은 눈이 자기 차례에는 잘 쓰이지 않아, 남을 보는 기준이 그대로 자기 검열이 되기도 합니다.",
+    next:"이미 좋은 발표가 무엇인지 알고 있습니다. 남은 일은 그 기준을 자기 준비 절차로 옮기는 것입니다. 친구 발표에서 좋았던 점을 적을 때 그중 하나를 골라 다음 내 발표에 그대로 써 보세요. 관찰이 실행으로 바뀌는 순간 가장 빠르게 느는 유형입니다."},
+  chick:{icon:"🐣",name:"성장 도약형",tagline:"이제 방법을 배우기 시작한 발표자",
+    voice:"“어떻게 해야 할지 몰라서 더 막막해요.”",
+    read:"긴장이 높고, 아직 그 긴장을 다룰 방법을 많이 갖지 못한 상태입니다. 능력이 부족한 것이 아니라 배우지 않은 것이 있을 뿐입니다.",
+    next:"그래서 연습 하나만 익혀도 변화가 가장 크게 나타나는 유형입니다. 아래 처방전을 전부 하려 하지 말고 딱 한 줄만 고르세요. 다음 발표에서 그 한 줄만 지켜도 충분합니다."}
+};
+
+/* =================== 채점 =================== */
+function sc(it,raw){ return it.rev ? 6-raw : raw; }
+function pct(arr){
+  if(!arr.length) return 0;
+  var s=0,i; for(i=0;i<arr.length;i++) s+=arr[i];
+  return Math.round(((s-arr.length)/(arr.length*4))*100);
+}
+function computeScores(ans){
+  var by={anx:[],prep:[],reg:[],lis:[]}, ph={pre:[],during:[],post:[]}, i;
+  for(i=0;i<ITEMS.length;i++){
+    var it=ITEMS[i], v=sc(it,ans[it.id]);
+    by[it.dim].push(v);
+    if(it.phase) ph[it.phase].push(v);
+  }
+  return {anx:pct(by.anx),prep:pct(by.prep),reg:pct(by.reg),lis:pct(by.lis),
+          pre:pct(ph.pre),during:pct(ph.during),post:pct(ph.post)};
+}
+function uniformAnswer(ans){
+  var vals=ITEMS.map(function(it){return ans[it.id];}),i;
+  for(i=1;i<vals.length;i++) if(vals[i]!==vals[0]) return false;
+  return true;
+}
+function abilityOf(s){ return Math.round((s.prep+s.reg+s.lis)/3); }
+function decideType(s){
+  var ab=abilityOf(s);
+  if(s.anx<50) return {key:ab>=50?"dolphin":"lion",ability:ab};
+  if(ab>=55) return {key:"hamster",ability:ab};
+  if(ab<38) return {key:"chick",ability:ab};
+  if(s.prep>=s.reg && s.prep>=s.lis) return {key:"turtle",ability:ab};
+  if(s.reg>=s.lis) return {key:"owl",ability:ab};
+  return {key:"rabbit",ability:ab};
+}
+function buildPrescription(s){
+  var b=[],d=[],a=[];
+  b.push(s.prep<55?"주제와 목적, 듣는 사람이 누구인지 한 줄로 적고 시작하기"
+                  :"준비한 내용을 핵심어 세 개로 줄여 카드에 적기");
+  b.push(s.prep<55?"도입-전개-정리 세 칸을 그려 놓고 한 칸씩 채우기"
+                  :"듣는 사람의 흥미를 끌 예나 이야기를 하나 더 넣기");
+  if(s.pre>=50) b.push("첫 15초에 할 말만 통째로 정해 두기 (시작이 안정되면 나머지는 따라옵니다)");
+  b.push(s.prep<55?"타이머를 켜고 소리 내어 한 번 연습하기"
+                  :"연습을 녹음해 듣고 말이 빨라지는 구간 한 곳만 고치기");
+  if(s.pre>=60) b.push("발표 직전 4초 들이마시고 6초 내쉬기 × 3회");
+
+  if(s.during>=50) d.push("숨을 내쉬면서 첫 문장을 시작하기");
+  d.push(s.during>=50?"나를 편하게 봐 주는 친구 한 명 → 두 명 → 전체로 시선 넓히기"
+                     :"한 문단마다 시선을 다른 쪽으로 옮기기");
+  d.push(s.reg<55?"내용을 잊으면 핵심어부터 다시 말하기 (침묵보다 되짚기가 낫습니다)"
+                 :"말이 막힐 때 쓸 연결 표현 하나 준비하기 — “다시 정리하면”");
+  d.push(s.reg<55?"듣는 사람이 갸웃하면 속도를 늦추고 예를 하나 더 들기"
+                 :"중요한 문장 앞에서 한 박자 쉬어 강조하기");
+  if(s.reg<45) d.push("한 문장씩 끝까지 말하고 쉬기 (문장을 이어 붙일수록 숨이 가빠집니다)");
+
+  a.push("잘된 점 한 가지 적기");
+  a.push("어려웠던 점 한 가지 적기");
+  a.push("다음에 바꿀 점 한 가지를 행동으로 적기");
+  if(s.post>=55) a.push("아쉬운 점은 한 개당 다음에 할 행동 한 개로 바꿔 적기 — “목소리가 작았다”가 아니라 “뒷자리까지 들리게 말한다”");
+  if(s.post>=55) a.push("친구에게 “어땠어?” 대신 “어느 부분이 이해 안 됐어?”라고 묻기");
+  a.push(s.lis<55?"친구의 발표에서 좋았던 점 한 가지를 구체적으로 말해 주기"
+                 :"친구의 발표를 들으며 내 발표에 쓸 만한 방법 하나 메모하기");
+  if(s.lis<50) a.push("받은 피드백을 전부 고치려 하지 말고, 내 목표에 맞는 하나만 골라 다음 발표에 반영하기");
+  if(s.lis<40) a.push("들을 때 딴생각이 들면 스스로 알아차리고 되돌아오기 (듣기도 점검이 필요합니다)");
+  return {before:b,during:d,after:a};
+}
+function levelKey(v){ return v<34?"lo":(v<=66?"mid":"hi"); }
+function esc(t){ return String(t==null?"":t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+/* =================== 2단계 : 선택지 자료 =================== */
+var PURPOSE = [
+  {k:"알게",label:"알게 하기",hint:"내가 겪은 일을 친구들이 또렷하게 그려 볼 수 있게"},
+  {k:"느끼게",label:"느끼게 하기",hint:"그때 내 마음이 어땠는지 함께 느낄 수 있게"},
+  {k:"해보게",label:"해 보게 하기",hint:"듣고 나서 한번 해 보고 싶어지게"}
+];
+var ANXSIGN = ["심장이 빨리 뛴다","손이나 다리가 떨린다","목소리가 떨린다","얼굴이 뜨거워진다",
+               "말이 빨라진다","머릿속이 하얘진다","목이 마른다","배가 아프다"];
+var ANXCAUSE = [
+  "공식적인 말하기 상황이 익숙하지 않아서",
+  "말할 내용을 충분히 준비하지 못해서",
+  "친구들이 나를 어떻게 볼지 걱정이 커서"
+];
+/* 준언어 : 말에 얹히는 소리의 요소 */
+var PARA = [
+  {k:"크기",label:"목소리 크기",fix:"뒷자리 친구 한 명을 정해 두고, 그 친구에게 들리도록 말한다"},
+  {k:"속도",label:"말의 속도",fix:"빨라진다고 느끼면 한 문장 끝에서 숨을 한 번 쉬고 이어 간다"},
+  {k:"억양",label:"억양",fix:"중요한 낱말에서 소리를 살짝 올려 말한다"},
+  {k:"쉼",label:"쉼(멈춤)",fix:"핵심 문장 앞에서 하나, 둘 세고 말한다"}
+];
+/* 비언어 : 몸으로 드러나는 요소 */
+var NONPARA = [
+  {k:"시선",label:"시선",fix:"한 문단마다 고개를 들어 다른 쪽 친구를 본다"},
+  {k:"표정",label:"표정",fix:"첫 문장을 말할 때 입꼬리를 한 번 올린다"},
+  {k:"손짓",label:"손짓",fix:"가장 중요한 한 문장에서만 손을 쓰고, 나머지는 내린다"},
+  {k:"자세",label:"자세",fix:"두 발을 어깨너비로 두고 몸을 흔들지 않는다"}
+];
+var CAUSE = [
+  "준비가 부족했다","긴장이 컸다","오래된 말버릇이다",
+  "청중을 살피지 못했다","시간 배분을 잘못했다","내용 순서가 엉켰다"
+];
+
+/* =================== 3단계 : 한국어 키워드 추출 =================== */
+/* 조사·접미 목록. 반드시 '가장 긴 것'이 먼저 걸리도록 길이순으로 정렬해 쓴다.
+   (그러지 않으면 '날이라는'에서 '는'만 떨어져 '날이라'가 남는다) */
+var JOSA = ["에게서는","으로서는","에서부터",
+            "에서는","에게서","으로는","으로서","으로써","이라고","이라는","이라며","까지도","까지는",
+            "부터는","에서도","에서의","에게는","에게도","한테는","한테도",
+            "라고","라는","라며","에서","에게","한테","께서","으로","까지","부터","처럼","만큼",
+            "조차","밖에","이나","이든","이랑","와는","과는","와의","과의","로는","로서","로써",
+            "들의","들을","들이","들은","들에","마다","에는","에도","에만","이라",
+            "의","이","가","은","는","을","를","에","도","만","와","과","로","랑","께","뿐","들"];
+JOSA.sort(function(a,b){ return b.length - a.length; });
+/* 과제 지시문에서 비롯되거나 뜻이 너무 넓은 말 */
+var STOP = ("나 내 저 제 우리 너 네 당신 그것 이것 저것 것 거 수 때 점 중 등 및 좀 참 " +
+  "정말 너무 진짜 매우 아주 조금 조금씩 그리고 그래서 하지만 그런데 또 또한 만약 " +
+  "때문 위해 위한 통해 대해 대한 이런 그런 저런 어떤 무슨 모든 여러 많이 다시 항상 자주 " +
+  "가끔 처음 마지막 이번 다음 오늘 어제 내일 지금 나중 " +
+  "그때 이때 그곳 이곳 여기 저기 거기 순간 무렵 " +
+  "먼저 얼마나 한동안 덕분 사실 결국 드디어 갑자기 우연히 특히 훨씬 점점 계속 " +
+  "함께 서로 이제 아직 벌써 이미 거의 대부분 가장 제일 아마 물론 오히려 게다가 " +
+  "따라서 그러나 그러면 그래도 왜냐하면 예를 " +
+  "배운 배워 만난 만나 있는 없는 같은 좋은 많은 다른 어려운 새로운 중요 기다려 알려 느낀 " +
+  "사람 생각 경험 이야기 얘기 기분 느낌 부분 경우 이유 까닭 모습 정도 동안 이후 이전 " +
+  "자신 스스로 발표 말하기 주제 내용 " +
+  "하고 하는 하며 하면 해서 되는 된다 " +
+  "하나 둘 셋 " +
+  "있음 없음 라고 무엇 누구 어디 언제 " +
+  "년 월 일 시 분 초 개 명 번 살").split(/\s+/);
+var STOPSET = {}; (function(){ var i; for(i=0;i<STOP.length;i++) STOPSET[STOP[i]]=1; })();
+/* 서술어로 끝나는 어절은 키워드에서 뺀다 */
+var PRED_TAIL = ["습니다","했습니다","합니다","이었다","였었다","하였다","했다","한다","된다","였다",
+                 "이다","같다","싶다","보다","이죠","네요","어요","아요","예요","이에요","해요","죠","다","요",
+                 /* 관형사형·연결형 어미 : 낱말이 아니라 문장 조각인 어절을 걸러 낸다 */
+                 "였던","았던","었던","하던","던",
+                 "이지","라지","하지","지만","는데","려서","라서","아서","어서","여서",
+                 "니까","으면","면서","려고","거나","든지","군요","겠다","더니","아도","어도",
+                 "든","해서","워서","오면","다면","이면",
+                 "한지","는지","은지","던지",
+                 /* '하는·되는'만 남긴다. '리는·기는·사는' 같은 꼬리는 머리는·경기는·이사는처럼
+                    멀쩡한 낱말까지 서술어로 오인하므로 넣지 않는다. */
+                 "하는","되는"];
+
+/* 한 번만 잘라 낸다. 가장 긴 조사가 걸렸는데 남는 몸통이 한 글자뿐이면
+   ('날이라는' -> '날') 낱말로 쓰지 않고 버린다. 빈 문자열이 그 신호다. */
+function stripJosa(w){
+  var i;
+  for(i=0;i<JOSA.length;i++){
+    var s=JOSA[i];
+    if(w.length>s.length && w.slice(-s.length)===s){
+      var rest = w.slice(0, w.length-s.length);
+      return rest.length>=2 ? rest : "";
+    }
+  }
+  return w;
+}
+/* '다'로 끝나는 흔한 명사는 서술어로 보지 않는다 */
+var NOUN_DA = {"바다":1,"소다":1,"사이다":1,"기타":0};
+function looksPredicate(w){
+  var i;
+  if(NOUN_DA[w]) return false;
+  for(i=0;i<PRED_TAIL.length;i++){
+    var t=PRED_TAIL[i];
+    if(w.length>t.length && w.slice(-t.length)===t) return true;
+  }
+  return false;
+}
+/* 한글 음절 또는 두 글자 이상 영문·숫자만 남긴다 */
+function cleanToken(raw){
+  return raw.replace(/[^가-힣A-Za-z0-9]/g,"");
+}
+function extractKeywords(text,want){
+  want = want || 8;
+  if(!text || !text.trim()) return [];
+  var sents = text.split(/[.!?\n]+/).map(function(s){return s.trim();}).filter(function(s){return s;});
+  if(!sents.length) return [];
+  var stat = {}, si, wi;
+  for(si=0; si<sents.length; si++){
+    var words = sents[si].split(/\s+/);
+    for(wi=0; wi<words.length; wi++){
+      var raw = cleanToken(words[wi]);
+      if(!raw) continue;
+      if(looksPredicate(raw)) continue;
+      var w = stripJosa(raw);
+      if(w.length<2) continue;
+      if(/^[0-9]+$/.test(w)) continue;
+      if(STOPSET[w]) continue;
+      if(!stat[w]) stat[w] = {w:w, n:0, sents:{}, first:si};
+      stat[w].n++;
+      stat[w].sents[si] = 1;
+      if(si < stat[w].first) stat[w].first = si;
+    }
+  }
+  var last = sents.length-1, arr = [], k;
+  for(k in stat){ if(stat.hasOwnProperty(k)) arr.push(stat[k]); }
+  for(wi=0; wi<arr.length; wi++){
+    var e = arr[wi], spread = 0, s2;
+    for(s2 in e.sents) if(e.sents.hasOwnProperty(s2)) spread++;
+    e.score = e.n
+      + spread * 0.6
+      + (e.w.length>2 ? (e.w.length-2)*0.35 : 0)
+      + (e.sents[0] ? 1.2 : 0)
+      + (e.sents[last] && last>0 ? 0.8 : 0);
+  }
+  arr.sort(function(a,b){ return b.score-a.score || a.first-b.first; });
+  /* 포함 관계가 있으면 긴 쪽만 남긴다 */
+  var out = [];
+  for(wi=0; wi<arr.length; wi++){
+    var cand = arr[wi].w, dup = false, oi;
+    for(oi=0; oi<out.length; oi++){
+      if(out[oi].indexOf(cand)>=0 || cand.indexOf(out[oi])>=0){ dup = true; break; }
+    }
+    if(!dup) out.push(cand);
+    if(out.length>=want) break;
+  }
+  return out;
+}
+var CPM = 280; /* 중학생 발표 기준 : 공백을 뺀 분당 280자 (1분 약 280자, 3분 약 840자) */
+function speakSeconds(text){
+  var n = (text||"").replace(/\s/g,"").length;
+  return Math.round(n / CPM * 60);
+}
+function mmss(sec){
+  var m = Math.floor(sec/60), s = sec%60;
+  return m + ":" + (s<10?"0":"") + s;
+}
+
+/* =================== 상태 =================== */
+function freshState(){
+  return {
+    view:"intro", idx:0, answers:{}, scores:null, flat:false,
+    sid:"", sname:"",
+    goals:[],                 /* [{phase,text,refined}] 최대 2개 */
+    pre:{ topic:"", why:"", purpose:"", purposeLine:"",
+          know:"", wonder:"", hook:"",
+          place:{}, placeLine:"",
+          anxLevel:0, anxSigns:{}, anxCause:"", warmup:"" },
+    cue:{ para:"", paraFix:"", nonpara:"", nonparaFix:"",
+          doneP:"", doneN:"", midMemo:"" },
+    post:{ good:"", problem:"", cause:"", causeLine:"", solution:"",
+           goalCheck:"", goalWhy:"" },
+    talk:{ script:"", keywords:["","",""], locked:false },
+    pcard:{ on:false, mode:"audience" },
+    fb:{ mode:"audience", draft:{name:"",goal:"",mark:"",why:"",good:"",next:""},
+         given:[], recvGood:"", recvNext:"", audienceMark:"" },
+    deck:{ on:false, i:0, showCues:true, t0:0, sec:0 }
+  };
+}
+var S = freshState();
+var app = document.getElementById("app");
+var STEP_KEYS = ["intro","quiz","result"];
+
+/* ── 저장 : 가능하면 브라우저에, 아니면 메모리에 ── */
+var MEMSTORE = {}, STORAGE_OK = null;
+function storeSet(k,v){
+  try{ localStorage.setItem(k,v); STORAGE_OK = true; }
+  catch(e){ MEMSTORE[k]=v; STORAGE_OK = false; }
+}
+function storeGet(k){
+  try{ var v = localStorage.getItem(k); STORAGE_OK = true; return v; }
+  catch(e){ STORAGE_OK = false; return MEMSTORE.hasOwnProperty(k) ? MEMSTORE[k] : null; }
+}
+var SKEY = "speech_workbook_v1";
+var saveTimer = null;
+/* 아직 아무것도 안 한 상태는 저장하지 않는다 (엉뚱한 "이어서 하기" 방지) */
+function hasWork(){
+  return !!(S.scores || S.goals.length || S.pre.topic || S.talk.script || S.fb.given.length);
+}
+function save(){
+  if(!hasWork()) return;
+  if(saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    try{ storeSet(SKEY, JSON.stringify(S)); }catch(e){}
+    paintSaveBar();
+  }, 400);
+}
+/* 옛 파일이나 일부만 담긴 데이터가 들어와도 깨지지 않게 기본값을 채운다 */
+function healState(f){
+  var d = freshState();
+  if(!f.pre) f.pre = d.pre;
+  if(!f.cue) f.cue = d.cue;
+  if(!f.post) f.post = d.post;
+  if(!f.talk) f.talk = d.talk;
+  if(!f.fb) f.fb = d.fb;
+  if(!f.pre.anxSigns || typeof f.pre.anxSigns!=="object") f.pre.anxSigns = {};
+  if(!f.pre.place || typeof f.pre.place!=="object") f.pre.place = {};
+  if(!Array.isArray(f.goals)) f.goals = [];
+  if(!Array.isArray(f.talk.keywords)) f.talk.keywords = ["","",""];
+  while(f.talk.keywords.length<3) f.talk.keywords.push("");
+  if(!Array.isArray(f.fb.given)) f.fb.given = [];
+  if(!f.fb.draft) f.fb.draft = {name:"",goal:"",mark:"",why:"",good:"",next:""};
+  if(!f.fb.mode) f.fb.mode = "audience";
+  f.deck = {on:false,i:0,showCues:true,t0:0,sec:0};
+  f.pcard = {on:false, mode:(f.pcard && f.pcard.mode) || "audience"};
+  return f;
+}
+function loadSaved(){
+  var raw = storeGet(SKEY);
+  if(!raw) return false;
+  try{
+    var o = JSON.parse(raw), f = freshState(), k;
+    for(k in f) if(f.hasOwnProperty(k) && o.hasOwnProperty(k)) f[k]=o[k];
+    S = healState(f); return true;
+  }catch(e){ return false; }
+}
+
+function toast(msg){
+  var t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("on");
+  setTimeout(function(){ t.classList.remove("on"); }, 2200);
+}
+
+/* =================== 상단 바 =================== */
+function stepOf(){
+  if(S.view==="intro"||S.view==="quiz"||S.view==="result") return 1;
+  if(S.view==="plan") return 2;
+  if(S.view==="talk") return 3;
+  return 4;
+}
+function goalList(){
+  return S.goals.map(function(g){ return (g.refined||"").trim() || g.text; });
+}
+function paintTop(){
+  var box = document.getElementById("topbarIn");
+  var now = stepOf();
+  var names = [["1","나의 목표"],["2","말하기 계획"],["3","1~3분 말하기"],["4","성찰하기"]];
+  var done = [ !!S.goals.length, !!(S.pre.topic&&S.pre.purpose), !!S.talk.script, !!(S.fb.given.length||S.post.problem) ];
+  var h = '<div class="steps">';
+  names.forEach(function(n,i){
+    var cls = (now===i+1) ? "now" : (done[i] ? "done" : "");
+    h += '<button class="stepbtn '+cls+'" data-step="'+(i+1)+'"><b>'+n[0]+'</b>'+n[1]+'</button>';
+  });
+  h += '</div>';
+  var gl = goalList();
+  if(gl.length && now>1){
+    h += '<div class="goalbar"><b>나의 발표 목표</b><br>'+esc(gl[0])+'</div>';
+  }
+  h += '<div class="savebar"><span id="saveMsg"></span>'+
+       '<span><button id="dlBtn">내 일지 내려받기</button> &nbsp;'+
+       '<button id="upBtn">불러오기</button> &nbsp;'+
+       '<button id="prBtn">인쇄</button></span>'+
+       '<input type="file" id="upFile" accept=".json,application/json" hidden></div>';
+  box.innerHTML = h;
+
+  box.querySelectorAll(".stepbtn").forEach(function(b){
+    b.addEventListener("click", function(){ gotoStep(+this.getAttribute("data-step")); });
+  });
+  document.getElementById("dlBtn").addEventListener("click", downloadWork);
+  document.getElementById("upBtn").addEventListener("click", function(){
+    document.getElementById("upFile").click();
+  });
+  document.getElementById("upFile").addEventListener("change", uploadWork);
+  document.getElementById("prBtn").addEventListener("click", function(){
+    buildSheet(); window.print();
+  });
+  paintSaveBar();
+}
+function paintSaveBar(){
+  var el = document.getElementById("saveMsg");
+  if(!el) return;
+  if(STORAGE_OK === false){
+    el.innerHTML = '<span style="color:#8A4E7B;font-weight:700">자동 저장이 안 되는 환경입니다 — 끝나면 꼭 내려받기</span>';
+  } else {
+    el.textContent = "자동 저장됨";
+  }
+}
+function gotoStep(n){
+  if(n===1) S.view = S.scores ? "result" : "intro";
+  else if(n===2) S.view = "plan";
+  else if(n===3) S.view = "talk";
+  else S.view = "reflect";
+  render();
+}
+
+/* =================== 파일 저장 =================== */
+/* 링크로 여는 경우와 파일로 여는 경우가 저장 방식이 다르다.
+   링크(아티팩트)에서는 내려받기 권한을 통해야 하고, 파일에서는 보통 방식이 된다. */
+var DL = null;
+try{
+  if(window.claude && typeof claude.use === "function"){
+    claude.use("downloads").then(function(d){ DL = d; }, function(){});
+  }
+}catch(e){}
+function saveFile(filename, text, mime){
+  if(DL && DL.save){
+    DL.save({filename:filename, data:text}).then(function(){
+      toast("저장했습니다");
+    }, function(err){
+      toast((err && err.code==="declined") ? "저장을 취소했습니다" : "저장할 수 없습니다 — 인쇄를 이용하세요");
+    });
+    return;
+  }
+  try{
+    var blob = new Blob([text], {type:mime});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 800);
+    toast("내려받았습니다");
+  }catch(e){ toast("저장할 수 없습니다 — 인쇄를 이용하세요"); }
+}
+function downloadWork(){
+  var name = (S.sid||"") + (S.sname?("_"+S.sname):"");
+  saveFile("말하기성찰일지" + (name?("_"+name):"") + ".json",
+           JSON.stringify(S,null,2), "application/json");
+}
+function uploadWork(e){
+  var f = e.target.files && e.target.files[0];
+  if(!f) return;
+  var r = new FileReader();
+  r.onload = function(){
+    try{
+      var o = JSON.parse(r.result), fs = freshState(), k;
+      for(k in fs) if(fs.hasOwnProperty(k) && o.hasOwnProperty(k)) fs[k]=o[k];
+      S = healState(fs); save(); render(); toast("불러왔습니다");
+    }catch(err){ toast("파일을 읽을 수 없습니다"); }
+  };
+  r.readAsText(f);
+  e.target.value = "";
+}
+
+/* =================== 1단계 : 시작 =================== */
+function viewIntro(){
+  return '<div class="fade">'+
+  '<svg viewBox="0 0 300 46" width="170" height="26" aria-hidden="true">'+
+  '<polyline points="0,23 24,23 36,9 48,37 60,15 72,31 84,23 300,23" fill="none" stroke="#24645F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/></svg>'+
+  '<h1 class="sf hero">말하기 성찰일지</h1>'+
+  '<p class="sub">1~3분 말하기 &middot; 점검하고 조정하기</p>'+
+  '<p class="lede">발표를 잘하는 사람과 못하는 사람이 따로 있는 것이 아닙니다. 자기 말하기를 <strong style="color:#15222D">점검하고 조정해 본 사람</strong>과 그러지 않은 사람이 있을 뿐입니다. 이 일지는 네 단계로 그 과정을 따라갑니다.</p>'+
+
+  '<div class="card" style="margin-top:22px">'+
+  '<h4 class="h" style="margin-top:0">이 일지에서 할 일</h4>'+
+  '<p class="body" style="font-size:13.5px;margin:0"><strong>1단계</strong> 나의 발표 성향을 검사하고, 그 결과에서 이번에 꼭 지킬 목표 하나를 고른다.<br>'+
+  '<strong>2단계</strong> 3P와 말하기 불안을 점검해 계획을 세우고, 계획 카드로 친구들 앞에서 한 번 나눈다.<br>'+
+  '<strong>3단계</strong> 대본을 쓰고, 뽑힌 핵심어 세 개만 들고 말한 뒤 자리에 앉자마자 점검한다.<br>'+
+  '<strong>4단계</strong> 친구들과 피드백을 주고받고, 문제 &rarr; 원인 &rarr; 해결로 성찰한다.</p></div>'+
+
+  '<p class="note">이 검사는 진단이 아니라 점검입니다. 정답도 좋은 점수도 없습니다. 그리고 <strong>긴장을 많이 한다는 것과 발표를 못한다는 것은 다릅니다.</strong> 불안도와 역량을 따로 재는 이유가 바로 그것입니다. 결과를 잘 쓰려면 솔직하게 답하는 것이 가장 중요합니다.</p>'+
+
+  '<div class="btnrow"><button class="btn" id="go">1단계 시작하기</button>'+
+  (storeGet(SKEY)?'<button class="ghost" id="resume">이어서 하기</button>':'')+'</div>'+
+  '<p class="hint">스무 문항, 약 3분 걸립니다.</p></div>';
+}
+
+/* =================== 1단계 : 문항 =================== */
+function viewQuiz(){
+  var it=SEQ[S.idx], sel=S.answers[it.id], segs="", h="", i;
+  for(i=0;i<SEQ.length;i++) segs+='<div class="seg'+(S.answers[SEQ[i].id]?" on":"")+'"></div>';
+  for(i=0;i<SCALE.length;i++){
+    var o=SCALE[i];
+    h+='<button class="opt'+(sel===o.v?" sel":"")+'" data-v="'+o.v+'" role="radio" aria-checked="'+(sel===o.v)+'">'+
+       '<span class="face" aria-hidden="true">'+o.face+'</span>'+
+       '<span><span class="olab">'+o.label+'</span><span class="osub">'+o.sub+'</span></span></button>';
+  }
+  var last=S.idx===SEQ.length-1;
+  var done=ITEMS.every(function(x){return S.answers[x.id];});
+  return '<div class="track" aria-hidden="true">'+segs+'</div>'+
+  '<div class="fade">'+
+  '<div class="rowb"><span class="phase">나의 발표 성향 &middot; 자기 점검</span><span class="cnt">'+(S.idx+1)+' / '+SEQ.length+'</span></div>'+
+  '<p class="q">'+esc(it.text)+'</p>'+
+  '<div role="radiogroup" aria-label="응답 선택">'+h+'</div></div>'+
+  '<div class="nav">'+
+  '<button class="ghost" id="prev"'+(S.idx===0?" disabled":"")+'>이전 문항</button>'+
+  (last?'<button class="btn" id="finish"'+(done?"":" disabled")+'>결과 보기</button>'
+       :'<button class="ghost" id="next">다음 문항</button>')+
+  '</div><p class="hint">숫자 키 1~5로도 답할 수 있습니다. 위에서부터 1~5입니다.</p>';
+}
+
+/* =================== 1단계 : 결과 + 목표 수립 =================== */
+function curveSVG(pre,during,post){
+  var W=580,H=190,P=36,xs=[P,W/2,W-P],vals=[pre,during,post],labels=["발표 전","발표 중","발표 후"];
+  function y(v){return H-P-(v/100)*(H-P*2);}
+  var pts=[],i,g="";
+  for(i=0;i<3;i++) pts.push([xs[i],y(vals[i])]);
+  var line=pts.map(function(p){return p[0]+","+p[1];}).join(" ");
+  for(i=0;i<3;i++){
+    g+='<circle cx="'+pts[i][0]+'" cy="'+pts[i][1]+'" r="6.5" fill="#fff" stroke="#8A4E7B" stroke-width="2.5"/>'+
+       '<text x="'+pts[i][0]+'" y="'+(pts[i][1]-15)+'" text-anchor="middle" font-size="14" font-weight="700" fill="#15222D">'+vals[i]+'</text>'+
+       '<text x="'+pts[i][0]+'" y="'+(H-P+21)+'" text-anchor="middle" font-size="12.5" fill="#64747F">'+labels[i]+'</text>';
+  }
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="긴장 곡선">'+
+    '<line x1="'+P+'" y1="'+(H-P)+'" x2="'+(W-P)+'" y2="'+(H-P)+'" stroke="#D4DBE1"/>'+
+    '<line x1="'+P+'" y1="'+y(50)+'" x2="'+(W-P)+'" y2="'+y(50)+'" stroke="#D4DBE1" stroke-dasharray="4 5"/>'+
+    '<polygon points="'+P+','+(H-P)+' '+line+' '+(W-P)+','+(H-P)+'" fill="#8A4E7B" opacity="0.1"/>'+
+    '<polyline points="'+line+'" fill="none" stroke="#8A4E7B" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'+
+    g+'</svg>';
+}
+function isGoalPicked(phase,text){
+  var i; for(i=0;i<S.goals.length;i++) if(S.goals[i].phase===phase && S.goals[i].text===text) return true;
+  return false;
+}
+function viewResult(){
+  var s=S.scores, t=decideType(s), T=TYPES[t.key], rx=buildPrescription(s), i;
+  var ph=[{k:"발표 전",v:s.pre},{k:"발표 중",v:s.during},{k:"발표 후",v:s.post}];
+  var peak=ph[0]; for(i=1;i<3;i++) if(ph[i].v>peak.v) peak=ph[i];
+  var trio=["prep","reg","lis"],strong=trio[0],weak=trio[0];
+  for(i=1;i<3;i++){ if(s[trio[i]]>s[strong]) strong=trio[i]; if(s[trio[i]]<s[weak]) weak=trio[i]; }
+
+  var bars="";
+  for(i=0;i<DIM_ORDER.length;i++){
+    var k=DIM_ORDER[i], d=DIM[k], inBar=s[k]>=16;
+    bars+='<div class="grow-wrap" style="margin-bottom:24px">'+
+      '<div class="grow"><span class="gname">'+d.name+'<span class="gdesc">'+d.desc+'</span></span></div>'+
+      '<div class="bar lg"><div class="fill" style="width:'+s[k]+'%;background:'+d.color+'">'+
+      (inBar?'<span class="bnum in">'+s[k]+'</span>':'')+'</div>'+
+      (inBar?'':'<span class="bnum out" style="left:calc('+s[k]+'% + 10px);color:'+d.color+'">'+s[k]+'</span>')+
+      '</div><p class="body" style="font-size:13.5px;margin:10px 0 0">'+d[levelKey(s[k])]+'</p></div>';
+  }
+
+  function block(head,title,list,phase){
+    var l="",j;
+    for(j=0;j<list.length;j++){
+      var on = isGoalPicked(phase,list[j]);
+      l += '<button class="rxpick'+(on?" sel":"")+'" data-phase="'+phase+'" data-text="'+esc(list[j])+'">'+
+           esc(list[j])+'</button>';
+    }
+    return '<div class="rx"><div class="rxh">'+head+'</div><div class="rxt">'+title+'</div>'+l+'</div>';
+  }
+
+  var goalCards = "";
+  if(S.goals.length){
+    var g = S.goals[0];
+    goalCards = '<div class="card">'+
+      '<div class="rowb"><span class="phase">나의 목표 &middot; '+esc(g.phase)+'</span>'+
+      '<button class="del" data-drop="0">지우기</button></div>'+
+      '<p class="body" style="margin:6px 0 10px;font-size:13.5px">고른 처방 &mdash; '+esc(g.text)+'</p>'+
+      '<label class="fl" for="ref0">청중에게 보여 줄 목표 문장으로 다듬기<span>언제, 무엇을, 얼마나</span></label>'+
+      '<textarea class="ta sm" id="ref0" data-ref="0" placeholder="예) 이번 말하기에서 한 문단마다 고개를 들어 친구들을 세 번 이상 본다.">'+esc(g.refined)+'</textarea>'+
+      '</div>';
+  } else {
+    goalCards = '<div class="empty">위 처방전에서 <b>하나</b>를 눌러 고르면 여기에 목표 칸이 생깁니다.<br>여러 개를 고르면 하나도 못 지킵니다. 이번 말하기에서는 딱 하나만 노립니다.</div>';
+  }
+
+  return '<div class="fade">'+
+  (S.flat?'<p class="warn">스무 문항에 모두 같은 번호로 답했습니다. 문항 중에는 <strong>반대로 물어보는 것</strong>도 섞여 있어서, 이대로는 결과가 실제 나와 다를 수 있습니다. 시간이 되면 다시 한번 천천히 해 보세요.</p>':'')+
+  '<div class="phase">1단계 &middot; 검사 결과</div>'+
+  '<div class="icon" aria-hidden="true">'+T.icon+'</div>'+
+  '<h2 class="sf tname">'+T.name+'</h2>'+
+  '<p class="tag">'+T.tagline+'</p>'+
+  '<p class="voice">'+T.voice+'</p>'+
+  '<p class="body">'+T.read+'</p>'+
+
+  '<h3 class="sf h">나의 발표 성향 분석표</h3>'+bars+
+  '<p class="body" style="font-size:13.5px">불안도만 높다고 발표를 못하는 것이 아닙니다. 네 영역을 나누어 보는 이유는, 같은 불안도라도 준비력과 조절력에 따라 결과가 크게 달라지기 때문입니다. 지금 나의 가장 든든한 힘은 <strong>'+DIM[strong].name+'</strong>이고, 가장 얇은 쪽은 <strong>'+DIM[weak].name+'</strong>입니다.</p>'+
+
+  '<h3 class="sf h">나의 긴장 곡선</h3>'+
+  '<div class="card">'+curveSVG(s.pre,s.during,s.post)+
+  '<p class="body" style="margin-top:10px;font-size:13.5px">점선은 중간 지점입니다. 세 구간 중 <strong>'+peak.k+'</strong>에서 긴장이 가장 높게 나왔습니다. 발표 전체를 통째로 고치려 하기보다 이 구간부터 다루는 편이 효율적입니다.</p></div>'+
+
+  '<h3 class="sf h">💊 나의 발표 처방전</h3>'+
+  '<p class="body" style="margin-bottom:14px">점수에 맞춰 뽑은 것이라 사람마다 내용이 다릅니다. 이 가운데 <strong>이번 말하기에서 꼭 지킬 것 하나</strong>를 눌러 고르세요. 고른 것이 나의 발표 목표가 됩니다. 다른 것을 누르면 그것으로 바뀝니다.</p>'+
+  block("BEFORE","발표 전",rx.before,"발표 전")+
+  block("DURING","발표 중",rx.during,"발표 중")+
+  block("AFTER","발표 후",rx.after,"발표 후")+
+
+  '<h3 class="sf h">나만의 발표 목표</h3>'+
+  '<p class="body" style="margin-bottom:12px">목표는 하나만 세웁니다. 여러 개를 노리면 발표 중에 아무것도 떠오르지 않습니다. “긴장하지 말자”처럼 마음가짐을 적으면 지켰는지 확인할 수 없으니, <strong>친구들이 보고 판단할 수 있는 행동</strong>으로 적으세요. 그래야 4단계에서 목표가 이루어졌는지 함께 점검할 수 있습니다.</p>'+
+  goalCards+
+
+  (s.anx>78?'<p class="note">긴장이 상당히 높게 나왔습니다. 혼자 견디는 것보다 선생님이나 믿을 만한 어른에게 이야기해 두면 발표 순서나 방식을 조정해 볼 수 있습니다. 도움을 요청하는 것도 조절력의 하나입니다.</p>':'')+
+
+  '<h3 class="sf h">지금 나에게 필요한 것</h3><p class="body">'+T.next+'</p>'+
+
+  '<h3 class="sf h">학번과 이름</h3>'+
+  '<div class="card"><p class="body" style="font-size:13.5px;margin:0 0 12px">일지를 내거나 인쇄할 때 쓰입니다.</p>'+
+  '<input class="inp" id="sid" placeholder="학번 (예: 20301)" aria-label="학번" style="margin-bottom:8px" value="'+esc(S.sid)+'">'+
+  '<input class="inp" id="sname" placeholder="이름" aria-label="이름" value="'+esc(S.sname)+'"></div>'+
+
+  '<div class="btnrow">'+
+  '<button class="btn" id="toPlan"'+(S.goals.length?"":" disabled")+'>2단계로 &mdash; 말하기 계획 세우기</button>'+
+  '<button class="ghost" id="again">검사 다시 하기</button></div>'+
+  (S.goals.length?'':'<p class="hint">처방전에서 목표를 한 개 이상 골라야 다음 단계로 넘어갈 수 있습니다.</p>')+
+  '</div>';
+}
+
+/* =================== 2단계 : 말하기 전 / 중 / 후 =================== */
+function chipRow(list,cur,attr,cls){
+  var h='<div class="chips">',i;
+  for(i=0;i<list.length;i++){
+    var o = typeof list[i]==="string" ? {k:list[i],label:list[i]} : list[i];
+    h+='<button class="chip'+(cls?(" "+cls):"")+(cur===o.k?" sel":"")+'" '+attr+'="'+esc(o.k)+'">'+esc(o.label)+'</button>';
+  }
+  return h+'</div>';
+}
+var GRADES = ["잘 지켰다","반쯤 지켰다","못 지켰다"];
+function gradeRow(cur,attr){
+  var h='<div class="grade">',i;
+  for(i=0;i<GRADES.length;i++)
+    h+='<button class="'+(cur===GRADES[i]?"sel":"")+'" '+attr+'="'+GRADES[i]+'">'+GRADES[i]+'</button>';
+  return h+'</div>';
+}
+function viewPlan(){
+  var s=S.scores, p=S.pre;
+  var peakLine = "";
+  if(s){
+    var ph=[{k:"발표 전",v:s.pre},{k:"발표 중",v:s.during},{k:"발표 후",v:s.post}],i;
+    var peak=ph[0]; for(i=1;i<3;i++) if(ph[i].v>peak.v) peak=ph[i];
+    peakLine = '<p class="tip">검사에서 <b>'+peak.k+'</b> 긴장이 가장 높게 나왔습니다('+peak.v+'점). 아래 칸을 채울 때 이 구간을 특히 신경 써 보세요.</p>';
+  }
+  var signs="",i2;
+  for(i2=0;i2<ANXSIGN.length;i2++){
+    var sg=ANXSIGN[i2];
+    signs+='<button class="chip pl'+(p.anxSigns[sg]?" sel":"")+'" data-sign="'+esc(sg)+'">'+esc(sg)+'</button>';
+  }
+  var placeOpts=["교실 앞에 서서","학급 전체 앞에서","화면을 함께 보며","마이크 없이","자리에 앉은 채로","1~3분 안에"];
+  var places="",i3;
+  for(i3=0;i3<placeOpts.length;i3++){
+    var pl=placeOpts[i3];
+    places+='<button class="chip'+(p.place[pl]?" sel":"")+'" data-place="'+esc(pl)+'">'+esc(pl)+'</button>';
+  }
+  return '<div class="fade">'+
+  '<div class="phase">2단계</div>'+
+  '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">1~3분 말하기 계획 세우기</h2>'+
+  '<p class="lede" style="margin-bottom:6px">친구들에게 말하고 싶은 <strong style="color:#15222D">나의 경험</strong>을 하나 골라, 말하기 전에 점검할 것을 채웁니다. 말하는 중에 점검할 것은 3단계에서, 말하기를 마친 뒤의 성찰은 4단계에서 이어집니다.</p>'+
+  peakLine+
+
+  /* ── 말하기 전 ── */
+  '<div class="panel pre" style="margin-top:22px">'+
+  '<div class="ph"><h3>말하기 전</h3><span class="when a">발표 전에 작성</span></div>'+
+  '<p class="plede">무엇을, 누구에게, 어떤 자리에서 말하는지 먼저 정해 둡니다. 이것을 정하지 않으면 대본이 길어지기만 합니다.</p>'+
+
+  '<label class="fl" for="topic">말하고 싶은 경험<span>한 가지만</span></label>'+
+  '<input class="inp" id="topic" data-f="pre.topic" placeholder="예) 처음으로 김장을 도운 날" value="'+esc(p.topic)+'">'+
+  '<label class="fl" for="why">이 경험을 고른 까닭</label>'+
+  '<textarea class="ta sm" id="why" data-f="pre.why" placeholder="예) 힘들었지만 그날 이후로 가족을 보는 눈이 달라졌기 때문이다.">'+esc(p.why)+'</textarea>'+
+
+  '<div class="sub3"><h4 class="h"><span class="pcol">3P</span> 말하기 상황 분석</h4>'+
+
+  '<label class="fl"><span class="pcol">PURPOSE</span> &nbsp;이 말하기의 목적</label>'+
+  chipRow(PURPOSE,p.purpose,"data-purpose")+
+  (p.purpose?'<p class="body" style="font-size:13px;margin:4px 0 0">'+
+    esc((PURPOSE.filter(function(x){return x.k===p.purpose;})[0]||{}).hint||"")+'</p>':'')+
+  '<textarea class="ta sm" id="purposeLine" data-f="pre.purposeLine" style="margin-top:8px" placeholder="한 줄로 &mdash; 이 발표가 끝나면 친구들이 무엇을 얻었으면 좋겠나요?">'+esc(p.purposeLine)+'</textarea>'+
+
+  '<label class="fl"><span class="pcol">PEOPLE</span> &nbsp;듣는 사람은 우리 반 친구들</label>'+
+  '<textarea class="ta sm" id="know" data-f="pre.know" placeholder="친구들이 이미 알고 있는 것은?">'+esc(p.know)+'</textarea>'+
+  '<textarea class="ta sm" id="wonder" data-f="pre.wonder" style="margin-top:7px" placeholder="친구들이 궁금해할 만한 것은?">'+esc(p.wonder)+'</textarea>'+
+  '<textarea class="ta sm" id="hook" data-f="pre.hook" style="margin-top:7px" placeholder="첫 15초에 관심을 끌 한마디는?">'+esc(p.hook)+'</textarea>'+
+
+  '<label class="fl"><span class="pcol">PLACE</span> &nbsp;말하는 자리의 조건<span>해당하는 것을 모두</span></label>'+
+  '<div class="chips">'+places+'</div>'+
+  '<textarea class="ta sm" id="placeLine" data-f="pre.placeLine" style="margin-top:8px" placeholder="그래서 조정할 것 &mdash; 예) 마이크가 없으니 뒷자리까지 들리게 목소리를 크게 낸다.">'+esc(p.placeLine)+'</textarea>'+
+  '</div>'+
+
+  '<div class="sub3"><h4 class="h">말하기 불안 점검</h4>'+
+  '<label class="fl" for="anxLevel">지금 내 긴장은 어느 정도<span>'+(p.anxLevel||"-")+' / 5</span></label>'+
+  '<input type="range" id="anxLevel" min="0" max="5" step="1" value="'+(p.anxLevel||0)+'" style="width:100%">'+
+  '<label class="fl">긴장하면 내 몸에 나타나는 것<span>해당하는 것을 모두</span></label>'+
+  '<div class="chips">'+signs+'</div>'+
+  '<label class="fl">내 긴장의 가장 큰 원인은</label>'+
+  chipRow(ANXCAUSE.map(function(x){return {k:x,label:x};}),p.anxCause,"data-anxcause","pl")+
+  '<label class="fl" for="warmup">발표 직전에 할 나의 예열 루틴<span>한 가지만, 순서까지</span></label>'+
+  '<textarea class="ta sm" id="warmup" data-f="pre.warmup" placeholder="예) 자리에서 4초 들이마시고 6초 내쉬기를 세 번 하고, 첫 문장만 속으로 한 번 말해 본다.">'+esc(p.warmup)+'</textarea>'+
+  '<p class="tip">긴장을 지우는 것이 목표가 아닙니다. 긴장한 채로도 할 수 있는 <b>순서</b>를 만들어 두는 것이 목표입니다.</p>'+
+  '</div></div>'+
+
+  '<h3 class="sf h">계획 나누기</h3>'+
+  '<p class="body" style="font-size:13.5px;margin-bottom:12px">세운 계획을 카드로 만들어 줍니다. 카드는 두 가지입니다. <strong>청중용</strong>은 캡처해 패들렛에 올려 발표하는 동안 모두가 함께 보고, <strong>발표자용</strong>은 준비한 내용이 다 담겨 있어 내 앞에 두고 봅니다. 대본 없이 말하는 첫 연습입니다.</p>'+
+  '<div class="btnrow">'+
+  '<button class="btn" id="openPlanCard"'+(planCardReady()?"":" disabled")+'>말하기 계획 카드 만들기</button>'+
+  '<button class="ghost" id="toTalk">3단계로 &mdash; 대본 쓰고 발표하기</button></div>'+
+  (planCardReady()
+    ? '<p class="hint">카드 아래에서 발표자용과 청중용을 바꿔 가며 각각 캡처할 수 있습니다. 한 화면에 들어가야 해서 각 칸은 두세 줄에서 끊습니다.</p>'
+    : '<p class="hint">말하고 싶은 경험과 말하기의 목적을 채우면 카드를 만들 수 있습니다.</p>')+
+  '</div>';
+}
+
+/* ===================================================
+   말하기 계획 카드 — 2단계를 마치고 패들렛에 올릴 한 장.
+   3단계의 발표 자료가 넘기는 슬라이드라면, 이것은 한 화면에
+   다 담겨야 하므로 각 칸을 두세 줄에서 끊는다.
+   =================================================== */
+function planCardReady(){
+  return !!(S.pre.topic && (S.pre.purpose || S.goals.length));
+}
+function pcVal(t){
+  return (t && String(t).trim()) ? esc(t) : '<span class="none">아직 안 썼어요</span>';
+}
+/* 발표자용 : 내가 발표하면서 곁에 두고 보는 카드. 준비한 것이 다 들어간다. */
+function planCardSpeaker(){
+  var p = S.pre, s = S.scores;
+  var T = s ? TYPES[decideType(s).key] : null;
+  var who = ((S.sid||"") + " " + (S.sname||"")).trim() || "이름 없음";
+  var places = Object.keys(p.place||{}).filter(function(k){ return p.place[k]; });
+  var pur = PURPOSE.filter(function(x){ return x.k===p.purpose; })[0];
+  var purText = pur ? ('<em>'+esc(pur.label)+'</em>' + (p.purposeLine ? ' &middot; '+esc(p.purposeLine) : ''))
+                    : pcVal(p.purposeLine);
+  return '<div class="pc">'+
+    '<div class="pc-head"><span class="pc-who">'+esc(who)+'</span>'+
+    (T?'<span class="pc-type">'+T.icon+' <b>'+esc(T.name)+'</b></span>':'')+'</div>'+
+    '<div class="pc-body">'+
+    '<div class="pc-topic">'+pcVal(p.topic)+'</div>'+
+    (p.why?'<div class="pc-why">'+esc(p.why)+'</div>':'')+
+    (S.goals.length?
+      '<div class="pc-goal"><div class="lab">이번 말하기에서 꼭 지킬 것</div>'+
+      '<div class="txt">'+esc(goalList()[0])+'</div></div>':'')+
+    '<div class="pc-rows">'+
+    '<div class="pc-row"><div class="pc-key">목적</div><div class="pc-val">'+purText+'</div></div>'+
+    '<div class="pc-row"><div class="pc-key">청중</div><div class="pc-val">'+
+      (p.wonder ? '궁금해할 것 &mdash; '+esc(p.wonder) : pcVal(p.know))+'</div></div>'+
+    '<div class="pc-row"><div class="pc-key">자리</div><div class="pc-val">'+
+      (places.length ? esc(places.join(" · ")) : pcVal(p.placeLine))+'</div></div>'+
+    '</div>'+
+    '<div class="pc-gap"></div>'+
+    (p.hook?'<div class="pc-hook">“'+esc(p.hook)+'”</div>':'')+
+    '<div class="pc-foot">'+
+    '<span>예열 &mdash; '+pcVal(p.warmup)+'</span>'+
+    (p.anxLevel?'<span class="pc-nerve">긴장 <b>'+p.anxLevel+'</b>/5</span>':'')+
+    '</div></div></div>';
+}
+/* 청중용 : 발표하는 동안 띄워 두는 카드.
+   준비 내용을 미리 읽히면 청중의 눈이 화면에 묶이므로,
+   누가 무엇을 말하는지와 '어디를 보고 들을지'만 남긴다. */
+function planCardAudience(){
+  var p = S.pre;
+  var who = ((S.sid||"") + " " + (S.sname||"")).trim() || "이름 없음";
+  return '<div class="pc">'+
+    '<div class="pc-head"><span class="pc-who">'+esc(who)+'</span></div>'+
+    '<div class="pc-aud">'+
+    '<div class="pc-aud-label">오늘 들려줄 이야기</div>'+
+    '<div class="pc-aud-topic">'+pcVal(p.topic)+'</div>'+
+    (S.goals.length?
+      '<div class="pc-aud-goal"><div class="lab">이 발표에서 지켜볼 것</div>'+
+      '<div class="txt">'+esc(goalList()[0])+'</div></div>'+
+      '<div class="pc-aud-ask">이 한 가지가 <b>실제로 일어났는지</b> 보면서 들어 주세요.<br>'+
+      '본 장면을 근거로 이야기해 주면 가장 큰 도움이 됩니다.</div>'
+      :'<div class="pc-aud-ask" style="margin-top:26px">1단계에서 목표를 정하면 여기에 들어갑니다.</div>')+
+    '</div></div>';
+}
+function paintPlanCard(){
+  var box = document.getElementById("pcard");
+  if(!S.pcard.on){ box.className="off"; box.innerHTML=""; return; }
+  box.className = "";
+  var aud = (S.pcard.mode === "audience");
+
+  box.innerHTML =
+    (aud ? planCardAudience() : planCardSpeaker())+
+    '<div class="pcbar">'+
+    '<span class="pcseg">'+
+    '<button data-pcmode="speaker" class="'+(aud?"":"on")+'">발표자용</button>'+
+    '<button data-pcmode="audience" class="'+(aud?"on":"")+'">청중용</button>'+
+    '</span>'+
+    '<span>'+(aud ? '이 화면을 캡처해 패들렛에 올리세요'
+                  : '발표할 때 내 앞에 두고 보는 카드입니다')+'</span>'+
+    '<button id="pcClose">닫기 (ESC)</button></div>';
+
+  box.querySelectorAll("[data-pcmode]").forEach(function(b){
+    b.addEventListener("click", function(){
+      S.pcard.mode = this.getAttribute("data-pcmode");
+      save(); paintPlanCard();
+    });
+  });
+  document.getElementById("pcClose").addEventListener("click", closePlanCard);
+  box.addEventListener("click", function(e){ if(e.target===box) closePlanCard(); });
+}
+function openPlanCard(){ S.pcard.on = true; paintPlanCard(); }
+function closePlanCard(){ S.pcard.on = false; paintPlanCard(); }
+
+/* ── 3단계 안에 들어가는 '말하기 중' 패널 ── */
+function cuePanelSet(){
+  var c=S.cue;
+  var paraSel = PARA.filter(function(x){return x.k===c.para;})[0];
+  var nonSel = NONPARA.filter(function(x){return x.k===c.nonpara;})[0];
+  return '<div class="panel dur" style="margin-top:22px">'+
+  '<div class="ph"><h3>말하기 중 &mdash; 점검 신호 정하기</h3><span class="when b">발표하기 전에</span></div>'+
+  '<p class="plede">발표하는 동안에는 글을 쓸 수 없습니다. 그래서 <strong>미리 점검 신호를 두 개만</strong> 정해 둡니다. 준언어에서 하나, 비언어에서 하나입니다. 이 두 줄은 아래 발표 화면에도 계속 떠 있습니다.</p>'+
+
+  '<label class="fl">준언어 &mdash; 말에 얹히는 소리<span>하나만</span></label>'+
+  chipRow(PARA,c.para,"data-para","am")+
+  (paraSel?'<textarea class="ta sm" id="paraFix" data-f="cue.paraFix" style="margin-top:8px">'+esc(c.paraFix||paraSel.fix)+'</textarea>':'')+
+
+  '<label class="fl">비언어 &mdash; 몸으로 드러나는 것<span>하나만</span></label>'+
+  chipRow(NONPARA,c.nonpara,"data-nonpara","am")+
+  (nonSel?'<textarea class="ta sm" id="nonparaFix" data-f="cue.nonparaFix" style="margin-top:8px">'+esc(c.nonparaFix||nonSel.fix)+'</textarea>':'')+
+  '</div>';
+}
+function cuePanelCheck(){
+  var c=S.cue;
+  var paraSel = PARA.filter(function(x){return x.k===c.para;})[0];
+  var nonSel = NONPARA.filter(function(x){return x.k===c.nonpara;})[0];
+  return '<div class="panel dur" id="midcheck" style="margin-top:22px">'+
+  '<div class="ph"><h3>발표 직후 바로 체크</h3><span class="when b">자리에 돌아오자마자</span></div>'+
+  '<p class="plede">시간이 지나면 기억이 좋은 쪽으로 바뀝니다. 내가 정한 신호 두 개를 실제로 지켰는지, 앉자마자 표시하세요.</p>'+
+  (c.para?'<label class="fl">'+esc((paraSel||{}).label||"")+'</label>'+gradeRow(c.doneP,"data-donep"):'')+
+  (c.nonpara?'<label class="fl" style="margin-top:14px">'+esc((nonSel||{}).label||"")+'</label>'+gradeRow(c.doneN,"data-donen"):'')+
+  ((c.para||c.nonpara)?'<label class="fl" for="midMemo">발표 중에 실제로 일어난 일 한 줄</label>'+
+   '<textarea class="ta sm" id="midMemo" data-f="cue.midMemo" placeholder="예) 두 번째 문단에서 말이 빨라진 걸 알아차리고 한 번 숨을 쉬었다.">'+esc(c.midMemo)+'</textarea>'
+   :'<div class="empty">먼저 위에서 점검 신호를 골라 주세요.</div>')+
+  '</div>';
+}
+
+/* ── 4단계 안에 들어가는 '말하기 후' 패널 ── */
+function postPanel(){
+  var q=S.post;
+  return '<div class="panel post" style="margin-top:22px">'+
+  '<div class="ph"><h3>말하기 후</h3><span class="when c">피드백을 받은 뒤 작성</span></div>'+
+  '<p class="plede">아쉬운 점만 적으면 성찰이 아니라 후회가 됩니다. 잘된 점을 먼저 적고, 문제는 <strong>하나만</strong> 골라 원인과 해결까지 끝까지 밀어붙입니다.</p>'+
+
+  '<label class="fl" for="good">잘된 점 한 가지<span>먼저</span></label>'+
+  '<textarea class="ta sm" id="good" data-f="post.good" placeholder="예) 첫 문장을 준비한 대로 또박또박 말해서 시작이 안정됐다.">'+esc(q.good)+'</textarea>'+
+
+  '<div class="sub3"><h4 class="h">문제 &rarr; 원인 &rarr; 해결</h4>'+
+  '<label class="fl" for="problem">문제 &mdash; 무엇이 잘 안 되었나<span>한 가지만</span></label>'+
+  '<textarea class="ta sm" id="problem" data-f="post.problem" placeholder="예) 중간에 할 말을 잊어버려 3초쯤 말이 끊겼다.">'+esc(q.problem)+'</textarea>'+
+  '<label class="fl">원인 &mdash; 왜 그랬을까</label>'+
+  chipRow(CAUSE.map(function(x){return {k:x,label:x};}),q.cause,"data-cause","pl")+
+  '<textarea class="ta sm" id="causeLine" data-f="post.causeLine" style="margin-top:8px" placeholder="고른 원인을 내 경우에 맞게 한 줄로 &mdash; 예) 대본을 문장으로 외웠더니 한 군데가 막히자 다음이 떠오르지 않았다.">'+esc(q.causeLine)+'</textarea>'+
+  '<label class="fl" for="solution">해결 &mdash; 다음 발표에서 할 행동 하나<span>언제, 무엇을, 얼마나</span></label>'+
+  '<textarea class="ta sm" id="solution" data-f="post.solution" placeholder="예) 다음 발표는 문장이 아니라 핵심어 세 개만 외우고, 연습할 때 일부러 한 번 멈춰 보는 연습을 두 번 한다.">'+esc(q.solution)+'</textarea>'+
+  '<p class="tip am">해결은 <b>다짐이 아니라 행동</b>이어야 합니다. “더 열심히 연습한다”가 아니라 “핵심어 세 개만 외운다”처럼 적으세요.</p>'+
+  '</div>'+
+
+  '<div class="sub3"><h4 class="h">나의 목표는 이루어졌나</h4>'+
+  (S.goals.length?'<p class="body" style="font-size:13.5px;margin-bottom:8px">내 목표 &mdash; '+esc(goalList()[0])+'</p>'+
+  chipRow([{k:"이루었다",label:"이루었다"},{k:"반쯤 이루었다",label:"반쯤 이루었다"},{k:"아직이다",label:"아직이다"}],q.goalCheck,"data-goalcheck","pl")+
+  '<textarea class="ta sm" id="goalWhy" data-f="post.goalWhy" style="margin-top:8px" placeholder="그렇게 판단한 근거 &mdash; 실제로 내가 한 일로 적어 보세요.">'+esc(q.goalWhy)+'</textarea>'
+  :'<div class="empty">1단계에서 목표를 먼저 정해 주세요.</div>')+
+  '</div></div>';
+}
+
+/* =================== 3단계 : 대본 -> 키워드 -> 발표 자료 =================== */
+function lenMsg(sec){
+  return sec<60 ? "1분보다 짧습니다 — 조금 더 채워 보세요"
+       : (sec>180 ? "3분을 넘습니다 — 덜 중요한 대목을 덜어 내세요" : "1~3분 안에 들어옵니다");
+}
+function meterHTML(){
+  var sec = speakSeconds(S.talk.script);
+  var chars = (S.talk.script||"").replace(/\s/g,"").length;
+  return '<span><b>'+mmss(sec)+'</b> 예상 시간</span><span>'+chars+'자</span>'+
+         '<span style="font-size:12px">'+lenMsg(sec)+'</span>';
+}
+/* 대본을 고치는 동안 이 구획만 다시 그린다 (입력 칸의 초점을 잃지 않도록) */
+function kwZoneHTML(){
+  var t = S.talk;
+  var cands = extractKeywords(t.script, 9);
+  var chosen = t.keywords.filter(function(x){return x;});
+  if(!cands.length && !chosen.length)
+    return '<h3 class="sf h">핵심어 세 개</h3>'+
+           '<div class="empty">대본을 쓰면 여기에 핵심어 후보가 나타납니다.</div>';
+  var candChips = "";
+  cands.forEach(function(w){
+    var on = chosen.indexOf(w)>=0;
+    candChips += '<button class="chip am'+(on?" sel":"")+'" data-kw="'+esc(w)+'">'+esc(w)+'</button>';
+  });
+  var kwCards = "";
+  [0,1,2].forEach(function(i){
+    kwCards += '<div class="kwcard"><div class="kwn">핵심어 '+(i+1)+'</div>'+
+      '<input class="kwe" data-kwi="'+i+'" placeholder="비어 있음" value="'+esc(t.keywords[i]||"")+'"></div>';
+  });
+  return '<h3 class="sf h">핵심어 세 개</h3>'+
+    '<p class="body" style="font-size:13.5px;margin-bottom:10px">대본에서 자주 나오고 중요해 보이는 낱말을 뽑았습니다. <strong>자동으로 뽑은 것이라 틀릴 수 있습니다.</strong> 눌러서 바꾸거나 직접 써 넣으세요. 어떤 낱말이 내 이야기의 중심인지 고르는 것도 점검입니다.</p>'+
+    '<div class="chips">'+candChips+'</div>'+
+    '<div class="btnrow" style="margin-top:10px"><button class="ghost" id="autoPick">가장 점수 높은 세 개로 채우기</button>'+
+    '<button class="ghost" id="clearKw">비우기</button></div>'+
+    '<div class="kwrow" style="margin-top:14px">'+kwCards+'</div>'+
+    '<p class="hint">말할 순서대로 1, 2, 3에 놓으세요. 칸을 직접 고쳐 쓸 수도 있습니다.</p>';
+}
+function actZoneHTML(){
+  var chosen = S.talk.keywords.filter(function(x){return x;});
+  return '<div class="btnrow">'+
+    '<button class="btn" id="openDeck"'+(chosen.length?"":" disabled")+'>발표 자료 띄우기</button>'+
+    '<button class="ghost" id="toMid">발표를 마쳤어요 — 바로 점검하기</button></div>'+
+    (chosen.length?'<p class="hint">전체 화면에 뜹니다. 화면을 누르거나 방향키로 넘기고, ESC로 닫습니다.</p>'
+                  :'<p class="hint">핵심어를 한 개 이상 채우면 발표 자료를 띄울 수 있습니다.</p>');
+}
+function viewTalk(){
+  var t=S.talk;
+  var sec = speakSeconds(t.script);
+  var gcls = sec<60 ? "lo" : (sec>180 ? "hi" : "");
+  var gw = Math.max(2, Math.min(100, Math.round(sec/210*100)));
+
+  return '<div class="fade">'+
+  '<div class="phase">3단계</div>'+
+  '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">1~3분 말하기</h2>'+
+  '<p class="lede">대본을 쓰면 핵심어 세 개를 자동으로 뽑아 발표 자료를 만들어 줍니다. <strong style="color:#15222D">자료를 꾸미는 데 시간을 쓰지 않는 것이 목적입니다.</strong> 화면에는 낱말 세 개만 뜨고, 나머지는 그 자리에서 말로 채웁니다.</p>'+
+
+  '<h3 class="sf h">대본 쓰기</h3>'+
+  '<p class="body" style="font-size:13.5px;margin-bottom:8px">완성된 문장이 아니어도 됩니다. 말할 순서대로 죽 적어 보세요. 문장 끝에 마침표를 찍으면 핵심어를 더 정확하게 뽑습니다.</p>'+
+  '<textarea class="plan" id="script" data-f="talk.script" style="min-height:190px" placeholder="예) 작년 김장 날 이야기를 하고 싶다. 아침부터 배추를 씻었다. 손이 시려서 그만하고 싶었다. 그런데 할머니가 웃으면서 양념을 묻혀 주셨다. ...">'+esc(t.script)+'</textarea>'+
+  '<div class="meter" id="meter">'+meterHTML()+'</div>'+
+  '<div class="gauge '+gcls+'" id="gauge"><i style="width:'+gw+'%"></i></div>'+
+
+  '<div id="kwzone">'+kwZoneHTML()+'</div>'+
+  cuePanelSet()+
+  '<div id="actzone">'+actZoneHTML()+'</div>'+
+  cuePanelCheck()+
+  '<div class="btnrow"><button class="btn" id="toReflect">4단계로 &mdash; 피드백 주고받고 성찰하기</button></div>'+
+  '</div>';
+}
+
+/* =================== 발표 자료 (전체 화면) =================== */
+var deckTimer = null;
+function slidesOf(){
+  var a = [{type:"title"}];
+  S.talk.keywords.forEach(function(k){ if(k) a.push({type:"kw",text:k}); });
+  return a;
+}
+function paintDeck(){
+  var d = document.getElementById("deck");
+  if(!S.deck.on){ d.className="off"; d.innerHTML=""; return; }
+  d.className="";
+  var sl = slidesOf(), i = Math.max(0, Math.min(S.deck.i, sl.length-1));
+  S.deck.i = i;
+  var cur = sl[i], body;
+  if(cur.type==="title"){
+    body = '<div class="dtitle">'+esc(S.pre.topic||"나의 경험 이야기")+'</div>'+
+           '<div class="dwho">'+esc((S.sname||"")+(S.sid?(" · "+S.sid):""))+'</div>';
+  } else {
+    body = '<div class="dnum">'+i+' / '+(sl.length-1)+'</div><div class="dkw">'+esc(cur.text)+'</div>';
+  }
+  var pl = PARA.filter(function(x){return x.k===S.cue.para;})[0];
+  var nl = NONPARA.filter(function(x){return x.k===S.cue.nonpara;})[0];
+  var cues = "";
+  if(S.deck.showCues && (pl||nl)){
+    cues = '<div class="dcues">'+
+      (pl?'<span>'+esc(pl.label)+'</span> '+esc(S.cue.paraFix||pl.fix)+'<br>':'')+
+      (nl?'<span>'+esc(nl.label)+'</span> '+esc(S.cue.nonparaFix||nl.fix):'')+'</div>';
+  } else {
+    cues = '<div class="dcues" style="color:#7E93A0">점검 신호 숨김</div>';
+  }
+  var dots = '<div class="ddots">';
+  sl.forEach(function(x,j){ dots += '<i class="'+(j===i?"on":"")+'"></i>'; });
+  dots += '</div>';
+  var tcls = S.deck.sec>180 ? "over" : (S.deck.sec>150 ? "warn" : "");
+
+  d.innerHTML =
+    '<div class="dstage" id="dstage">'+body+'</div>'+
+    '<div class="dfoot">'+cues+
+    '<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">'+dots+
+    '<span class="dtime '+tcls+'" id="dtime">'+mmss(S.deck.sec)+'</span>'+
+    '<button class="dx" id="dcue">'+(S.deck.showCues?"신호 숨기기":"신호 보기")+'</button>'+
+    '<button class="dx" id="dclose">닫기 (ESC)</button></div></div>';
+
+  document.getElementById("dstage").addEventListener("click", function(){ deckNext(1); });
+  document.getElementById("dcue").addEventListener("click", function(){
+    S.deck.showCues = !S.deck.showCues; paintDeck();
+  });
+  document.getElementById("dclose").addEventListener("click", closeDeck);
+}
+function deckNext(step){
+  var n = slidesOf().length;
+  S.deck.i = Math.max(0, Math.min(S.deck.i + step, n-1));
+  paintDeck();
+}
+function openDeck(){
+  S.deck.on = true; S.deck.i = 0; S.deck.sec = 0;
+  paintDeck();
+  if(deckTimer) clearInterval(deckTimer);
+  deckTimer = setInterval(function(){
+    S.deck.sec++;
+    var el = document.getElementById("dtime");
+    if(el){
+      el.textContent = mmss(S.deck.sec);
+      el.className = "dtime " + (S.deck.sec>180?"over":(S.deck.sec>150?"warn":""));
+    }
+  }, 1000);
+}
+function closeDeck(){
+  S.deck.on = false;
+  if(deckTimer){ clearInterval(deckTimer); deckTimer=null; }
+  paintDeck();
+}
+
+/* =================== 4단계 : 피드백 =================== */
+function viewReflect(){
+  var f = S.fb;
+  var tabs = '<div class="modes">'+
+    '<button class="'+(f.mode==="audience"?"on":"")+'" data-mode="audience">청중일 때</button>'+
+    '<button class="'+(f.mode==="speaker"?"on":"")+'" data-mode="speaker">발표자일 때</button></div>';
+
+  var body;
+  if(f.mode==="audience"){
+    var d = f.draft;
+    var marks = [{k:"이루었다",label:"○ 이루었다"},{k:"반쯤",label:"△ 반쯤"},{k:"아직",label:"✕ 아직"}];
+    var list = "";
+    if(f.given.length){
+      f.given.forEach(function(g,gi){
+        var mc = g.mark==="이루었다" ? "o" : (g.mark==="반쯤" ? "t" : "x");
+        list += '<div class="fbitem"><div class="fbtop"><span class="fbname">'+esc(g.name)+'</span>'+
+          '<span class="fbmark '+mc+'">'+esc(g.mark||"-")+'</span></div>'+
+          (g.goal?'<div class="fbl"><b>목표</b> '+esc(g.goal)+'</div>':'')+
+          (g.why?'<div class="fbl"><b>근거</b> '+esc(g.why)+'</div>':'')+
+          (g.good?'<div class="fbl"><b>좋았던 점</b> '+esc(g.good)+'</div>':'')+
+          (g.next?'<div class="fbl"><b>제안</b> '+esc(g.next)+'</div>':'')+
+          '<div style="margin-top:8px"><button class="del" data-fbdrop="'+gi+'">지우기</button></div></div>';
+      });
+    } else {
+      list = '<div class="empty">아직 쓴 피드백이 없습니다.<br>발표가 끝날 때마다 위 칸을 채우고 <b>피드백 저장</b>을 누르면 여기에 쌓입니다.</div>';
+    }
+
+    body =
+    '<div class="card">'+
+    '<h4 class="h" style="margin-top:0">좋은 피드백의 조건</h4>'+
+    '<ul class="rules">'+
+    '<li>사람이 아니라 <b>행동</b>에 대해 말합니다. “발표를 못했다”가 아니라 “뒷자리에서 잘 안 들렸다”.</li>'+
+    '<li>내가 <b>본 장면</b>을 근거로 댑니다. 느낌만 말하면 발표자가 무엇을 고쳐야 할지 알 수 없습니다.</li>'+
+    '<li>제안은 <b>하나만</b> 합니다. 여러 개를 주면 하나도 남지 않습니다.</li>'+
+    '<li>발표자가 스스로 세운 <b>목표</b>를 기준으로 봅니다. 내 기준이 아닙니다.</li>'+
+    '</ul></div>'+
+
+    '<h3 class="sf h">피드백 쓰기</h3>'+
+    '<label class="fl" for="fbname">발표자 이름</label>'+
+    '<input class="inp" id="fbname" data-f="fb.draft.name" placeholder="누구의 발표였나요" value="'+esc(d.name)+'">'+
+    '<label class="fl" for="fbgoal">발표자가 세운 목표<span>발표 전에 들은 대로</span></label>'+
+    '<textarea class="ta sm" id="fbgoal" data-f="fb.draft.goal" placeholder="예) 한 문단마다 고개를 들어 친구들을 세 번 이상 본다.">'+esc(d.goal)+'</textarea>'+
+    '<label class="fl">그 목표가 이루어졌나요</label>'+
+    chipRow(marks,d.mark,"data-fbmark","pl")+
+    '<label class="fl" for="fbwhy">그렇게 본 근거<span>내가 본 장면으로</span></label>'+
+    '<textarea class="ta sm" id="fbwhy" data-f="fb.draft.why" placeholder="예) 세 번쯤 고개를 들었고, 뒤쪽까지 눈이 닿았다.">'+esc(d.why)+'</textarea>'+
+    '<label class="fl" for="fbgood">좋았던 점 한 가지</label>'+
+    '<textarea class="ta sm" id="fbgood" data-f="fb.draft.good" placeholder="예) 김장 이야기에서 손이 시렸다는 말이 생생해서 그 장면이 그려졌다.">'+esc(d.good)+'</textarea>'+
+    '<label class="fl" for="fbnext">다음에 이렇게 하면 더 좋겠다<span>하나만</span></label>'+
+    '<textarea class="ta sm" id="fbnext" data-f="fb.draft.next" placeholder="예) 마지막 문장을 조금 천천히 말하면 마무리가 더 또렷할 것 같다.">'+esc(d.next)+'</textarea>'+
+    '<div class="btnrow"><button class="btn sm" id="fbsave"'+(d.name?"":" disabled")+'>피드백 저장</button>'+
+    '<span class="cnt">지금까지 '+f.given.length+'명</span></div>'+
+    (d.name?'':'<p class="hint">발표자 이름을 적어야 저장할 수 있습니다.</p>')+
+
+    '<h3 class="sf h">내가 쓴 피드백 <span class="cnt">'+f.given.length+'명</span></h3>'+
+    list+
+    (f.given.length?'<div class="btnrow">'+
+      '<button class="btn sm" id="fbcopy">전체 복사하기</button>'+
+      '<button class="ghost" id="fbcsv">CSV로 내려받기</button></div>'+
+      '<p class="hint">수업이 끝나면 복사해서 구글 클래스룸에 붙여넣거나, CSV 파일을 제출하세요.</p>':'');
+  } else {
+    var mySelf = S.post.goalCheck;
+    body =
+    '<p class="lede">친구들이 말해 준 피드백을 받아 적습니다. 다 적으려 하지 말고, <strong style="color:#15222D">내 목표와 관련된 것</strong>만 고르세요.</p>'+
+    (S.goals.length?'<div class="card" style="margin-top:16px"><span class="phase">내가 세운 목표</span>'+
+      '<p class="body" style="margin:8px 0 0">'+esc(goalList()[0])+'</p></div>'
+      :'<div class="empty" style="margin-top:16px">1단계에서 목표를 먼저 정해 주세요.</div>')+
+
+    '<label class="fl" for="recvGood">친구들이 꼽은 좋았던 점</label>'+
+    '<textarea class="ta sm" id="recvGood" data-f="fb.recvGood" placeholder="두세 명의 말을 모아 적어 보세요.">'+esc(S.fb.recvGood)+'</textarea>'+
+    '<label class="fl" for="recvNext">친구들이 준 제안</label>'+
+    '<textarea class="ta sm" id="recvNext" data-f="fb.recvNext" placeholder="겹치는 제안이 있으면 그것부터 적으세요. 여러 사람이 같은 말을 했다면 눈여겨볼 대목입니다.">'+esc(S.fb.recvNext)+'</textarea>'+
+    '<label class="fl">친구들이 본 나의 목표 달성</label>'+
+    chipRow([{k:"이루었다",label:"이루었다"},{k:"반쯤 이루었다",label:"반쯤 이루었다"},{k:"아직이다",label:"아직이다"}],S.fb.audienceMark,"data-audmark","pl")+
+
+    postPanel()+
+
+    '<div class="card" style="margin-top:20px">'+
+    '<h4 class="h" style="margin-top:0">내 눈과 친구들의 눈</h4>'+
+    '<div class="cmp2">'+
+    '<div><div class="k">내가 본 나</div><div class="v">'+esc(mySelf||"-")+'</div></div>'+
+    '<div><div class="k">친구들이 본 나</div><div class="v">'+esc(S.fb.audienceMark||"-")+'</div></div>'+
+    '</div>'+
+    ((mySelf&&S.fb.audienceMark)?
+      '<p class="body" style="font-size:13.5px;margin:12px 0 0">'+
+      (mySelf===S.fb.audienceMark
+        ? '두 눈이 같은 곳을 보고 있습니다. 내 점검이 실제와 잘 맞았다는 뜻입니다.'
+        : '두 눈이 다릅니다. <strong>어느 쪽이 맞는지 따지는 것보다, 왜 다르게 보였는지가 더 중요합니다.</strong> 그 차이가 바로 다음 발표에서 조정할 지점입니다.')+
+      '</p>' : '<p class="body" style="font-size:13px;margin:12px 0 0">위 “말하기 후”에서 목표 달성을 표시하면 여기서 나란히 볼 수 있습니다.</p>')+
+    '</div>';
+  }
+
+  return '<div class="fade">'+
+  '<div class="phase">4단계</div>'+
+  '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">듣기·말하기 성찰하기</h2>'+
+  '<p class="lede" style="margin-bottom:4px">한 시간 동안 나는 발표자이기도 하고 청중이기도 합니다. 역할에 맞는 쪽을 고르세요.</p>'+
+  tabs + body + '</div>';
+}
+
+function fbText(){
+  var out = "[말하기 피드백] " + (S.sid?S.sid+" ":"") + (S.sname||"") + "\n";
+  S.fb.given.forEach(function(g,i){
+    out += "\n" + (i+1) + ". " + g.name + " — 목표 달성: " + (g.mark||"-") + "\n";
+    if(g.goal) out += "   목표: " + g.goal + "\n";
+    if(g.why)  out += "   근거: " + g.why + "\n";
+    if(g.good) out += "   좋았던 점: " + g.good + "\n";
+    if(g.next) out += "   제안: " + g.next + "\n";
+  });
+  return out;
+}
+function fbCsv(){
+  function q(v){ return '"' + String(v==null?"":v).replace(/"/g,'""') + '"'; }
+  var rows = [["쓴사람학번","쓴사람이름","발표자","목표","목표달성","근거","좋았던점","제안"].map(q).join(",")];
+  S.fb.given.forEach(function(g){
+    rows.push([S.sid,S.sname,g.name,g.goal,g.mark,g.why,g.good,g.next].map(q).join(","));
+  });
+  return "﻿" + rows.join("\r\n");
+}
+
+/* =================== 인쇄용 일지 =================== */
+function buildSheet(){
+  var s = S.scores, sheet = document.getElementById("sheet");
+  var T = s ? TYPES[decideType(s).key] : null;
+  function v(x){ return (x && String(x).trim()) ? esc(x) : '<span class="blank">(비어 있음)</span>'; }
+  function signs(){
+    var a = Object.keys(S.pre.anxSigns||{}).filter(function(k){return S.pre.anxSigns[k];});
+    return a.length ? esc(a.join(", ")) : '<span class="blank">(비어 있음)</span>';
+  }
+  function places(){
+    var a = Object.keys(S.pre.place||{}).filter(function(k){return S.pre.place[k];});
+    return a.length ? esc(a.join(", ")) : '<span class="blank">(비어 있음)</span>';
+  }
+  var pl = PARA.filter(function(x){return x.k===S.cue.para;})[0];
+  var nl = NONPARA.filter(function(x){return x.k===S.cue.nonpara;})[0];
+
+  var h = '<h1>말하기 성찰일지</h1>'+
+  '<p class="who">1~3분 말하기 · 점검하고 조정하기 &nbsp;|&nbsp; '+
+  (S.sid?esc(S.sid)+' ':'')+esc(S.sname||'')+'</p>';
+
+  h += '<section><h2>1단계 · 나만의 발표 목표</h2>';
+  if(s){
+    h += '<p><span class="k">나의 유형</span> '+esc(T.name)+' — '+esc(T.tagline)+'</p>'+
+    '<p><span class="k">점수</span> 불안도 '+s.anx+' / 준비력 '+s.prep+' / 조절력 '+s.reg+' / 경청·피드백 '+s.lis+'</p>'+
+    '<p><span class="k">긴장 곡선</span> 발표 전 '+s.pre+' · 발표 중 '+s.during+' · 발표 후 '+s.post+'</p>';
+  } else { h += '<p class="blank">검사를 하지 않았습니다.</p>'; }
+  if(S.goals.length){
+    h += '<h3>나의 발표 목표</h3>'+
+         '<p>['+esc(S.goals[0].phase)+'] '+v(S.goals[0].refined||S.goals[0].text)+'</p>';
+  }
+  h += '</section>';
+
+  h += '<section><h2>2단계 · 말하기 전</h2>'+
+  '<p><span class="k">말하고 싶은 경험</span> '+v(S.pre.topic)+'</p>'+
+  '<p><span class="k">고른 까닭</span> '+v(S.pre.why)+'</p>'+
+  '<h3>3P 분석</h3>'+
+  '<table><tr><th>Purpose</th><td>'+v(S.pre.purpose)+' / '+v(S.pre.purposeLine)+'</td></tr>'+
+  '<tr><th>People</th><td>이미 아는 것: '+v(S.pre.know)+'<br>궁금해할 것: '+v(S.pre.wonder)+'<br>첫 한마디: '+v(S.pre.hook)+'</td></tr>'+
+  '<tr><th>Place</th><td>'+places()+'<br>조정할 것: '+v(S.pre.placeLine)+'</td></tr></table>'+
+  '<h3>말하기 불안 점검</h3>'+
+  '<p><span class="k">긴장 정도</span> '+(S.pre.anxLevel||0)+' / 5</p>'+
+  '<p><span class="k">몸에 나타나는 것</span> '+signs()+'</p>'+
+  '<p><span class="k">가장 큰 원인</span> '+v(S.pre.anxCause)+'</p>'+
+  '<p><span class="k">예열 루틴</span> '+v(S.pre.warmup)+'</p></section>';
+
+  h += '<section><h2>3단계 · 1~3분 말하기</h2>'+
+  '<p><span class="k">핵심어</span> '+
+  ([0,1,2].map(function(i){ return S.talk.keywords[i] ? esc(S.talk.keywords[i]) : "—"; }).join(" · "))+'</p>'+
+  '<p><span class="k">대본 길이</span> '+(S.talk.script||"").replace(/\s/g,"").length+'자 · 예상 '+mmss(speakSeconds(S.talk.script))+'</p>'+
+  '<h3>말하기 중 점검 신호</h3>'+
+  '<table><tr><th>준언어</th><td>'+(pl?esc(pl.label):'<span class="blank">(비어 있음)</span>')+
+  ' — '+v(S.cue.paraFix||(pl?pl.fix:""))+'<br>발표 직후: '+v(S.cue.doneP)+'</td></tr>'+
+  '<tr><th>비언어</th><td>'+(nl?esc(nl.label):'<span class="blank">(비어 있음)</span>')+
+  ' — '+v(S.cue.nonparaFix||(nl?nl.fix:""))+'<br>발표 직후: '+v(S.cue.doneN)+'</td></tr></table>'+
+  '<p><span class="k">발표 중에 일어난 일</span> '+v(S.cue.midMemo)+'</p>'+
+  '<h3>대본</h3><p>'+v(S.talk.script)+'</p></section>';
+
+  h += '<section><h2>4단계 · 듣기·말하기 성찰</h2>'+
+  '<h3>말하기 후 성찰</h3>'+
+  '<p><span class="k">잘된 점</span> '+v(S.post.good)+'</p>'+
+  '<table><tr><th>문제</th><td>'+v(S.post.problem)+'</td></tr>'+
+  '<tr><th>원인</th><td>'+v(S.post.cause)+'<br>'+v(S.post.causeLine)+'</td></tr>'+
+  '<tr><th>해결</th><td>'+v(S.post.solution)+'</td></tr></table>'+
+  '<h3>목표 달성</h3>'+
+  '<p><span class="k">내가 본 나</span> '+v(S.post.goalCheck)+' — '+v(S.post.goalWhy)+'</p>'+
+  '<p><span class="k">친구들이 본 나</span> '+v(S.fb.audienceMark)+'</p>'+
+  '<p><span class="k">친구들이 꼽은 좋았던 점</span> '+v(S.fb.recvGood)+'</p>'+
+  '<p><span class="k">친구들이 준 제안</span> '+v(S.fb.recvNext)+'</p>';
+  if(S.fb.given.length){
+    h += '<h3>내가 청중으로 쓴 피드백 ('+S.fb.given.length+'명)</h3><table>'+
+    '<tr><th>발표자</th><th>달성</th><th>좋았던 점</th><th>제안</th></tr>';
+    S.fb.given.forEach(function(g){
+      h += '<tr><td>'+esc(g.name)+'</td><td>'+esc(g.mark||"-")+'</td><td>'+esc(g.good||"")+'</td><td>'+esc(g.next||"")+'</td></tr>';
+    });
+    h += '</table>';
+  }
+  h += '</section>';
+  sheet.innerHTML = h;
+}
+
+/* =================== 렌더 =================== */
+var lastView = null;
+function render(){
+  /* 같은 화면을 다시 그릴 때는 보던 자리를 지킨다.
+     (선택지 하나 눌렀다고 맨 위로 튀어 올라가지 않도록) */
+  var keep = (lastView === S.view);
+  var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+  if(S.view==="intro") app.innerHTML = viewIntro();
+  else if(S.view==="quiz") app.innerHTML = viewQuiz();
+  else if(S.view==="result") app.innerHTML = viewResult();
+  else if(S.view==="plan") app.innerHTML = viewPlan();
+  else if(S.view==="talk") app.innerHTML = viewTalk();
+  else app.innerHTML = viewReflect();
+  paintTop();
+  bind();
+  save();
+  window.scrollTo(0, keep ? y : 0);
+  lastView = S.view;
+}
+function setPath(path,val){
+  var parts = path.split("."), o = S, i;
+  for(i=0;i<parts.length-1;i++) o = o[parts[i]];
+  o[parts[parts.length-1]] = val;
+}
+function bindFields(){
+  app.querySelectorAll("[data-f]").forEach(function(el){
+    el.addEventListener("input", function(){
+      setPath(this.getAttribute("data-f"), this.value);
+      save();
+      if(this.id==="script") queueTalkRepaint();
+    });
+  });
+}
+var talkTimer = null;
+function queueTalkRepaint(){
+  /* 숫자는 바로, 핵심어 구획은 잠깐 멈춘 뒤에 다시 그린다 */
+  var sec = speakSeconds(S.talk.script);
+  var m = document.getElementById("meter");
+  if(m) m.innerHTML = meterHTML();
+  var g = document.getElementById("gauge");
+  if(g){
+    g.className = "gauge " + (sec<60?"lo":(sec>180?"hi":""));
+    g.querySelector("i").style.width = Math.max(2, Math.min(100, Math.round(sec/210*100))) + "%";
+  }
+  if(talkTimer) clearTimeout(talkTimer);
+  talkTimer = setTimeout(repaintTalkZones, 350);
+}
+function repaintTalkZones(){
+  var z = document.getElementById("kwzone");
+  if(!z) return;
+  z.innerHTML = kwZoneHTML();
+  var a = document.getElementById("actzone");
+  if(a) a.innerHTML = actZoneHTML();
+  bindTalkZones();
+}
+function pick(v){
+  S.answers[SEQ[S.idx].id] = v;
+  if(S.idx < SEQ.length-1) S.idx++;
+  render();
+}
+/* 3단계의 핵심어 구획은 대본을 고칠 때마다 다시 그려지므로 따로 묶어 둔다 */
+function bindTalkZones(){
+  var el;
+  document.querySelectorAll("[data-kw]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var w=this.getAttribute("data-kw"), at=S.talk.keywords.indexOf(w), i;
+      if(at>=0){ S.talk.keywords[at]=""; save(); repaintTalkZones(); return; }
+      for(i=0;i<3;i++) if(!S.talk.keywords[i]){
+        S.talk.keywords[i]=w; save(); repaintTalkZones(); return;
+      }
+      toast("세 칸이 모두 찼습니다 — 하나를 눌러 비우세요");
+    });
+  });
+  document.querySelectorAll("[data-kwi]").forEach(function(inp){
+    inp.addEventListener("input", function(){
+      S.talk.keywords[+this.getAttribute("data-kwi")] = this.value;
+      save();
+      var a = document.getElementById("actzone");
+      if(a){ a.innerHTML = actZoneHTML(); bindActZone(); }
+    });
+  });
+  el=document.getElementById("autoPick");
+  if(el) el.addEventListener("click", function(){
+    var c = extractKeywords(S.talk.script, 3);
+    S.talk.keywords = [c[0]||"", c[1]||"", c[2]||""];
+    save(); repaintTalkZones();
+  });
+  el=document.getElementById("clearKw");
+  if(el) el.addEventListener("click", function(){
+    S.talk.keywords=["","",""]; save(); repaintTalkZones();
+  });
+  bindActZone();
+}
+function bindActZone(){
+  var el=document.getElementById("openDeck");
+  if(el) el.addEventListener("click", openDeck);
+  el=document.getElementById("toMid");
+  if(el) el.addEventListener("click", function(){
+    var t = document.getElementById("midcheck");
+    if(t) t.scrollIntoView({behavior:"smooth", block:"start"});
+  });
+}
+function bind(){
+  var el;
+  bindFields();
+
+  if(S.view==="intro"){
+    document.getElementById("go").addEventListener("click", function(){
+      S.view="quiz"; S.idx=0; render();
+    });
+    el = document.getElementById("resume");
+    if(el) el.addEventListener("click", function(){
+      if(loadSaved()){ render(); toast("이어서 합니다"); }
+      else toast("저장된 내용이 없습니다");
+    });
+  }
+
+  if(S.view==="quiz"){
+    app.querySelectorAll(".opt").forEach(function(b){
+      b.addEventListener("click", function(){ pick(+this.getAttribute("data-v")); });
+    });
+    el=document.getElementById("prev");
+    if(el) el.addEventListener("click", function(){ if(S.idx>0){S.idx--;render();} });
+    el=document.getElementById("next");
+    if(el) el.addEventListener("click", function(){ if(S.idx<SEQ.length-1){S.idx++;render();} });
+    el=document.getElementById("finish");
+    if(el) el.addEventListener("click", function(){
+      S.scores = computeScores(S.answers);
+      S.flat = uniformAnswer(S.answers);
+      S.view = "result"; render();
+    });
+  }
+
+  if(S.view==="result"){
+    app.querySelectorAll(".rxpick").forEach(function(b){
+      b.addEventListener("click", function(){
+        /* 목표는 딱 하나. 같은 것을 다시 누르면 해제, 다른 것을 누르면 교체한다. */
+        var phase=this.getAttribute("data-phase"), text=this.getAttribute("data-text");
+        var had = S.goals.length>0;
+        if(had && S.goals[0].phase===phase && S.goals[0].text===text){
+          S.goals = []; render(); return;
+        }
+        S.goals = [{phase:phase, text:text, refined:""}];
+        render();
+        if(had) toast("목표를 바꿨습니다");
+      });
+    });
+    app.querySelectorAll("[data-ref]").forEach(function(t){
+      t.addEventListener("input", function(){
+        S.goals[+this.getAttribute("data-ref")].refined = this.value;
+        save();
+      });
+    });
+    app.querySelectorAll("[data-drop]").forEach(function(b){
+      b.addEventListener("click", function(){
+        S.goals.splice(+this.getAttribute("data-drop"),1); render();
+      });
+    });
+    el=document.getElementById("sid");
+    if(el) el.addEventListener("input", function(){ S.sid=this.value; save(); });
+    el=document.getElementById("sname");
+    if(el) el.addEventListener("input", function(){ S.sname=this.value; save(); });
+    el=document.getElementById("toPlan");
+    if(el) el.addEventListener("click", function(){ S.view="plan"; render(); });
+    el=document.getElementById("again");
+    if(el) el.addEventListener("click", function(){
+      S.answers={}; S.scores=null; S.goals=[]; S.idx=0; S.view="quiz"; render();
+    });
+  }
+
+  if(S.view==="plan"){
+    app.querySelectorAll("[data-purpose]").forEach(function(b){
+      b.addEventListener("click", function(){
+        S.pre.purpose = (S.pre.purpose===this.getAttribute("data-purpose")) ? "" : this.getAttribute("data-purpose");
+        render();
+      });
+    });
+    app.querySelectorAll("[data-sign]").forEach(function(b){
+      b.addEventListener("click", function(){
+        var k=this.getAttribute("data-sign");
+        S.pre.anxSigns[k] = !S.pre.anxSigns[k]; render();
+      });
+    });
+    app.querySelectorAll("[data-place]").forEach(function(b){
+      b.addEventListener("click", function(){
+        var k=this.getAttribute("data-place");
+        S.pre.place[k] = !S.pre.place[k]; render();
+      });
+    });
+    app.querySelectorAll("[data-anxcause]").forEach(function(b){
+      b.addEventListener("click", function(){
+        var k=this.getAttribute("data-anxcause");
+        S.pre.anxCause = (S.pre.anxCause===k) ? "" : k; render();
+      });
+    });
+    el=document.getElementById("anxLevel");
+    if(el) el.addEventListener("input", function(){ S.pre.anxLevel=+this.value; save();
+      var lab=app.querySelector('label[for="anxLevel"] span');
+      if(lab) lab.textContent = this.value + " / 5";
+    });
+    el=document.getElementById("openPlanCard");
+    if(el) el.addEventListener("click", openPlanCard);
+    el=document.getElementById("toTalk");
+    if(el) el.addEventListener("click", function(){ S.view="talk"; render(); });
+  }
+
+  if(S.view==="talk"){
+    bindTalkZones();
+    app.querySelectorAll("[data-para]").forEach(function(b){
+      b.addEventListener("click", function(){
+        var k=this.getAttribute("data-para");
+        if(S.cue.para===k){ S.cue.para=""; S.cue.paraFix=""; }
+        else { S.cue.para=k; S.cue.paraFix=(PARA.filter(function(x){return x.k===k;})[0]||{}).fix||""; }
+        render();
+      });
+    });
+    app.querySelectorAll("[data-nonpara]").forEach(function(b){
+      b.addEventListener("click", function(){
+        var k=this.getAttribute("data-nonpara");
+        if(S.cue.nonpara===k){ S.cue.nonpara=""; S.cue.nonparaFix=""; }
+        else { S.cue.nonpara=k; S.cue.nonparaFix=(NONPARA.filter(function(x){return x.k===k;})[0]||{}).fix||""; }
+        render();
+      });
+    });
+    app.querySelectorAll("[data-donep]").forEach(function(b){
+      b.addEventListener("click", function(){ S.cue.doneP = this.getAttribute("data-donep"); render(); });
+    });
+    app.querySelectorAll("[data-donen]").forEach(function(b){
+      b.addEventListener("click", function(){ S.cue.doneN = this.getAttribute("data-donen"); render(); });
+    });
+    el=document.getElementById("toReflect");
+    if(el) el.addEventListener("click", function(){ S.view="reflect"; render(); });
+  }
+
+  if(S.view==="reflect"){
+    app.querySelectorAll("[data-mode]").forEach(function(b){
+      b.addEventListener("click", function(){
+        S.fb.mode = this.getAttribute("data-mode"); render();
+      });
+    });
+    app.querySelectorAll("[data-fbmark]").forEach(function(b){
+      b.addEventListener("click", function(){
+        var k=this.getAttribute("data-fbmark");
+        S.fb.draft.mark = (S.fb.draft.mark===k) ? "" : k; render();
+      });
+    });
+    app.querySelectorAll("[data-audmark]").forEach(function(b){
+      b.addEventListener("click", function(){
+        var k=this.getAttribute("data-audmark");
+        S.fb.audienceMark = (S.fb.audienceMark===k) ? "" : k; render();
+      });
+    });
+    app.querySelectorAll("[data-fbdrop]").forEach(function(b){
+      b.addEventListener("click", function(){
+        S.fb.given.splice(+this.getAttribute("data-fbdrop"),1); render();
+      });
+    });
+    /* 이름을 적는 순간 저장 버튼이 열리도록 (전체 새로 그리지 않고) */
+    el=document.getElementById("fbname");
+    if(el) el.addEventListener("input", function(){
+      var b=document.getElementById("fbsave");
+      if(b) b.disabled = !this.value.trim();
+    });
+    el=document.getElementById("fbsave");
+    if(el) el.addEventListener("click", function(){
+      var d=S.fb.draft;
+      if(!d.name) return;
+      S.fb.given.push({name:d.name,goal:d.goal,mark:d.mark,why:d.why,good:d.good,next:d.next});
+      S.fb.draft = {name:"",goal:"",mark:"",why:"",good:"",next:""};
+      render(); toast("저장했습니다 — 다음 발표자로");
+    });
+    el=document.getElementById("fbcopy");
+    if(el) el.addEventListener("click", function(){
+      var txt = fbText();
+      var done = function(){ toast("복사했습니다"); };
+      var fail = function(){
+        var ta=document.createElement("textarea");
+        ta.value=txt; ta.style.position="fixed"; ta.style.opacity="0";
+        document.body.appendChild(ta); ta.select();
+        try{ document.execCommand("copy"); done(); }catch(e){ toast("복사가 안 됩니다 — 인쇄를 이용하세요"); }
+        ta.remove();
+      };
+      try{
+        if(navigator.clipboard && navigator.clipboard.writeText)
+          navigator.clipboard.writeText(txt).then(done).catch(fail);
+        else fail();
+      }catch(e){ fail(); }
+    });
+    el=document.getElementById("fbcsv");
+    if(el) el.addEventListener("click", function(){
+      saveFile("말하기피드백_"+(S.sid||"")+(S.sname?("_"+S.sname):"")+".csv",
+               fbCsv(), "text/csv;charset=utf-8");
+    });
+    app.querySelectorAll("[data-cause]").forEach(function(b){
+      b.addEventListener("click", function(){
+        var k=this.getAttribute("data-cause");
+        S.post.cause = (S.post.cause===k) ? "" : k; render();
+      });
+    });
+    app.querySelectorAll("[data-goalcheck]").forEach(function(b){
+      b.addEventListener("click", function(){
+        var k=this.getAttribute("data-goalcheck");
+        S.post.goalCheck = (S.post.goalCheck===k) ? "" : k; render();
+      });
+    });
+  }
+}
+
+/* =================== 키보드 =================== */
+document.addEventListener("keydown", function(e){
+  if(S.pcard.on){
+    if(e.key==="Escape") closePlanCard();
+    return;
+  }
+  if(S.deck.on){
+    if(e.key==="Escape") closeDeck();
+    else if(e.key==="ArrowRight"||e.key===" "||e.key==="Enter") { e.preventDefault(); deckNext(1); }
+    else if(e.key==="ArrowLeft") deckNext(-1);
+    return;
+  }
+  if(S.view!=="quiz") return;
+  if(document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
+  if(["1","2","3","4","5"].indexOf(e.key)>=0) pick(+e.key);
+  else if(e.key==="ArrowLeft" && S.idx>0){ S.idx--; render(); }
+  else if(e.key==="ArrowRight" && S.idx<SEQ.length-1){ S.idx++; render(); }
+});
+
+window.addEventListener("beforeprint", buildSheet);
+
+render();
+</script>
+</body>
+</html>
