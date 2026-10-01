@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>말하기 성찰일지</title>
+<title>듣기·말하기 성찰일지</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
 :root{
@@ -357,7 +357,7 @@ label.fl span{font-weight:400;color:var(--mut);margin-left:6px;font-size:12.5px;
 
 <script>
 /* ===========================================================
-   말하기 성찰일지
+   듣기·말하기 성찰일지
    1단계 나만의 발표 목표 수립  (나의 발표 성향 검사 통합)
    2단계 1~3분 말하기 계획 세우기 (말하기 전 / 중 / 후)
    3단계 1~3분 말하기            (대본 -> 키워드 3개 -> 발표 자료)
@@ -859,7 +859,7 @@ function saveFile(filename, text, mime){
 }
 function downloadWork(){
   var name = (S.sid||"") + (S.sname?("_"+S.sname):"");
-  saveFile("말하기성찰일지" + (name?("_"+name):"") + ".json",
+  saveFile("듣기말하기성찰일지" + (name?("_"+name):"") + ".json",
            JSON.stringify(S,null,2), "application/json");
 }
 function uploadWork(e){
@@ -882,7 +882,7 @@ function viewIntro(){
   return '<div class="fade">'+
   '<svg viewBox="0 0 300 46" width="170" height="26" aria-hidden="true">'+
   '<polyline points="0,23 24,23 36,9 48,37 60,15 72,31 84,23 300,23" fill="none" stroke="#24645F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/></svg>'+
-  '<h1 class="sf hero">말하기 성찰일지</h1>'+
+  '<h1 class="sf hero">듣기·말하기 성찰일지</h1>'+
   '<p class="sub">1~3분 말하기 &middot; 점검하고 조정하기</p>'+
   '<p class="lede">발표를 잘하는 사람과 못하는 사람이 따로 있는 것이 아닙니다. 자기 말하기를 <strong style="color:#15222D">점검하고 조정해 본 사람</strong>과 그러지 않은 사람이 있을 뿐입니다. 이 일지는 네 단계로 그 과정을 따라갑니다.</p>'+
 
@@ -1554,7 +1554,7 @@ function buildSheet(){
   var pl = PARA.filter(function(x){return x.k===S.cue.para;})[0];
   var nl = NONPARA.filter(function(x){return x.k===S.cue.nonpara;})[0];
 
-  var h = '<h1>말하기 성찰일지</h1>'+
+  var h = '<h1>듣기·말하기 성찰일지</h1>'+
   '<p class="who">1~3분 말하기 · 점검하고 조정하기 &nbsp;|&nbsp; '+
   (S.sid?esc(S.sid)+' ':'')+esc(S.sname||'')+'</p>';
 
