@@ -53,6 +53,7 @@ h4.h{font-size:15px;margin:26px 0 10px;}
 .ghost{font-family:inherit;font-size:14px;font-weight:500;color:var(--mut);background:none;
   border:1px solid var(--line);border-radius:9px;padding:11px 18px;cursor:pointer;}
 .ghost:hover{color:var(--ink);border-color:var(--mut);}
+.ghost.danger{color:#fff;background:var(--plum);border-color:var(--plum);font-weight:700;}
 :focus-visible{outline:2.5px solid var(--amber);outline-offset:3px;}
 .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:20px;}
 
@@ -861,7 +862,7 @@ function freshState(){
            goalCheck:"", goalWhy:"" },
     talk:{ script:"", keywords:["","",""], locked:false },
     pcard:{ on:false, mode:"audience" },
-    ui:{ seeds:false },
+    ui:{ seeds:false, confirmNew:false },
     fb:{ mode:"audience", draft:{name:"",goal:"",mark:"",why:"",good:"",next:""},
          given:[], recvGood:"", recvNext:"", audienceMark:"" },
     deck:{ on:false, i:0, showCues:true, t0:0, sec:0 }
@@ -913,7 +914,8 @@ function healState(f){
   if(!f.fb.mode) f.fb.mode = "audience";
   f.deck = {on:false,i:0,showCues:true,t0:0,sec:0};
   f.pcard = {on:false, mode:(f.pcard && f.pcard.mode) || "audience"};
-  if(!f.ui || typeof f.ui!=="object") f.ui = {seeds:false};
+  if(!f.ui || typeof f.ui!=="object") f.ui = {seeds:false, confirmNew:false};
+  f.ui.confirmNew = false;
   return f;
 }
 function loadSaved(){
@@ -1006,7 +1008,7 @@ try{
 function saveFile(filename, text, mime){
   if(DL && DL.save){
     DL.save({filename:filename, data:text}).then(function(){
-      toast("저장했습니다");
+      toast("저장했습니다 — " + filename);
     }, function(err){
       toast((err && err.code==="declined") ? "저장을 취소했습니다" : "저장할 수 없습니다 — 인쇄를 이용하세요");
     });
@@ -1019,13 +1021,22 @@ function saveFile(filename, text, mime){
     a.download = filename;
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function(){ URL.revokeObjectURL(a.href); }, 800);
-    toast("내려받았습니다");
+    toast("내려받았습니다 — " + filename);
   }catch(e){ toast("저장할 수 없습니다 — 인쇄를 이용하세요"); }
 }
+/* 파일 이름은 영문·숫자로만 짓는다. 크로미움은 내려받기 이름에 한글이 섞이면
+   이름을 통째로 버리고 'download'로 바꾸는데, 그러면 24명의 파일이 전부
+   download(1), download(2)…가 되어 다음 시간에 자기 것을 찾지 못한다. */
+function stamp(){
+  var d=new Date(), z=function(n){ return (n<10?"0":"")+n; };
+  return z(d.getMonth()+1)+z(d.getDate())+"-"+z(d.getHours())+z(d.getMinutes());
+}
+function workFilename(){
+  var sid = (S.sid||"").replace(/[^0-9A-Za-z]/g,"");
+  return "ilji_" + (sid?sid+"_":"") + stamp() + ".json";
+}
 function downloadWork(){
-  var name = (S.sid||"") + (S.sname?("_"+S.sname):"");
-  saveFile("듣기말하기성찰일지" + (name?("_"+name):"") + ".json",
-           JSON.stringify(S,null,2), "application/json");
+  saveFile(workFilename(), JSON.stringify(S,null,2), "application/json");
 }
 function uploadWork(e){
   var f = e.target.files && e.target.files[0];
@@ -1044,6 +1055,7 @@ function uploadWork(e){
 
 /* =================== 1단계 : 시작 =================== */
 function viewIntro(){
+  var saved = !!storeGet(SKEY);
   return '<div class="fade">'+
   '<svg viewBox="0 0 300 46" width="170" height="26" aria-hidden="true">'+
   '<polyline points="0,23 24,23 36,9 48,37 60,15 72,31 84,23 300,23" fill="none" stroke="#24645F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/></svg>'+
@@ -1060,9 +1072,18 @@ function viewIntro(){
 
   '<p class="note">이 검사는 진단이 아니라 점검입니다. 정답도 좋은 점수도 없습니다. 그리고 <strong>긴장을 많이 한다는 것과 발표를 못한다는 것은 다릅니다.</strong> 불안도와 역량을 따로 재는 이유가 바로 그것입니다. 결과를 잘 쓰려면 솔직하게 답하는 것이 가장 중요합니다.</p>'+
 
-  '<div class="btnrow"><button class="btn" id="go">1단계 시작하기</button>'+
-  (storeGet(SKEY)?'<button class="ghost" id="resume">이어서 하기</button>':'')+'</div>'+
-  '<p class="hint">스무 문항, 약 3분 걸립니다.</p></div>';
+  (saved
+    ? '<div class="btnrow"><button class="btn" id="resume">이어서 하기</button>'+
+      '<button class="ghost" id="introUp">지난 시간 파일 불러오기</button>'+
+      '<button class="ghost'+(S.ui.confirmNew?" danger":"")+'" id="go">'+
+      (S.ui.confirmNew?"정말 지우고 새로 시작":"처음부터 새로 하기")+'</button></div>'+
+      (S.ui.confirmNew
+        ? '<p class="hint" style="color:#8A4E7B"><b>한 번 더 누르면 이 기기에 저장된 내용이 지워집니다.</b> 지난 시간에 정한 목표도 함께 사라집니다.</p>'
+        : '<p class="hint">이 기기에 저장된 내용이 있습니다. <b>이어서 하기</b>를 누르세요.</p>')
+    : '<div class="btnrow"><button class="btn" id="go">1단계 시작하기</button>'+
+      '<button class="ghost" id="introUp">지난 시간 파일 불러오기</button></div>'+
+      '<p class="hint">스무 문항, 약 3분 걸립니다. 지난 시간에 내려받은 일지 파일이 있으면 <b>불러오기</b>로 이어서 할 수 있습니다.</p>')+
+  '</div>';
 }
 
 /* =================== 1단계 : 문항 =================== */
@@ -1909,12 +1930,21 @@ function bind(){
 
   if(S.view==="intro"){
     document.getElementById("go").addEventListener("click", function(){
+      /* 저장된 내용이 있으면 한 번 더 확인받는다. 큰 버튼을 잘못 눌러
+         지난 시간 목표를 날리는 일이 교실에서 가장 흔한 사고다. */
+      if(storeGet(SKEY) && !S.ui.confirmNew){ S.ui.confirmNew = true; render(); return; }
+      var keep = S.ui;
+      S = freshState(); S.ui = keep; S.ui.confirmNew = false;
       S.view="quiz"; S.idx=0; render();
     });
     el = document.getElementById("resume");
     if(el) el.addEventListener("click", function(){
       if(loadSaved()){ render(); toast("이어서 합니다"); }
       else toast("저장된 내용이 없습니다");
+    });
+    el = document.getElementById("introUp");
+    if(el) el.addEventListener("click", function(){
+      document.getElementById("upFile").click();
     });
   }
 
