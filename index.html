@@ -323,6 +323,11 @@ label.fl span{font-weight:400;color:var(--mut);margin-left:6px;font-size:12.5px;
 .tbar button.on{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:700;}
 .tbar .tsp{flex:1;min-width:0;}
 .tbar .tnote{font-size:12px;color:var(--mut);}
+.tcust{display:flex;align-items:center;gap:4px;font-size:12.5px;color:var(--mut);}
+.tcust input{width:54px;font-family:inherit;font-size:14px;font-weight:700;text-align:center;
+  padding:6px 4px;border:1px solid var(--line);border-radius:7px;background:var(--sf);color:var(--ink);}
+.tcust input:focus{outline:none;border-color:var(--teal);}
+.tdiv{width:1px;align-self:stretch;background:var(--line);margin:0 2px;}
 #tfull{position:fixed;inset:0;z-index:110;background:#0E1A22;color:#fff;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
   padding:24px;text-align:center;}
@@ -642,19 +647,42 @@ function REQT(){ return '<span class="req">꼭</span>'; }
 function OPTT(){ return '<span class="optb">여유 되면</span>'; }
 
 /* =================== 구상 타이머 =================== */
-var TIMER = {sec:0, total:0, run:false, full:false};
+var TIMER = {sec:0, total:0, run:false, full:false, cmin:9, csec:0};
 var timerTick = null;
 function tfmt(s){
   if(s<0) s=0;
   var m=Math.floor(s/60), x=s%60;
   return m+":"+(x<10?"0":"")+x;
 }
-function tstate(){ return TIMER.sec<=0 ? "over" : (TIMER.sec<=60 ? "warn" : ""); }
+function tstate(){
+  /* 아직 맞추지 않은 0:00은 '끝남'이 아니므로 경고색을 쓰지 않는다 */
+  if(TIMER.total<=0) return "";
+  return TIMER.sec<=0 ? "over" : (TIMER.sec<=60 ? "warn" : "");
+}
 function timerStop(){ if(timerTick){ clearInterval(timerTick); timerTick=null; } }
 function timerSet(min){
-  timerStop();
-  TIMER.total = min*60; TIMER.sec = min*60; TIMER.run = false;
+  timerSetSec(min*60);
+  TIMER.cmin = min; TIMER.csec = 0;
   paintTimer();
+}
+/* 직접 입력한 시간을 적용한다. 되돌리기와 다시 시작의 기준도 이 값이 된다. */
+function timerSetSec(sec){
+  timerStop();
+  TIMER.total = sec; TIMER.sec = sec; TIMER.run = false;
+}
+function timerApplyCustom(){
+  var m = document.getElementById("tcm"), x = document.getElementById("tcs");
+  var mm = m ? parseInt(m.value,10) : 0, ss = x ? parseInt(x.value,10) : 0;
+  if(isNaN(mm)||mm<0) mm=0;
+  if(isNaN(ss)||ss<0) ss=0;
+  if(ss>59) ss=59;
+  if(mm>99) mm=99;
+  var tot = mm*60+ss;
+  if(tot<=0){ toast("1초 이상으로 맞춰 주세요"); return; }
+  TIMER.cmin = mm; TIMER.csec = ss;
+  timerSetSec(tot);
+  paintTimer();
+  toast("타이머를 " + tfmt(tot) + "로 맞췄습니다");
 }
 function timerToggle(){
   if(TIMER.total<=0) return;
@@ -680,13 +708,19 @@ function paintClock(){
 function timerBarHTML(){
   var mins=[3,5,9,10], h='<div class="tbar">', i;
   h += '<span class="tclock '+tstate()+'" id="tclock">'+tfmt(TIMER.sec)+'</span>';
-  for(i=0;i<mins.length;i++)
-    h += '<button data-tmin="'+mins[i]+'" class="'+(TIMER.total===mins[i]*60?"on":"")+'">'+mins[i]+'분</button>';
   h += '<button id="tgo">'+(TIMER.run?"멈춤":"시작")+'</button>'+
        '<button id="treset">되돌리기</button>'+
        '<span class="tsp"></span>'+
-       '<button id="tbigbtn">크게 보기</button></div>'+
-       '<p class="hint" style="margin-top:7px">선생님 화면에서 <b>크게 보기</b>로 띄워 두면 반 전체가 같은 시간을 봅니다.</p>';
+       '<button id="tbigbtn">크게 보기</button>';
+  for(i=0;i<mins.length;i++)
+    h += '<button data-tmin="'+mins[i]+'" class="'+(TIMER.total===mins[i]*60?"on":"")+'">'+mins[i]+'분</button>';
+  h += '<span class="tdiv"></span>'+
+       '<span class="tcust">'+
+       '<input type="number" id="tcm" min="0" max="99" inputmode="numeric" value="'+TIMER.cmin+'" aria-label="분">분'+
+       '<input type="number" id="tcs" min="0" max="59" step="5" inputmode="numeric" value="'+TIMER.csec+'" aria-label="초">초'+
+       '<button id="tset">맞춤</button></span>';
+  h += '</div>'+
+       '<p class="hint" style="margin-top:7px">버튼으로 고르거나 <b>분·초를 직접 입력</b>해 맞출 수 있습니다. 선생님 화면에서 <b>크게 보기</b>로 띄워 두면 반 전체가 같은 시간을 봅니다.</p>';
   return h;
 }
 function paintTimer(){
@@ -716,6 +750,15 @@ function bindTimer(){
   });
   el=document.getElementById("tgo");     if(el) el.addEventListener("click", timerToggle);
   el=document.getElementById("treset");  if(el) el.addEventListener("click", timerReset);
+  el=document.getElementById("tset");    if(el) el.addEventListener("click", timerApplyCustom);
+  ["tcm","tcs"].forEach(function(id){
+    var n=document.getElementById(id);
+    if(!n) return;
+    n.addEventListener("keydown", function(e){
+      if(e.key==="Enter"){ e.preventDefault(); timerApplyCustom(); }
+    });
+    n.addEventListener("focus", function(){ this.select(); });
+  });
   el=document.getElementById("tbigbtn"); if(el) el.addEventListener("click", function(){
     TIMER.full=true; paintFullTimer();
   });
