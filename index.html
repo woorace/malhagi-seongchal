@@ -289,19 +289,6 @@ label.fl span{font-weight:400;color:var(--mut);margin-left:6px;font-size:12.5px;
 .pc-aud-ask{margin-top:22px;font-size:13px;line-height:1.75;color:var(--mut);}
 .pc-aud-ask b{color:var(--ink);}
 
-/* ── 필수 / 선택 표시 ── */
-.req,.optb{font-size:10.5px;font-weight:700;border-radius:20px;padding:3px 8px;margin-left:7px;
-  vertical-align:middle;white-space:nowrap;letter-spacing:0;}
-.req{background:var(--teal);color:#fff;}
-.optb{background:var(--line);color:var(--mut);}
-.reqbar{display:flex;align-items:center;gap:11px;flex-wrap:wrap;
-  background:var(--tealsoft);border:1px solid #C3DAD6;border-radius:11px;
-  padding:11px 14px;margin:0 0 4px;font-size:13px;line-height:1.7;color:#1B4F4B;}
-.reqdots{display:flex;gap:5px;}
-.reqdots i{width:11px;height:11px;border-radius:50%;background:#C3DAD6;display:block;}
-.reqdots i.on{background:var(--teal);}
-.reqbar .num{font-weight:700;font-size:15px;}
-
 /* ── 주제가 안 떠오를 때 ── */
 .seedbtn{font-family:inherit;font-size:12.5px;color:var(--mut);background:var(--sf);
   border:1px solid var(--line);border-radius:8px;padding:7px 13px;cursor:pointer;margin-top:8px;}
@@ -616,35 +603,6 @@ var SEEDS = [
   "용돈을 벌어 본 일","포기하려다 끝까지 한 일","전학이나 이사로 달라진 것","내가 만든 것 중 가장 마음에 드는 것",
   "칭찬을 받아 어리둥절했던 일","체육대회나 축제에서 있었던 일","처음 가 본 곳","작지만 뿌듯했던 하루"
 ];
-
-/* 수업 시간 안에 전원이 완주하도록, 먼저 채울 다섯 칸을 정해 둔다.
-   나머지는 다 쓴 학생만 채운다. */
-var REQ = [
-  {path:"pre.topic",   name:"말하고 싶은 경험"},
-  {path:"pre.purpose", name:"말하기의 목적"},
-  {path:"pre.wonder",  name:"궁금해할 것"},
-  {path:"pre.hook",    name:"첫 한마디"},
-  {path:"pre.warmup",  name:"예열 루틴"}
-];
-function getPath(p){
-  var a=p.split("."), o=S, i;
-  for(i=0;i<a.length;i++){ if(o==null) return ""; o=o[a[i]]; }
-  return o;
-}
-function reqFilled(i){ var v=getPath(REQ[i].path); return !!(v && String(v).trim()); }
-function reqDone(){ var n=0,i; for(i=0;i<REQ.length;i++) if(reqFilled(i)) n++; return n; }
-function reqBarHTML(){
-  var n=reqDone(), dots="", i;
-  for(i=0;i<REQ.length;i++) dots += '<i class="'+(reqFilled(i)?"on":"")+'"></i>';
-  return '<span class="reqdots">'+dots+'</span>'+
-    '<span>꼭 채울 칸 <span class="num">'+n+'</span> / '+REQ.length+'</span>'+
-    '<span style="flex:1"></span>'+
-    '<span>'+(n===REQ.length
-      ? '다 됐습니다. 남은 칸은 여유가 되면 채우세요.'
-      : '<b>꼭</b> 표시된 칸부터 채우세요.')+'</span>';
-}
-function REQT(){ return '<span class="req">꼭</span>'; }
-function OPTT(){ return '<span class="optb">여유 되면</span>'; }
 
 /* =================== 구상 타이머 =================== */
 var TIMER = {sec:0, total:0, run:false, full:false, cmin:9, csec:0};
@@ -1308,49 +1266,48 @@ function viewPlan(){
   /* ── 말하기 전 ── */
   '<div class="panel pre" style="margin-top:22px">'+
   '<div class="ph"><h3>말하기 전</h3><span class="when a">발표 전에 작성</span></div>'+
-  '<p class="plede">무엇을, 누구에게, 어떤 자리에서 말하는지 먼저 정해 둡니다. 칸이 많아 보이지만 <b>꼭</b> 표시된 다섯 칸만 채우면 발표할 수 있습니다.</p>'+
-  '<div class="reqbar" id="reqbar">'+reqBarHTML()+'</div>'+
+  '<p class="plede">무엇을, 누구에게, 어떤 자리에서 말하는지 먼저 정해 둡니다. 이것을 정하지 않으면 대본이 길어지기만 합니다.</p>'+
 
-  '<label class="fl" for="topic">말하고 싶은 경험'+REQT()+'<span>한 가지만</span></label>'+
-  '<input class="inp" id="topic" data-f="pre.topic" data-req="1" placeholder="예) 처음으로 김장을 도운 날" value="'+esc(p.topic)+'">'+
+  '<label class="fl" for="topic">말하고 싶은 경험<span>한 가지만</span></label>'+
+  '<input class="inp" id="topic" data-f="pre.topic" placeholder="예) 처음으로 김장을 도운 날" value="'+esc(p.topic)+'">'+
   (S.ui.seeds
     ? '<div class="seedbox"><p>마음에 드는 것을 눌러 보세요. 그대로 쓰는 것이 아니라 <b>내 이야기로 고쳐 쓰는 출발점</b>입니다.</p><div class="chips">'+seeds+'</div>'+
       '<button class="seedbtn" id="seedClose" style="margin-top:4px">닫기</button></div>'
     : '<button class="seedbtn" id="seedOpen">주제가 안 떠올라요</button>')+
-  '<label class="fl" for="why">이 경험을 고른 까닭'+OPTT()+'</label>'+
+  '<label class="fl" for="why">이 경험을 고른 까닭</label>'+
   '<textarea class="ta sm" id="why" data-f="pre.why" placeholder="예) 힘들었지만 그날 이후로 가족을 보는 눈이 달라졌기 때문이다.">'+esc(p.why)+'</textarea>'+
 
   '<div class="sub3"><h4 class="h"><span class="pcol">3P</span> 말하기 상황 분석</h4>'+
 
-  '<label class="fl"><span class="pcol">PURPOSE</span> &nbsp;이 말하기의 목적'+REQT()+'</label>'+
+  '<label class="fl"><span class="pcol">PURPOSE</span> &nbsp;이 말하기의 목적</label>'+
   chipRow(PURPOSE,p.purpose,"data-purpose")+
   (p.purpose?'<p class="body" style="font-size:13px;margin:4px 0 0">'+
     esc((PURPOSE.filter(function(x){return x.k===p.purpose;})[0]||{}).hint||"")+'</p>':'')+
-  '<label class="fl" for="purposeLine">한 줄로 풀어 쓰기'+OPTT()+'</label>'+
+  '<label class="fl" for="purposeLine">한 줄로 풀어 쓰기</label>'+
   '<textarea class="ta sm" id="purposeLine" data-f="pre.purposeLine" placeholder="이 발표가 끝나면 친구들이 무엇을 얻었으면 좋겠나요?">'+esc(p.purposeLine)+'</textarea>'+
 
   '<label class="fl"><span class="pcol">PEOPLE</span> &nbsp;듣는 사람은 우리 반 친구들</label>'+
-  '<label class="fl" for="know" style="margin-top:8px">친구들이 이미 알고 있는 것'+OPTT()+'</label>'+
+  '<label class="fl" for="know" style="margin-top:8px">친구들이 이미 알고 있는 것</label>'+
   '<textarea class="ta sm" id="know" data-f="pre.know" placeholder="예) 김장이 뭔지는 다들 안다.">'+esc(p.know)+'</textarea>'+
-  '<label class="fl" for="wonder">친구들이 궁금해할 것'+REQT()+'</label>'+
-  '<textarea class="ta sm" id="wonder" data-f="pre.wonder" data-req="1" placeholder="예) 중2가 김장을 왜 도왔는지, 얼마나 힘들었는지">'+esc(p.wonder)+'</textarea>'+
-  '<label class="fl" for="hook">첫 15초에 관심을 끌 한마디'+REQT()+'</label>'+
-  '<textarea class="ta sm" id="hook" data-f="pre.hook" data-req="1" placeholder="예) 여러분, 배추 삼십 포기를 씻어 본 적 있나요?">'+esc(p.hook)+'</textarea>'+
+  '<label class="fl" for="wonder">친구들이 궁금해할 것</label>'+
+  '<textarea class="ta sm" id="wonder" data-f="pre.wonder" placeholder="예) 중2가 김장을 왜 도왔는지, 얼마나 힘들었는지">'+esc(p.wonder)+'</textarea>'+
+  '<label class="fl" for="hook">첫 15초에 관심을 끌 한마디</label>'+
+  '<textarea class="ta sm" id="hook" data-f="pre.hook" placeholder="예) 여러분, 배추 삼십 포기를 씻어 본 적 있나요?">'+esc(p.hook)+'</textarea>'+
 
-  '<label class="fl"><span class="pcol">PLACE</span> &nbsp;말하는 자리의 조건'+OPTT()+'<span>해당하는 것을 모두</span></label>'+
+  '<label class="fl"><span class="pcol">PLACE</span> &nbsp;말하는 자리의 조건<span>해당하는 것을 모두</span></label>'+
   '<div class="chips">'+places+'</div>'+
   '<textarea class="ta sm" id="placeLine" data-f="pre.placeLine" style="margin-top:8px" placeholder="그래서 조정할 것 &mdash; 예) 마이크가 없으니 뒷자리까지 들리게 목소리를 크게 낸다.">'+esc(p.placeLine)+'</textarea>'+
   '</div>'+
 
   '<div class="sub3"><h4 class="h">말하기 불안 점검</h4>'+
-  '<label class="fl" for="anxLevel">지금 내 긴장은 어느 정도'+OPTT()+'<span>'+(p.anxLevel||"-")+' / 5</span></label>'+
+  '<label class="fl" for="anxLevel">지금 내 긴장은 어느 정도<span>'+(p.anxLevel||"-")+' / 5</span></label>'+
   '<input type="range" id="anxLevel" min="0" max="5" step="1" value="'+(p.anxLevel||0)+'" style="width:100%">'+
-  '<label class="fl">긴장하면 내 몸에 나타나는 것'+OPTT()+'<span>해당하는 것을 모두</span></label>'+
+  '<label class="fl">긴장하면 내 몸에 나타나는 것<span>해당하는 것을 모두</span></label>'+
   '<div class="chips">'+signs+'</div>'+
-  '<label class="fl">내 긴장의 가장 큰 원인은'+OPTT()+'</label>'+
+  '<label class="fl">내 긴장의 가장 큰 원인은</label>'+
   chipRow(ANXCAUSE.map(function(x){return {k:x,label:x};}),p.anxCause,"data-anxcause","pl")+
-  '<label class="fl" for="warmup">발표 직전에 할 나의 예열 루틴'+REQT()+'<span>한 가지만, 순서까지</span></label>'+
-  '<textarea class="ta sm" id="warmup" data-f="pre.warmup" data-req="1" placeholder="예) 자리에서 4초 들이마시고 6초 내쉬기를 세 번 하고, 첫 문장만 속으로 한 번 말해 본다.">'+esc(p.warmup)+'</textarea>'+
+  '<label class="fl" for="warmup">발표 직전에 할 나의 예열 루틴<span>한 가지만, 순서까지</span></label>'+
+  '<textarea class="ta sm" id="warmup" data-f="pre.warmup" placeholder="예) 자리에서 4초 들이마시고 6초 내쉬기를 세 번 하고, 첫 문장만 속으로 한 번 말해 본다.">'+esc(p.warmup)+'</textarea>'+
   '<p class="tip">긴장을 지우는 것이 목표가 아닙니다. 긴장한 채로도 할 수 있는 <b>순서</b>를 만들어 두는 것이 목표입니다.</p>'+
   '</div></div>'+
 
@@ -1889,16 +1846,11 @@ function bindFields(){
     el.addEventListener("input", function(){
       setPath(this.getAttribute("data-f"), this.value);
       save();
-      if(this.getAttribute("data-req")) paintReqBar();
       if(this.id==="script") queueTalkRepaint();
     });
   });
 }
 var talkTimer = null;
-function paintReqBar(){
-  var b=document.getElementById("reqbar");
-  if(b) b.innerHTML = reqBarHTML();
-}
 function queueTalkRepaint(){
   /* 숫자는 바로, 핵심어 구획은 잠깐 멈춘 뒤에 다시 그린다 */
   var sec = speakSeconds(S.talk.script);
