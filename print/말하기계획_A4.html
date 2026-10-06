@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>1~3분 말하기 계획 세우기 — 종이 계획서</title>
+<style>
+  @page { size: A4; margin: 10mm 12mm 8mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { font-family: "Noto Sans CJK KR", "Malgun Gothic", sans-serif;
+               color: #15222D; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-size: 10pt; line-height: 1.45; }
+
+  .page { width: 186mm; min-height: 274mm; display: flex; flex-direction: column;
+          page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+
+  /* ── 머리 ── */
+  .top { display: flex; align-items: flex-end; justify-content: space-between;
+         border-bottom: 1.1mm solid #24645F; padding-bottom: 2mm; }
+  .top h1 { font-size: 15.5pt; font-weight: 700; letter-spacing: -0.4pt; }
+  .top .sub { font-size: 8.5pt; color: #64747F; margin-top: 1mm; }
+  .idbox { text-align: right; font-size: 9pt; white-space: nowrap; }
+  .idbox b { font-weight: 700; }
+  .u { display: inline-block; border-bottom: 0.3mm solid #15222D; }
+  .u.w8 { width: 8mm; } .u.w26 { width: 26mm; }
+
+  .note { font-size: 8.5pt; color: #4A5A66; background: #F2F5F7;
+          border-left: 0.9mm solid #C98A0E; padding: 1.6mm 3mm; margin-top: 2.5mm; }
+
+  /* ── 칸 ── */
+  .q { margin-top: 3mm; }
+  .q > .lab { font-size: 10.5pt; font-weight: 700; display: flex; align-items: baseline; gap: 2mm; }
+  .q > .lab .n { display: inline-flex; align-items: center; justify-content: center;
+                 width: 5.2mm; height: 5.2mm; border-radius: 50%;
+                 background: #24645F; color: #fff; font-size: 8pt; font-weight: 700; flex: none; }
+  .q > .lab .hint { font-size: 8.5pt; font-weight: 400; color: #64747F; }
+  .q > .eg { font-size: 8.3pt; color: #8A95A0; margin: 0.6mm 0 1mm 7.2mm; }
+
+  .lines { margin-left: 7.2mm; }
+  .lines .ln { height: 8.6mm; border-bottom: 0.25mm solid #B9C4CC; }
+  .lines.tight .ln { height: 7.6mm; }
+
+  /* ── 3P ── */
+  .sec { margin-top: 4mm; border: 0.4mm solid #D4DBE1; border-radius: 1.5mm; padding: 2.5mm 3.5mm 3mm; }
+  .sec > h2 { font-size: 11pt; display: flex; align-items: center; gap: 2mm; }
+  .sec > h2 .tag { background: #24645F; color: #fff; font-size: 8pt; font-weight: 700;
+                   padding: 0.4mm 1.8mm; border-radius: 1mm; letter-spacing: 0.3pt; }
+  .sec > h2 .d { font-size: 8.5pt; font-weight: 400; color: #64747F; }
+  .pl { font-size: 8.5pt; font-weight: 700; color: #24645F; letter-spacing: 0.5pt; }
+
+  .sub { margin-top: 2.6mm; }
+  .sub > .lab { font-size: 10pt; font-weight: 700; }
+  .sub > .lab .hint { font-size: 8.5pt; font-weight: 400; color: #64747F; }
+  .sub .lines { margin-left: 0; }
+
+  /* 고르는 칸 */
+  .picks { display: flex; gap: 3mm; margin-top: 1.5mm; }
+  .pick { flex: 1; border: 0.4mm solid #C3CDD4; border-radius: 1.5mm; padding: 1.6mm 2.2mm; }
+  .pick .cb { float: left; margin: 0.6mm 1.8mm 0 0; }
+  .pick .t { font-size: 9.5pt; font-weight: 700; }
+  .pick .h { font-size: 8pt; color: #64747F; line-height: 1.35; margin-top: 0.6mm; clear: both; }
+
+  .cb { display: inline-block; width: 3.4mm; height: 3.4mm;
+        border: 0.35mm solid #15222D; border-radius: 0.5mm; vertical-align: -0.4mm; }
+  .cbrow { display: flex; flex-wrap: wrap; gap: 1.5mm 4mm; margin-top: 1.5mm; }
+  .cbrow span { font-size: 9pt; white-space: nowrap; }
+  .cbrow span .cb { margin-right: 1.4mm; }
+
+  /* 주제 예시 */
+  .seeds { margin-top: 2mm; margin-left: 7.2mm; border: 0.3mm dashed #C3CDD4;
+           border-radius: 1.5mm; padding: 1.6mm 2.2mm; }
+  .seeds .cap { font-size: 7.8pt; font-weight: 700; color: #C98A0E; margin-bottom: 0.8mm; }
+  .seeds .grid { display: flex; flex-wrap: wrap; gap: 0.3mm 2.4mm; }
+  .seeds .grid span { font-size: 7.2pt; color: #4A5A66; white-space: nowrap; }
+
+  /* 목표 */
+  .goal { margin-top: 3mm; border: 0.5mm solid #C98A0E; border-radius: 1.5mm; padding: 2mm 3mm 0.8mm; }
+  .goal .lab { font-size: 9.5pt; font-weight: 700; color: #9A6A08; }
+  .goal .lab span { font-size: 8pt; font-weight: 400; color: #64747F; }
+  .goal .ln { height: 8.6mm; border-bottom: 0.25mm solid #DCC28A; }
+
+  /* 긴장 눈금 */
+  .scale { display: flex; align-items: flex-start; gap: 0; margin-top: 2mm; }
+  .scale .st { flex: 1; text-align: center; }
+  .scale .st i { display: block; width: 5.5mm; height: 5.5mm; margin: 0 auto 1mm;
+                 border: 0.35mm solid #15222D; border-radius: 50%; }
+  .scale .st b { font-size: 9pt; font-weight: 700; }
+  .scale .st em { display: block; font-size: 7.5pt; color: #64747F; font-style: normal; min-height: 3.6mm; }
+
+  .tip { font-size: 8.5pt; color: #4A5A66; margin-top: 2mm; }
+  .tip b { color: #15222D; }
+
+  /* ── 절취선 ── */
+  .cut { margin: 6mm 0 5mm; border-top: 0.4mm dashed #8A95A0; position: relative; height: 0; }
+  .cut span { position: absolute; left: 0; top: -2.6mm; background: #fff;
+              padding-right: 2mm; font-size: 8pt; color: #64747F; }
+
+  /* ── 청중용 카드 ── */
+  .card { border: 0.7mm solid #15222D; border-radius: 2mm; padding: 6mm 7mm 7mm;
+          flex: 1; display: flex; flex-direction: column; }
+  .card .ch { display: flex; align-items: baseline; justify-content: space-between;
+              border-bottom: 0.3mm solid #D4DBE1; padding-bottom: 2mm; }
+  .card .ch .who { font-size: 11pt; }
+  .card .ch .tagline { font-size: 8pt; color: #64747F; }
+  .card .cl { font-size: 9.5pt; font-weight: 700; color: #24645F; letter-spacing: 0.4pt;
+              margin-top: 6mm; }
+  .card .big { flex: 1.15; min-height: 19mm; border-bottom: 0.3mm solid #B9C4CC; }
+  .card .gl { margin-top: 1mm; flex: 1; display: flex; flex-direction: column; }
+  .card .gl .ln { flex: 1; min-height: 12mm; border-bottom: 0.25mm solid #B9C4CC; }
+  .card .ask { margin-top: 6mm; background: #F2F5F7; border-radius: 1.5mm;
+               padding: 3.5mm 4mm; font-size: 9.5pt; line-height: 1.5; color: #4A5A66; }
+  .card .ask b { color: #15222D; }
+
+  .foot { margin-top: 2mm; flex: none; font-size: 8pt; color: #8A95A0; display: flex;
+          justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ 1면 ══════════ -->
+<div class="page">
+
+  <div class="top">
+    <div>
+      <h1>1~3분 말하기 계획 세우기</h1>
+      <div class="sub">3단원 (2) 듣기·말하기 성찰하기 · 4/6차시 · 성취기준 [9국01-11]</div>
+    </div>
+    <div class="idbox">
+      2학년 <span class="u w8"></span>반 <span class="u w8"></span>번<br>
+      이름 <span class="u w26"></span>
+    </div>
+  </div>
+
+  <div class="note">
+    디벗으로 <b>듣기·말하기 성찰일지</b>를 열 수 없을 때 쓰는 종이 계획서입니다.
+    칸은 성찰일지 ‘2 말하기 계획’과 같습니다. 수업이 끝난 뒤 성찰일지에 그대로 옮겨 적으면 다음 차시로 이어집니다.
+  </div>
+
+  <div class="goal">
+    <div class="lab">이번 말하기에서 꼭 지킬 것 하나 <span>— 지난 시간에 성향 검사를 하고 정한 나의 목표</span></div>
+    <div class="ln"></div>
+  </div>
+
+  <div class="q">
+    <div class="lab"><span class="n">1</span>말하고 싶은 나의 경험 <span class="hint">한 가지만</span></div>
+    <div class="eg">예) 처음으로 김장을 도운 날</div>
+    <div class="lines"><div class="ln"></div></div>
+    <div class="seeds">
+      <div class="cap">주제가 안 떠오르면 — 그대로 쓰지 말고, 내 이야기로 고쳐 쓰는 출발점으로</div>
+      <div class="grid">
+        <span>처음으로 혼자 해낸 일</span><span>크게 웃었던 날</span><span>억울했던 일</span>
+        <span>가족과 보낸 특별한 하루</span><span>친구와 다투고 화해한 일</span><span>오래 기다려 본 것</span>
+        <span>처음 배워 본 것</span><span>실수해서 식은땀 났던 순간</span><span>고맙다고 말하지 못한 일</span>
+        <span>반려동물과 보낸 하루</span><span>길을 잃었던 날</span><span>무언가에 푹 빠졌던 날</span>
+        <span>용돈을 벌어 본 일</span><span>포기하려다 끝까지 한 일</span><span>전학이나 이사로 달라진 것</span>
+        <span>내가 만든 것 중 가장 마음에 드는 것</span><span>칭찬을 받아 어리둥절했던 일</span>
+        <span>체육대회나 축제에서 있었던 일</span><span>처음 가 본 곳</span><span>작지만 뿌듯했던 하루</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="q">
+    <div class="lab"><span class="n">2</span>이 경험을 고른 까닭</div>
+    <div class="eg">예) 힘들었지만 그날 이후로 가족을 보는 눈이 달라졌기 때문이다.</div>
+    <div class="lines tight"><div class="ln"></div><div class="ln"></div></div>
+  </div>
+
+  <div class="sec">
+    <h2><span class="tag">3P</span> 말하기 상황 분석
+      <span class="d">무엇을, 누구에게, 어떤 자리에서 말하는지 먼저 정합니다</span></h2>
+
+    <div class="sub">
+      <div class="lab"><span class="pl">PURPOSE</span> &nbsp;이 말하기의 목적 <span class="hint">하나 골라 ✓</span></div>
+      <div class="picks">
+        <div class="pick"><span class="cb"></span><span class="t">알게 하기</span>
+          <div class="h">내가 겪은 일을 친구들이 또렷하게 그려 볼 수 있게</div></div>
+        <div class="pick"><span class="cb"></span><span class="t">느끼게 하기</span>
+          <div class="h">그때 내 마음이 어땠는지 함께 느낄 수 있게</div></div>
+        <div class="pick"><span class="cb"></span><span class="t">해 보게 하기</span>
+          <div class="h">듣고 나서 한번 해 보고 싶어지게</div></div>
+      </div>
+      <div class="lab" style="margin-top:3mm">한 줄로 풀어 쓰기
+        <span class="hint">— 이 발표가 끝나면 친구들이 무엇을 얻었으면 좋겠나요?</span></div>
+      <div class="lines tight"><div class="ln"></div></div>
+    </div>
+
+    <div class="sub">
+      <div class="lab"><span class="pl">PEOPLE</span> &nbsp;듣는 사람은 우리 반 친구들</div>
+      <div class="lab" style="margin-top:2mm; font-size:9.5pt">친구들이 이미 알고 있는 것
+        <span class="hint">예) 김장이 뭔지는 다들 안다.</span></div>
+      <div class="lines tight"><div class="ln"></div></div>
+      <div class="lab" style="margin-top:2mm; font-size:9.5pt">친구들이 궁금해할 것
+        <span class="hint">예) 중2가 김장을 왜 도왔는지, 얼마나 힘들었는지</span></div>
+      <div class="lines tight"><div class="ln"></div></div>
+      <div class="lab" style="margin-top:2mm; font-size:9.5pt">첫 15초에 관심을 끌 한마디
+        <span class="hint">예) 여러분, 배추 삼십 포기를 씻어 본 적 있나요?</span></div>
+      <div class="lines tight"><div class="ln"></div></div>
+    </div>
+
+    <div class="sub">
+      <div class="lab"><span class="pl">PLACE</span> &nbsp;말하는 자리의 조건 <span class="hint">해당하는 것 모두 ✓</span></div>
+      <div class="cbrow">
+        <span><span class="cb"></span>교실 앞에 서서</span>
+        <span><span class="cb"></span>학급 전체 앞에서</span>
+        <span><span class="cb"></span>화면을 함께 보며</span>
+        <span><span class="cb"></span>마이크 없이</span>
+        <span><span class="cb"></span>자리에 앉은 채로</span>
+        <span><span class="cb"></span>1~3분 안에</span>
+      </div>
+      <div class="lab" style="margin-top:2.5mm; font-size:9.5pt">그래서 조정할 것
+        <span class="hint">예) 마이크가 없으니 뒷자리까지 들리게 목소리를 크게 낸다.</span></div>
+      <div class="lines tight"><div class="ln"></div></div>
+    </div>
+  </div>
+
+  <div class="foot"><span>듣기·말하기 성찰일지 · 종이 계획서 (1/2)</span><span>2학년 국어</span></div>
+</div>
+
+<!-- ══════════ 2면 ══════════ -->
+<div class="page">
+
+  <div class="sec" style="margin-top:0">
+    <h2>말하기 불안 점검 <span class="d">긴장을 지우는 것이 목표가 아니라, 긴장한 채로도 할 수 있는 순서를 만드는 것이 목표입니다</span></h2>
+
+    <div class="sub">
+      <div class="lab">지금 내 긴장은 어느 정도 <span class="hint">하나에 ✓</span></div>
+      <div class="scale">
+        <div class="st"><i></i><b>0</b><em>전혀</em></div>
+        <div class="st"><i></i><b>1</b><em></em></div>
+        <div class="st"><i></i><b>2</b><em>조금</em></div>
+        <div class="st"><i></i><b>3</b><em></em></div>
+        <div class="st"><i></i><b>4</b><em>많이</em></div>
+        <div class="st"><i></i><b>5</b><em>아주 많이</em></div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <div class="lab">긴장하면 내 몸에 나타나는 것 <span class="hint">해당하는 것 모두 ✓</span></div>
+      <div class="cbrow">
+        <span><span class="cb"></span>심장이 빨리 뛴다</span>
+        <span><span class="cb"></span>손이나 다리가 떨린다</span>
+        <span><span class="cb"></span>목소리가 떨린다</span>
+        <span><span class="cb"></span>얼굴이 뜨거워진다</span>
+        <span><span class="cb"></span>말이 빨라진다</span>
+        <span><span class="cb"></span>머릿속이 하얘진다</span>
+        <span><span class="cb"></span>목이 마른다</span>
+        <span><span class="cb"></span>배가 아프다</span>
+      </div>
+    </div>
+
+    <div class="sub">
+      <div class="lab">내 긴장의 가장 큰 원인은 <span class="hint">하나 골라 ✓</span></div>
+      <div class="cbrow" style="gap:1.5mm 5mm">
+        <span><span class="cb"></span>공식적인 말하기 상황이 익숙하지 않아서</span>
+        <span><span class="cb"></span>말할 내용을 충분히 준비하지 못해서</span>
+        <span><span class="cb"></span>친구들이 나를 어떻게 볼지 걱정이 커서</span>
+      </div>
+    </div>
+
+    <div class="sub">
+      <div class="lab">발표 직전에 할 나의 예열 루틴 <span class="hint">한 가지만, 순서까지</span></div>
+      <div class="eg" style="margin-left:0">예) 자리에서 4초 들이마시고 6초 내쉬기를 세 번 하고, 첫 문장만 속으로 한 번 말해 본다.</div>
+      <div class="lines"><div class="ln"></div><div class="ln"></div></div>
+    </div>
+  </div>
+
+  <div class="tip">이 종이의 1면이 <b>발표자용 카드</b>입니다. 발표할 때 책상에 펴 놓고 보세요.
+    아래 칸은 잘라서 <b>청중용 카드</b>로 씁니다. 발표하는 동안 친구들이 보도록 들어 보이거나 칠판에 붙입니다.</div>
+
+  <div class="cut"><span>✂ 여기를 자르세요</span></div>
+
+  <div class="card">
+    <div class="ch">
+      <div class="who">2학년 <span class="u w8"></span>반 <span class="u w8"></span>번 이름 <span class="u w26"></span></div>
+      <div class="tagline">말하기 계획 카드 · 청중용</div>
+    </div>
+
+    <div class="cl" style="margin-top:5mm">오늘 들려줄 이야기</div>
+    <div class="big"></div>
+
+    <div class="cl">이 발표에서 지켜볼 것 <span style="font-weight:400;color:#64747F;letter-spacing:0">— 내가 정한 목표 한 가지를 그대로 옮겨 적기</span></div>
+    <div class="gl"><div class="ln"></div></div>
+
+    <div class="ask">이 한 가지가 <b>실제로 일어났는지</b> 보면서 들어 주세요.
+      본 장면을 근거로 이야기해 주면 가장 큰 도움이 됩니다.</div>
+  </div>
+
+  <div class="foot"><span>듣기·말하기 성찰일지 · 종이 계획서 (2/2)</span><span>2학년 국어</span></div>
+</div>
+
+</body>
+</html>
