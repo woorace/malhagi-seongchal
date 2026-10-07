@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>1~3분 말하기와 성찰 — 종이 기록지</title>
+<style>
+  @page { size: A4; margin: 10mm 12mm 8mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { font-family: "Noto Sans CJK KR", "Malgun Gothic", sans-serif;
+               color: #15222D; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-size: 10pt; line-height: 1.45; }
+  .page { width: 186mm; min-height: 274mm; display: flex; flex-direction: column;
+          page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+
+  /* 머리 */
+  .top { display: flex; align-items: flex-end; justify-content: space-between;
+         border-bottom: 1.1mm solid #24645F; padding-bottom: 2mm; }
+  .top h1 { font-size: 15pt; font-weight: 700; letter-spacing: -0.4pt; }
+  .top .sub { font-size: 8.5pt; color: #64747F; margin-top: 1mm; }
+  .idbox { text-align: right; font-size: 9pt; white-space: nowrap; }
+  .u { display: inline-block; border-bottom: 0.3mm solid #15222D; }
+  .u.w8 { width: 8mm; } .u.w26 { width: 26mm; } .u.w34 { width: 34mm; }
+
+  /* 규칙 띠 */
+  .rules { margin-top: 2.5mm; border: 0.4mm solid #D4DBE1; border-radius: 1.5mm;
+           padding: 1.6mm 3mm; display: flex; gap: 3mm; align-items: flex-start; }
+  .rules .cap { font-size: 8.5pt; font-weight: 700; color: #24645F; white-space: nowrap; flex: none; }
+  .rules .items { font-size: 8.5pt; color: #4A5A66; }
+  .rules b { color: #15222D; }
+
+  /* 피드백 카드 */
+  .fc { margin-top: 2.5mm; border: 0.5mm solid #B9C4CC; border-radius: 2mm;
+        padding: 2.5mm 4mm 3mm; }
+  .fc .fh { display: flex; align-items: baseline; justify-content: space-between;
+            border-bottom: 0.3mm solid #D4DBE1; padding-bottom: 2mm; }
+  .fc .fh .n { font-size: 8pt; font-weight: 700; color: #fff; background: #24645F;
+               border-radius: 50%; width: 5mm; height: 5mm; display: inline-flex;
+               align-items: center; justify-content: center; margin-right: 2mm;
+               vertical-align: -0.8mm; }
+  .fc .fh .who { font-size: 10pt; font-weight: 700; }
+  .mark { font-size: 9pt; white-space: nowrap; }
+  .mark b { font-weight: 700; margin-right: 1.5mm; }
+  .mark span { margin-left: 3mm; }
+  .mark i { display: inline-block; width: 4mm; height: 4mm; border: 0.35mm solid #15222D;
+            border-radius: 50%; vertical-align: -0.7mm; margin-right: 1.2mm; }
+
+  .q { margin-top: 2mm; }
+  .q .lab { font-size: 9.5pt; font-weight: 700; }
+  .q .lab .hint { font-size: 8.3pt; font-weight: 400; color: #64747F; }
+  .ln { height: 7.2mm; border-bottom: 0.25mm solid #B9C4CC; }
+  .ln.sm { height: 6.6mm; }
+
+  /* 뒷면 */
+  .sec { margin-top: 3mm; border: 0.4mm solid #D4DBE1; border-radius: 1.5mm;
+         padding: 2.5mm 3.5mm 3mm; }
+  .sec > h2 { font-size: 10.5pt; display: flex; align-items: center; gap: 2mm; }
+  .sec > h2 .d { font-size: 8.5pt; font-weight: 400; color: #64747F; }
+  .goal { margin-top: 2.5mm; border: 0.5mm solid #C98A0E; border-radius: 1.5mm; padding: 2mm 3mm 0.8mm; }
+  .goal .lab { font-size: 9.5pt; font-weight: 700; color: #9A6A08; }
+  .goal .lab span { font-size: 8pt; font-weight: 400; color: #64747F; }
+  .goal .ln { border-bottom-color: #DCC28A; }
+
+  .two { display: flex; gap: 4mm; margin-top: 2mm; }
+  .two > div { flex: 1; border: 0.4mm solid #C3CDD4; border-radius: 1.5mm; padding: 2mm 2.5mm; }
+  .two .k { font-size: 8.5pt; font-weight: 700; color: #24645F; }
+  .two .m { margin-top: 1.5mm; font-size: 9pt; }
+
+  .cbrow { display: flex; flex-wrap: wrap; gap: 1.5mm 5mm; margin-top: 1.5mm; }
+  .cbrow span { font-size: 9pt; white-space: nowrap; }
+  .cb { display: inline-block; width: 3.4mm; height: 3.4mm; border: 0.35mm solid #15222D;
+        border-radius: 0.5mm; vertical-align: -0.4mm; margin-right: 1.4mm; }
+
+  .tip { font-size: 8.5pt; color: #4A5A66; margin-top: 2mm; }
+  .tip b { color: #15222D; }
+  .note { font-size: 8.5pt; color: #4A5A66; background: #F2F5F7;
+          border-left: 0.9mm solid #C98A0E; padding: 1.6mm 3mm; margin-top: 2.5mm; }
+  .foot { margin-top: 1.5mm; flex: none; font-size: 8pt; color: #8A95A0;
+          display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ 앞면 : 청중일 때 ══════════ -->
+<div class="page">
+
+  <div class="top">
+    <div>
+      <h1>청중일 때 — 피드백 카드</h1>
+      <div class="sub">3단원 (2) 듣기·말하기 성찰하기 · 5/6차시 · 모둠에서 들은 친구 세 명에게 한 장씩</div>
+    </div>
+    <div class="idbox">
+      2학년 <span class="u w8"></span>반 <span class="u w8"></span>번<br>
+      이름 <span class="u w26"></span>
+    </div>
+  </div>
+
+  <div class="rules">
+    <div class="cap">좋은 피드백의 조건</div>
+    <div class="items">
+      ① 사람이 아니라 <b>행동</b>에 대해 — “발표를 못했다”가 아니라 “뒷자리에서 잘 안 들렸다”
+      &nbsp;② 내가 <b>본 장면</b>을 근거로 &nbsp;③ 제안은 <b>하나만</b> &nbsp;④ 발표자가 세운 <b>목표</b>를 기준으로, 내 기준이 아니라
+    </div>
+  </div>
+
+  <div class="fc">
+    <div class="fh">
+      <div class="who"><span class="n">1</span>발표자 <span class="u w34"></span></div>
+      <div class="mark"><b>목표 달성</b>
+        <span><i></i>이루었다</span><span><i></i>반쯤</span><span><i></i>아직</span></div>
+    </div>
+    <div class="q"><div class="lab">그 친구가 세운 목표 <span class="hint">발표 전에 들은 대로</span></div>
+      <div class="ln sm"></div></div>
+    <div class="q"><div class="lab">그렇게 본 근거 <span class="hint">내가 본 장면으로</span></div>
+      <div class="ln"></div><div class="ln"></div></div>
+    <div class="q"><div class="lab">좋았던 점 한 가지</div><div class="ln"></div></div>
+    <div class="q"><div class="lab">다음에 이렇게 하면 더 좋겠다 <span class="hint">하나만</span></div>
+      <div class="ln"></div></div>
+  </div>
+
+  <div class="fc">
+    <div class="fh">
+      <div class="who"><span class="n">2</span>발표자 <span class="u w34"></span></div>
+      <div class="mark"><b>목표 달성</b>
+        <span><i></i>이루었다</span><span><i></i>반쯤</span><span><i></i>아직</span></div>
+    </div>
+    <div class="q"><div class="lab">그 친구가 세운 목표 <span class="hint">발표 전에 들은 대로</span></div>
+      <div class="ln sm"></div></div>
+    <div class="q"><div class="lab">그렇게 본 근거 <span class="hint">내가 본 장면으로</span></div>
+      <div class="ln"></div><div class="ln"></div></div>
+    <div class="q"><div class="lab">좋았던 점 한 가지</div><div class="ln"></div></div>
+    <div class="q"><div class="lab">다음에 이렇게 하면 더 좋겠다 <span class="hint">하나만</span></div>
+      <div class="ln"></div></div>
+  </div>
+
+  <div class="fc">
+    <div class="fh">
+      <div class="who"><span class="n">3</span>발표자 <span class="u w34"></span></div>
+      <div class="mark"><b>목표 달성</b>
+        <span><i></i>이루었다</span><span><i></i>반쯤</span><span><i></i>아직</span></div>
+    </div>
+    <div class="q"><div class="lab">그 친구가 세운 목표 <span class="hint">발표 전에 들은 대로</span></div>
+      <div class="ln sm"></div></div>
+    <div class="q"><div class="lab">그렇게 본 근거 <span class="hint">내가 본 장면으로</span></div>
+      <div class="ln"></div><div class="ln"></div></div>
+    <div class="q"><div class="lab">좋았던 점 한 가지</div><div class="ln"></div></div>
+    <div class="q"><div class="lab">다음에 이렇게 하면 더 좋겠다 <span class="hint">하나만</span></div>
+      <div class="ln"></div></div>
+  </div>
+
+  <div class="foot"><span>듣기·말하기 성찰일지 · 종이 기록지 (1/2)</span><span>2학년 국어</span></div>
+</div>
+
+<!-- ══════════ 뒷면 : 발표자일 때 ══════════ -->
+<div class="page">
+
+  <div class="top">
+    <div>
+      <h1>발표자일 때 — 성찰하기</h1>
+      <div class="sub">내 발표가 끝나고, 친구들의 말을 들은 뒤에 씁니다</div>
+    </div>
+    <div class="idbox">
+      2학년 <span class="u w8"></span>반 <span class="u w8"></span>번<br>
+      이름 <span class="u w26"></span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="lab">내가 세운 목표 <span>— 지난 시간에 정한 한 가지. 발표 전에 소리 내어 읽기</span></div>
+    <div class="ln"></div>
+  </div>
+
+  <div class="sec">
+    <h2>오늘 지킬 점검 신호 <span class="d">말하는 동안 머릿속에 두 줄만</span></h2>
+    <div class="q"><div class="lab">준언어 <span class="hint">목소리 크기 · 말의 속도 · 억양 · 쉼 가운데 하나</span></div>
+      <div class="ln sm"></div></div>
+    <div class="q"><div class="lab">비언어 <span class="hint">시선 · 표정 · 손짓 · 자세 가운데 하나</span></div>
+      <div class="ln sm"></div></div>
+  </div>
+
+  <div class="sec">
+    <h2>친구들이 해 준 말 <span class="d">다 적지 말고, 내 목표와 관련된 것만</span></h2>
+    <div class="q"><div class="lab">친구들이 꼽은 좋았던 점</div>
+      <div class="ln sm"></div><div class="ln sm"></div></div>
+    <div class="q"><div class="lab">친구들이 준 제안 <span class="hint">여러 사람이 같은 말을 했다면 그것부터</span></div>
+      <div class="ln sm"></div><div class="ln sm"></div></div>
+
+    <div class="two">
+      <div><div class="k">내가 본 나</div>
+        <div class="m"><span class="cb"></span>이루었다 <span class="cb" style="margin-left:3mm"></span>반쯤 <span class="cb" style="margin-left:3mm"></span>아직</div></div>
+      <div><div class="k">친구들이 본 나</div>
+        <div class="m"><span class="cb"></span>이루었다 <span class="cb" style="margin-left:3mm"></span>반쯤 <span class="cb" style="margin-left:3mm"></span>아직</div></div>
+    </div>
+    <div class="q"><div class="lab">두 칸이 다르다면, 왜 다르게 보였을까
+      <span class="hint">어느 쪽이 맞는지보다 이것이 더 중요합니다</span></div>
+      <div class="ln sm"></div><div class="ln sm"></div></div>
+  </div>
+
+  <div class="sec">
+    <h2>문제 → 원인 → 해결 <span class="d">아쉬운 점만 적으면 성찰이 아니라 후회가 됩니다</span></h2>
+
+    <div class="q"><div class="lab">잘된 점 한 가지 <span class="hint">먼저</span></div>
+      <div class="ln sm"></div></div>
+
+    <div class="q"><div class="lab">문제 — 무엇이 잘 안 되었나 <span class="hint">한 가지만</span></div>
+      <div class="ln sm"></div></div>
+
+    <div class="q"><div class="lab">원인 — 왜 그랬을까 <span class="hint">하나 골라 ✓</span></div>
+      <div class="cbrow">
+        <span><span class="cb"></span>준비가 부족했다</span>
+        <span><span class="cb"></span>긴장이 컸다</span>
+        <span><span class="cb"></span>오래된 말버릇이다</span>
+        <span><span class="cb"></span>청중을 살피지 못했다</span>
+        <span><span class="cb"></span>시간 배분을 잘못했다</span>
+        <span><span class="cb"></span>내용 순서가 엉켰다</span>
+      </div>
+      <div class="ln sm" style="margin-top:1.5mm"></div></div>
+
+    <div class="q"><div class="lab">해결 — 다음 발표에서 할 행동 하나
+      <span class="hint">언제, 무엇을, 얼마나</span></div>
+      <div class="ln sm"></div><div class="ln sm"></div></div>
+
+    <div class="tip">해결은 <b>다짐이 아니라 행동</b>이어야 합니다. “더 열심히 연습한다”가 아니라 “핵심어 세 개만 외운다”처럼.</div>
+  </div>
+
+  <div class="note">디벗이 켜지면 이 내용을 <b>성찰일지 4단계</b>에 그대로 옮겨 적으세요. 앞면은 ‘청중일 때’, 뒷면은 ‘발표자일 때’와 칸 순서가 같습니다.</div>
+
+  <div class="foot"><span>듣기·말하기 성찰일지 · 종이 기록지 (2/2)</span><span>2학년 국어</span></div>
+</div>
+
+</body>
+</html>
