@@ -605,7 +605,7 @@ var SEEDS = [
 ];
 
 /* =================== 구상 타이머 =================== */
-var TIMER = {sec:0, total:0, run:false, full:false, cmin:9, csec:0};
+var TIMER = {sec:0, total:0, run:false, full:false, cmin:2, csec:0};
 var timerTick = null;
 function tfmt(s){
   if(s<0) s=0;
@@ -664,7 +664,7 @@ function paintClock(){
   if(b){ b.textContent=tfmt(TIMER.sec); b.className="tbig "+tstate(); }
 }
 function timerBarHTML(){
-  var mins=[3,5,9,10], h='<div class="tbar">', i;
+  var mins=[1,2,3,5], h='<div class="tbar">', i;
   h += '<span class="tclock '+tstate()+'" id="tclock">'+tfmt(TIMER.sec)+'</span>';
   h += '<button id="tgo">'+(TIMER.run?"멈춤":"시작")+'</button>'+
        '<button id="treset">되돌리기</button>'+
@@ -794,7 +794,7 @@ function healState(f){
   if(!f.pre.place || typeof f.pre.place!=="object") f.pre.place = {};
   if(!Array.isArray(f.goals)) f.goals = [];
   /* 4단계가 있던 때의 일지를 열면 마무리 화면으로 보낸다 */
-  if(f.view==="reflect") f.view = "done";
+  if(f.view==="reflect" || f.view==="done") f.view = "present";
   if(!Array.isArray(f.talk.keywords)) f.talk.keywords = ["","",""];
   while(f.talk.keywords.length<3) f.talk.keywords.push("");
   if(!Array.isArray(f.fb.given)) f.fb.given = [];
@@ -826,7 +826,8 @@ function toast(msg){
 function stepOf(){
   if(S.view==="intro"||S.view==="quiz"||S.view==="result") return 1;
   if(S.view==="plan") return 2;
-  return 3;
+  if(S.view==="talk") return 3;
+  return 4;
 }
 function goalList(){
   return S.goals.map(function(g){ return (g.refined||"").trim() || g.text; });
@@ -834,8 +835,8 @@ function goalList(){
 function paintTop(){
   var box = document.getElementById("topbarIn");
   var now = stepOf();
-  var names = [["1","나의 성향과 목표"],["2","말하기 계획"],["3","대본 쓰기"]];
-  var done = [ !!S.goals.length, !!(S.pre.topic&&S.pre.purpose), !!S.talk.script ];
+  var names = [["1","나의 성향과 목표"],["2","말하기 계획"],["3","대본 쓰기"],["4","발표 및 성찰"]];
+  var done = [ !!S.goals.length, !!(S.pre.topic&&S.pre.purpose), !!S.talk.script, false ];
   var h = '<div class="steps">';
   names.forEach(function(n,i){
     var cls = (now===i+1) ? "now" : (done[i] ? "done" : "");
@@ -878,7 +879,8 @@ function paintSaveBar(){
 function gotoStep(n){
   if(n===1) S.view = S.scores ? "result" : "intro";
   else if(n===2) S.view = "plan";
-  else S.view = "talk";
+  else if(n===3) S.view = "talk";
+  else S.view = "present";
   render();
 }
 
@@ -947,14 +949,14 @@ function viewIntro(){
   '<polyline points="0,23 24,23 36,9 48,37 60,15 72,31 84,23 300,23" fill="none" stroke="#24645F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/></svg>'+
   '<h1 class="sf hero">듣기·말하기 성찰일지</h1>'+
   '<p class="sub">1~3분 말하기 &middot; 점검하고 조정하기</p>'+
-  '<p class="lede">발표를 잘하는 사람과 못하는 사람이 따로 있는 것이 아닙니다. 자기 말하기를 <strong style="color:#15222D">점검하고 조정해 본 사람</strong>과 그러지 않은 사람이 있을 뿐입니다. 이 일지는 <strong style="color:#15222D">발표를 준비하는 데까지</strong> 세 단계로 함께합니다.</p>'+
+  '<p class="lede">발표를 잘하는 사람과 못하는 사람이 따로 있는 것이 아닙니다. 자기 말하기를 <strong style="color:#15222D">점검하고 조정해 본 사람</strong>과 그러지 않은 사람이 있을 뿐입니다. 이 일지는 네 단계로 그 과정을 따라갑니다.</p>'+
 
   '<div class="card" style="margin-top:22px">'+
   '<h4 class="h" style="margin-top:0">이 일지에서 할 일</h4>'+
   '<p class="body" style="font-size:13.5px;margin:0"><strong>1단계</strong> 나의 발표 성향을 검사하고, 그 결과에서 이번에 꼭 지킬 목표 하나를 고른다.<br>'+
   '<strong>2단계</strong> 3P와 말하기 불안을 점검해 계획을 세우고, 그 계획으로 발표 자료 한 장을 만든다.<br>'+
-  '<strong>3단계</strong> 대본을 쓰고, 말하는 동안 지킬 점검 신호를 두 개 정한다.</p>'+
-  '<p class="body" style="font-size:13.5px;margin:10px 0 0;color:#64747F">발표와 성찰은 화면이 아니라 <strong style="color:#15222D">종이 활동지와 친구들 앞에서</strong> 합니다.</p></div>'+
+  '<strong>3단계</strong> 대본을 쓰고, 말하는 동안 지킬 점검 신호를 두 개 정한다.<br>'+
+  '<strong>4단계</strong> 모둠 앞에서 발표하고, 친구들과 피드백을 주고받은 뒤 문제 &rarr; 원인 &rarr; 해결로 성찰한다.</p></div>'+
 
   '<p class="note">이 검사는 진단이 아니라 점검입니다. 정답도 좋은 점수도 없습니다. 그리고 <strong>긴장을 많이 한다는 것과 발표를 못한다는 것은 다릅니다.</strong> 불안도와 역량을 따로 재는 이유가 바로 그것입니다. 결과를 잘 쓰려면 솔직하게 답하는 것이 가장 중요합니다.</p>'+
 
@@ -1137,14 +1139,9 @@ function viewPlan(){
   return '<div class="fade">'+
   '<div class="phase">2단계</div>'+
   '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">1~3분 말하기 계획 세우기</h2>'+
-  '<p class="lede" style="margin-bottom:6px">친구들에게 말하고 싶은 <strong style="color:#15222D">나의 경험</strong>을 하나 골라, 말하기 전에 점검할 것을 채웁니다. 말하는 중에 점검할 것은 3단계에서 정하고, 말하기를 마친 뒤의 성찰은 종이 활동지에서 합니다.</p>'+
+  '<p class="lede" style="margin-bottom:6px">친구들에게 말하고 싶은 <strong style="color:#15222D">나의 경험</strong>을 하나 골라, 말하기 상황을 분석하고 긴장을 점검합니다. 여기서 세운 계획이 그대로 발표 자료가 됩니다.</p>'+
   peakLine+
-  '<div id="timerzone">'+timerBarHTML()+'</div>'+
-
-  /* ── 말하기 전 ── */
-  '<div class="panel pre" style="margin-top:22px">'+
-  '<div class="ph"><h3>말하기 전</h3><span class="when a">발표 전에 작성</span></div>'+
-  '<p class="plede">무엇을, 누구에게, 어떤 자리에서 말하는지 먼저 정해 둡니다. 이것을 정하지 않으면 대본이 길어지기만 합니다.</p>'+
+  '<p class="body" style="font-size:13.5px;margin:14px 0 0">무엇을, 누구에게, 어떤 자리에서 말하는지 먼저 정해 둡니다. 이것을 정하지 않으면 대본이 길어지기만 합니다.</p>'+
 
   '<label class="fl" for="topic">말하고 싶은 경험<span>한 가지만</span></label>'+
   '<input class="inp" id="topic" data-f="pre.topic" placeholder="예) 처음으로 김장을 도운 날" value="'+esc(p.topic)+'">'+
@@ -1155,7 +1152,7 @@ function viewPlan(){
   '<label class="fl" for="why">이 경험을 고른 까닭</label>'+
   '<textarea class="ta sm" id="why" data-f="pre.why" placeholder="예) 힘들었지만 그날 이후로 가족을 보는 눈이 달라졌기 때문이다.">'+esc(p.why)+'</textarea>'+
 
-  '<div class="sub3"><h4 class="h"><span class="pcol">3P</span> 말하기 상황 분석</h4>'+
+  '<div class="sub3"><h4 class="h">1) <span class="pcol">3P</span> 말하기 상황 분석</h4>'+
 
   '<label class="fl"><span class="pcol">PURPOSE</span> &nbsp;이 말하기의 목적</label>'+
   chipRow(PURPOSE,p.purpose,"data-purpose")+
@@ -1177,7 +1174,7 @@ function viewPlan(){
   '<textarea class="ta sm" id="placeLine" data-f="pre.placeLine" style="margin-top:8px" placeholder="그래서 조정할 것 &mdash; 예) 마이크가 없으니 뒷자리까지 들리게 목소리를 크게 낸다.">'+esc(p.placeLine)+'</textarea>'+
   '</div>'+
 
-  '<div class="sub3"><h4 class="h">말하기 불안 점검</h4>'+
+  '<div class="sub3"><h4 class="h">2) 말하기 불안 점검</h4>'+
   '<label class="fl" for="anxLevel">지금 내 긴장은 어느 정도<span>'+(p.anxLevel||"-")+' / 5</span></label>'+
   '<input type="range" id="anxLevel" min="0" max="5" step="1" value="'+(p.anxLevel||0)+'" style="width:100%">'+
   '<label class="fl">긴장하면 내 몸에 나타나는 것<span>해당하는 것을 모두</span></label>'+
@@ -1187,15 +1184,16 @@ function viewPlan(){
   '<label class="fl" for="warmup">발표 직전에 할 나의 예열 루틴<span>한 가지만, 순서까지</span></label>'+
   '<textarea class="ta sm" id="warmup" data-f="pre.warmup" placeholder="예) 자리에서 4초 들이마시고 6초 내쉬기를 세 번 하고, 첫 문장만 속으로 한 번 말해 본다.">'+esc(p.warmup)+'</textarea>'+
   '<p class="tip">긴장을 지우는 것이 목표가 아닙니다. 긴장한 채로도 할 수 있는 <b>순서</b>를 만들어 두는 것이 목표입니다.</p>'+
-  '</div></div>'+
+  '</div>'+
 
   '<h3 class="sf h">발표 자료 만들기</h3>'+
   '<p class="body" style="font-size:13.5px;margin-bottom:12px">세운 계획이 그대로 발표 자료가 됩니다. 두 장이 나옵니다. <strong>발표 자료</strong>는 캡처해 패들렛에 올려 발표하는 동안 모둠이 함께 보고, <strong>내 준비 카드</strong>는 준비한 것이 다 담겨 있어 발표 직전에 나만 봅니다. 자료를 꾸미는 데 시간을 쓰지 않는 것이 목적입니다.</p>'+
   '<div class="btnrow">'+
   '<button class="btn" id="openPlanCard"'+(planCardReady()?"":" disabled")+'>발표 자료 만들기</button>'+
+  '<button class="ghost" id="planPad">패들렛에 올리기</button>'+
   '<button class="ghost" id="toTalk">3단계로 &mdash; 대본 쓰기</button></div>'+
   (planCardReady()
-    ? '<p class="hint">카드 아래에서 두 장을 바꿔 가며 볼 수 있습니다. 패들렛에 올리는 것은 <b>발표 자료</b>입니다.</p>'
+    ? '<p class="hint">카드 아래에서 두 장을 바꿔 가며 볼 수 있습니다. 패들렛에 올리는 것은 <b>발표 자료</b>이고, <b>자기 모둠 칸</b>에 올립니다.</p>'
     : '<p class="hint">말하고 싶은 경험과 말하기의 목적을 채우면 자료를 만들 수 있습니다.</p>')+
   '</div>';
 }
@@ -1276,6 +1274,7 @@ function paintPlanCard(){
     '</span>'+
     '<span>'+(aud ? '이 화면을 캡처해 패들렛 <b>자기 모둠 칸</b>에 올리세요'
                   : '발표 직전에 나만 보는 카드입니다 &mdash; 올리지 마세요')+'</span>'+
+    '<button id="pcPad">패들렛 열기</button>'+
     '<button id="pcClose">닫기 (ESC)</button></div>';
 
   box.querySelectorAll("[data-pcmode]").forEach(function(b){
@@ -1283,6 +1282,9 @@ function paintPlanCard(){
       S.pcard.mode = this.getAttribute("data-pcmode");
       save(); paintPlanCard();
     });
+  });
+  document.getElementById("pcPad").addEventListener("click", function(){
+    window.open(PADLET_URL, "_blank", "noopener");
   });
   document.getElementById("pcClose").addEventListener("click", closePlanCard);
   box.addEventListener("click", function(e){ if(e.target===box) closePlanCard(); });
@@ -1296,8 +1298,8 @@ function cuePanelSet(){
   var paraSel = PARA.filter(function(x){return x.k===c.para;})[0];
   var nonSel = NONPARA.filter(function(x){return x.k===c.nonpara;})[0];
   return '<div class="panel dur" style="margin-top:22px">'+
-  '<div class="ph"><h3>말하기 중 &mdash; 점검 신호 정하기</h3><span class="when b">발표하기 전에</span></div>'+
-  '<p class="plede">발표하는 동안에는 글을 쓸 수 없습니다. 그래서 <strong>미리 점검 신호를 두 개만</strong> 정해 둡니다. 준언어에서 하나, 비언어에서 하나입니다. 이 두 줄은 아래 발표 화면에도 계속 떠 있습니다.</p>'+
+  '<div class="ph"><h3>점검 신호 정하기</h3></div>'+
+  '<p class="plede">발표하는 동안에는 글을 쓸 수 없습니다. 그래서 <strong>미리 점검 신호를 두 개만</strong> 정해 둡니다. 준언어에서 하나, 비언어에서 하나입니다.</p>'+
 
   '<label class="fl">준언어 &mdash; 말에 얹히는 소리<span>하나만</span></label>'+
   chipRow(PARA,c.para,"data-para","am")+
@@ -1337,47 +1339,58 @@ function viewTalk(){
   '<div class="gauge '+gcls+'" id="gauge"><i style="width:'+gw+'%"></i></div>'+
 
   cuePanelSet()+
-  '<div class="btnrow"><button class="btn" id="toDone">마무리 &mdash; 종이로 넘기기</button></div>'+
+
+  '<h3 class="sf h">종이로 옮기기</h3>'+
+  '<p class="body" style="font-size:13.5px;margin-bottom:10px">발표할 때는 화면을 보지 않습니다. 아래 두 줄과 대본을 <strong>손으로</strong> 옮겨 적어 두세요. 옮겨 적다 보면 대본이 저절로 줄고, 줄어든 그것이 발표할 때 손에 쥐는 종이가 됩니다.</p>'+
+  cueCopyBox()+
+  '<div class="btnrow"><button class="btn" id="toPresent">4단계로 &mdash; 발표하고 성찰하기</button>'+
+  '<button class="ghost" id="talkDl">내 일지 내려받기</button></div>'+
   '</div>';
 }
-
-/* =================== 마무리 : 화면에서 종이로 =================== */
-var PADLET_URL = "https://padlet.com/woorace/padlet-s0248qwl985nvt5mpqcq";
-function viewDone(){
+/* 종이에 옮겨 적을 두 줄 */
+function cueCopyBox(){
   var pl = PARA.filter(function(x){return x.k===S.cue.para;})[0];
   var nl = NONPARA.filter(function(x){return x.k===S.cue.nonpara;})[0];
-  var cueBox = (pl||nl)
-    ? '<div class="card" style="margin-top:12px">'+
-      (pl?'<p class="body" style="margin:0 0 8px"><b>'+esc(pl.label)+'</b> &mdash; '+esc(S.cue.paraFix||pl.fix)+'</p>':'')+
-      (nl?'<p class="body" style="margin:0"><b>'+esc(nl.label)+'</b> &mdash; '+esc(S.cue.nonparaFix||nl.fix)+'</p>':'')+
-      '</div>'
-    : '<div class="empty" style="margin-top:12px">3단계에서 점검 신호를 두 개 고르면 여기에 뜹니다.</div>';
+  if(!pl && !nl) return '<div class="empty">위에서 점검 신호를 두 개 고르면 여기에 뜹니다.</div>';
+  return '<div class="card">'+
+    (pl?'<p class="body" style="margin:0 0 8px"><b>'+esc(pl.label)+'</b> &mdash; '+esc(S.cue.paraFix||pl.fix)+'</p>':'')+
+    (nl?'<p class="body" style="margin:0"><b>'+esc(nl.label)+'</b> &mdash; '+esc(S.cue.nonparaFix||nl.fix)+'</p>':'')+
+    '</div>';
+}
+
+/* =================== 4단계 : 발표 및 성찰 =================== */
+var PADLET_URL = "https://padlet.com/woorace/padlet-s0248qwl985nvt5mpqcq";
+var FBRULE = [
+  "친구가 설정한 말하기 목표와 관련하여 피드백한다.",
+  "실제로 관찰한 발언이나 행동을 근거로 제시한다.",
+  "개선을 제안할 때에는 실천할 수 있는 방법을 제시한다.",
+  "상대를 존중하는 표현을 사용한다."
+];
+function viewPresent(){
+  var rules="", i;
+  for(i=0;i<FBRULE.length;i++)
+    rules += '<li>'+esc(FBRULE[i])+'</li>';
 
   return '<div class="fade">'+
-  '<div class="phase">마무리</div>'+
-  '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">종이로 넘기기</h2>'+
-  '<p class="lede">준비는 여기까지입니다. 아래 네 가지를 끝내고 <strong style="color:#15222D">디벗을 덮습니다.</strong></p>'+
+  '<div class="phase">4단계</div>'+
+  '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">발표 및 성찰</h2>'+
+  '<p class="lede">여기서부터는 화면이 아니라 <strong style="color:#15222D">사람을 보고</strong> 합니다. 이 화면은 <strong style="color:#15222D">모둠에 한 대만</strong> 켜 두고 시간과 기준을 함께 봅니다. 쓰는 것은 모두 종이 활동지에 합니다.</p>'+
 
-  '<h3 class="sf h">하나 &mdash; 발표 자료를 패들렛에 올리기</h3>'+
-  '<p class="body" style="font-size:13.5px;margin-bottom:10px">대본을 쓰면서 첫 한마디가 바뀌었을 수 있습니다. 자료를 다시 열어 확인한 뒤 캡처해 올리세요. 올리는 것은 <b>발표 자료</b>이고, <b>자기 모둠 칸</b>에 올립니다.</p>'+
+  '<h3 class="sf h">시간 재기</h3>'+
+  '<div id="timerzone">'+timerBarHTML()+'</div>'+
+
+  '<h3 class="sf h">동료 피드백 기준</h3>'+
+  '<p class="body" style="font-size:13.5px;margin-bottom:10px">친구의 발표가 끝나면 아래 네 가지에 맞추어 말합니다. 하나라도 빠지면 “잘했어”로 끝납니다.</p>'+
+  '<div class="card"><ul class="rules">'+rules+'</ul></div>'+
+
+  '<h3 class="sf h">성찰하기</h3>'+
+  '<p class="body" style="font-size:13.5px">발표가 끝나면 <b>30초 동안 각자 조용히</b> 활동지를 채웁니다. 듣는 사람은 친구의 것을, 발표한 사람은 자기 것을 적습니다. 그다음 말로 주고받습니다.</p>'+
+  '<p class="body" style="font-size:13.5px">활동지에는 <b>C &rarr; 잘한 점</b>과 <b>S &dashv; C &rarr; P</b>를 적습니다. 친구들의 말을 다 듣고 나면, 내가 본 나와 친구들이 본 나를 나란히 놓고 <strong style="color:#15222D">왜 다르게 보였는지</strong>를 한 줄로 적습니다. 거기서 나온 것이 다음 발표에서 바꿀 한 가지입니다.</p>'+
+
   '<div class="btnrow">'+
-  '<button class="btn" id="doneCard"'+(planCardReady()?"":" disabled")+'>발표 자료 다시 열기</button>'+
-  '<button class="ghost" id="donePad">패들렛 열기</button></div>'+
-  (planCardReady()?'':'<p class="hint">2단계에서 경험과 목적을 채워야 자료를 만들 수 있습니다.</p>')+
-
-  '<h3 class="sf h">둘 &mdash; 점검 신호 두 줄을 종이에 옮겨 적기</h3>'+
-  '<p class="body" style="font-size:13.5px;margin-bottom:0">발표할 때는 화면을 보지 않습니다. 이 두 줄은 손에 쥔 종이에 있어야 합니다.</p>'+
-  cueBox+
-
-  '<h3 class="sf h">셋 &mdash; 대본을 손으로 옮겨 적기</h3>'+
-  '<p class="body" style="font-size:13.5px">대본은 인쇄하지 않습니다. 공책이나 활동지 여백에 <b>손으로</b> 옮겨 적으세요. 옮겨 적다 보면 저절로 줄어들고, 줄어든 그것이 발표할 때 손에 쥐는 종이가 됩니다. 그대로 읽으려고 적는 것이 아닙니다.</p>'+
-
-  '<h3 class="sf h">넷 &mdash; 내 일지 내려받기</h3>'+
-  '<p class="body" style="font-size:13.5px;margin-bottom:10px">다음 시간에 이어 쓰려면 꼭 눌러야 합니다.</p>'+
-  '<div class="btnrow"><button class="btn" id="doneDl">내 일지 내려받기</button>'+
-  '<button class="ghost" id="backTalk">3단계로 돌아가기</button></div>'+
-
-  '<p class="note" style="margin-top:24px">여기서부터는 화면이 아니라 <strong>사람을 보고</strong> 합니다. 발표도, 친구에게 주는 말도, 성찰도 종이 활동지에서 합니다.</p>'+
+  '<button class="ghost" id="presentPad">패들렛 열기</button>'+
+  '<button class="ghost" id="backTalk">3단계로 돌아가기</button>'+
+  '<button class="ghost" id="presentDl">내 일지 내려받기</button></div>'+
   '</div>';
 }
 
@@ -1453,7 +1466,7 @@ function render(){
   else if(S.view==="result") app.innerHTML = viewResult();
   else if(S.view==="plan") app.innerHTML = viewPlan();
   else if(S.view==="talk") app.innerHTML = viewTalk();
-  else app.innerHTML = viewDone();
+  else app.innerHTML = viewPresent();
   paintTop();
   bind();
   save();
@@ -1596,7 +1609,6 @@ function bind(){
       var lab=app.querySelector('label[for="anxLevel"] span');
       if(lab) lab.textContent = this.value + " / 5";
     });
-    bindTimer();
     el=document.getElementById("seedOpen");
     if(el) el.addEventListener("click", function(){ S.ui.seeds=true; render(); });
     el=document.getElementById("seedClose");
@@ -1610,6 +1622,10 @@ function bind(){
     });
     el=document.getElementById("openPlanCard");
     if(el) el.addEventListener("click", openPlanCard);
+    el=document.getElementById("planPad");
+    if(el) el.addEventListener("click", function(){
+      window.open(PADLET_URL, "_blank", "noopener");
+    });
     el=document.getElementById("toTalk");
     if(el) el.addEventListener("click", function(){ S.view="talk"; render(); });
   }
@@ -1631,18 +1647,19 @@ function bind(){
         render();
       });
     });
-    el=document.getElementById("toDone");
-    if(el) el.addEventListener("click", function(){ S.view="done"; render(); });
+    el=document.getElementById("toPresent");
+    if(el) el.addEventListener("click", function(){ S.view="present"; render(); });
+    el=document.getElementById("talkDl");
+    if(el) el.addEventListener("click", downloadWork);
   }
 
-  if(S.view==="done"){
-    el=document.getElementById("doneCard");
-    if(el) el.addEventListener("click", openPlanCard);
-    el=document.getElementById("donePad");
+  if(S.view==="present"){
+    bindTimer();
+    el=document.getElementById("presentPad");
     if(el) el.addEventListener("click", function(){
       window.open(PADLET_URL, "_blank", "noopener");
     });
-    el=document.getElementById("doneDl");
+    el=document.getElementById("presentDl");
     if(el) el.addEventListener("click", downloadWork);
     el=document.getElementById("backTalk");
     if(el) el.addEventListener("click", function(){ S.view="talk"; render(); });
