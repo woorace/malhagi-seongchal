@@ -1267,7 +1267,7 @@ function viewPlan(){
   '<div class="p3"><div class="p3h"><span class="pn">셋째</span><span class="pcol">PLACE</span> 말하는 자리의 조건</div>'+
   '<label class="fl">해당하는 것을 모두 고르세요</label>'+
   '<div class="chips">'+places+'</div>'+
-  '<textarea class="ta sm" id="placeLine" data-f="pre.placeLine" style="margin-top:8px" placeholder="그래서 조정할 것 &mdash; 예) 모둠원 모두와 시선을 골고루 마주친다.">'+esc(p.placeLine)+'</textarea>'+
+  '<textarea class="ta sm" id="placeLine" data-f="pre.placeLine" style="margin-top:8px" placeholder="그래서 조정할 것 &mdash; 예) 마이크가 없으니 뒷자리까지 들리게 목소리를 크게 낸다.">'+esc(p.placeLine)+'</textarea>'+
   '</div>'+
   actEnd()+
 
@@ -1277,7 +1277,7 @@ function viewPlan(){
   '<label class="fl">내 긴장의 가장 큰 원인은</label>'+
   chipRow(ANXCAUSE.map(function(x){return {k:x,label:x};}),p.anxCause,"data-anxcause","pl")+
   '<label class="fl" for="warmup">발표 직전에 할 나의 예열 루틴<span>한 가지만, 순서까지</span></label>'+
-  '<textarea class="ta sm" id="warmup" data-f="pre.warmup" placeholder="예) 발표 전체 흐름을 머릿속에 그린 후 발표를 시작한다.">'+esc(p.warmup)+'</textarea>'+
+  '<textarea class="ta sm" id="warmup" data-f="pre.warmup" placeholder="예) 발표 전체 흐름을 그린 후 발표를 시작한다. / 성공적으로 발표를 해내는 장면을 상상한다.">'+esc(p.warmup)+'</textarea>'+
   '<p class="tip">긴장을 지우는 것이 목표가 아닙니다. 긴장한 채로도 할 수 있는 <b>순서</b>를 만들어 두는 것이 목표입니다.</p>'+
   actEnd()+
 
