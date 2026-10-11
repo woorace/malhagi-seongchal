@@ -28,7 +28,7 @@ img{max-width:100%}
 /* ── 공통 타이포 ── */
 .hero{font-size:clamp(30px,7.6vw,46px);line-height:1.24;margin:18px 0 8px;}
 .sub{font-size:15px;color:var(--mut);margin:0 0 20px;}
-.lede{font-size:15px;line-height:1.92;color:var(--mut);max-width:47ch;}
+.lede{font-size:15px;line-height:1.92;color:var(--mut);}
 .note{font-size:13.5px;line-height:1.85;color:var(--mut);
   border-left:3px solid var(--teal);padding:3px 0 3px 14px;margin:24px 0;}
 .note strong{color:var(--ink);}
@@ -345,6 +345,22 @@ label.fl span{font-weight:400;color:var(--mut);margin-left:6px;font-size:12.5px;
 .rules{list-style:none;padding:0;margin:10px 0 0;}
 .rules li{position:relative;padding-left:22px;font-size:13.5px;line-height:1.8;color:var(--mut);margin-bottom:5px;}
 .rules li::before{content:"\2022";position:absolute;left:6px;color:var(--plum);font-weight:700;}
+.p3{border-left:3px solid var(--line);padding-left:15px;margin-top:20px;}
+.p3:first-of-type{margin-top:12px;}
+.p3h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;
+  font-size:14.5px;font-weight:700;color:var(--ink);}
+.p3h .pn{font-size:12px;font-weight:700;color:var(--mut);}
+.nums{list-style:none;padding:0;margin:10px 0 0;}
+.nums li{position:relative;padding-left:26px;font-size:14px;line-height:1.85;
+  color:var(--mut);margin-bottom:10px;}
+.nums li b{color:var(--ink);}
+.nums li .nn{position:absolute;left:0;top:0;color:var(--teal);font-weight:700;}
+.tfrules{list-style:none;padding:0;margin:0;max-width:640px;text-align:left;}
+.tfrules li{position:relative;padding-left:22px;font-size:clamp(13px,2.6vw,17px);
+  line-height:1.75;color:#C8D6DE;margin-bottom:7px;}
+.tfrules li::before{content:"\2022";position:absolute;left:5px;color:#C98A0E;font-weight:700;}
+.tftitle{font-size:clamp(12px,2.4vw,15px);letter-spacing:1px;color:#7E93A0;
+  font-weight:700;margin-bottom:10px;text-align:left;max-width:640px;width:100%;}
 .cmp2{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
 .cmp2 div{flex:1 1 130px;background:var(--sf);border:1px solid var(--line);
   border-radius:12px;padding:14px 16px;}
@@ -396,8 +412,8 @@ label.fl span{font-weight:400;color:var(--mut);margin-left:6px;font-size:12.5px;
    듣기·말하기 성찰일지
    1단계 나의 성향과 목표   (발표 성향 검사 + 꼭 지킬 목표 하나)
    2단계 말하기 계획        (3P / 말하기 불안 / 발표 자료 카드)
-   3단계 대본 쓰기          (대본 + 예상 시간 + 말하기 중 점검 신호)
-   마무리 종이로 넘기기     (자료 캡처 · 신호 옮겨 적기 · 일지 내려받기)
+   3단계 대본 쓰기          (대본 + 예상 시간 + 말하기 중 점검 사항)
+   4단계 발표 및 성찰       (타이머 · 동료 피드백 기준 · 성찰 활동지 안내)
    발표와 성찰은 화면이 아니라 종이 활동지(P-C-S)와 친구들 앞에서 한다.
    성취기준 [9국01-11]
    =========================================================== */
@@ -677,8 +693,7 @@ function timerBarHTML(){
        '<input type="number" id="tcm" min="0" max="99" inputmode="numeric" value="'+TIMER.cmin+'" aria-label="분">분'+
        '<input type="number" id="tcs" min="0" max="59" step="5" inputmode="numeric" value="'+TIMER.csec+'" aria-label="초">초'+
        '<button id="tset">맞춤</button></span>';
-  h += '</div>'+
-       '<p class="hint" style="margin-top:7px">버튼으로 고르거나 <b>분·초를 직접 입력</b>해 맞출 수 있습니다. 선생님 화면에서 <b>크게 보기</b>로 띄워 두면 반 전체가 같은 시간을 봅니다.</p>';
+  h += '</div>';
   return h;
 }
 function paintTimer(){
@@ -691,8 +706,12 @@ function paintFullTimer(){
   var f=document.getElementById("tfull");
   if(!TIMER.full){ f.className="off"; f.innerHTML=""; return; }
   f.className="";
+  var rl="", i;
+  for(i=0;i<FBRULE.length;i++) rl += '<li>'+esc(FBRULE[i])+'</li>';
   f.innerHTML = '<div class="tbig '+tstate()+'" id="tbig">'+tfmt(TIMER.sec)+'</div>'+
-    '<div class="tlab">'+(TIMER.sec<=0 ? '시간이 끝났습니다' : '말하기 계획 세우기')+'</div>'+
+    (TIMER.sec<=0 ? '<div class="tlab">시간이 끝났습니다</div>' : '')+
+    '<div class="tftitle">동료 피드백 기준</div>'+
+    '<ul class="tfrules">'+rl+'</ul>'+
     '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">'+
     '<button class="dx" id="tfgo">'+(TIMER.run?"멈춤":"시작")+'</button>'+
     '<button class="dx" id="tfclose">닫기 (ESC)</button></div>';
@@ -955,7 +974,7 @@ function viewIntro(){
   '<h4 class="h" style="margin-top:0">이 일지에서 할 일</h4>'+
   '<p class="body" style="font-size:13.5px;margin:0"><strong>1단계</strong> 나의 발표 성향을 검사하고, 그 결과에서 이번에 꼭 지킬 목표 하나를 고른다.<br>'+
   '<strong>2단계</strong> 3P와 말하기 불안을 점검해 계획을 세우고, 그 계획으로 발표 자료 한 장을 만든다.<br>'+
-  '<strong>3단계</strong> 대본을 쓰고, 말하는 동안 지킬 점검 신호를 두 개 정한다.<br>'+
+  '<strong>3단계</strong> 대본을 쓰고, 말하는 동안 점검할 사항을 두 가지 확인한다.<br>'+
   '<strong>4단계</strong> 모둠 앞에서 발표하고, 친구들과 피드백을 주고받은 뒤 문제 &rarr; 원인 &rarr; 해결로 성찰한다.</p></div>'+
 
   '<p class="note">이 검사는 진단이 아니라 점검입니다. 정답도 좋은 점수도 없습니다. 그리고 <strong>긴장을 많이 한다는 것과 발표를 못한다는 것은 다릅니다.</strong> 불안도와 역량을 따로 재는 이유가 바로 그것입니다. 결과를 잘 쓰려면 솔직하게 답하는 것이 가장 중요합니다.</p>'+
@@ -1153,25 +1172,30 @@ function viewPlan(){
   '<textarea class="ta sm" id="why" data-f="pre.why" placeholder="예) 힘들었지만 그날 이후로 가족을 보는 눈이 달라졌기 때문이다.">'+esc(p.why)+'</textarea>'+
 
   '<div class="sub3"><h4 class="h">1) <span class="pcol">3P</span> 말하기 상황 분석</h4>'+
+  '<p class="plede">말하기 상황은 세 가지로 이루어집니다. <b>목적</b>, <b>청중</b>, <b>자리</b>를 차례로 봅니다.</p>'+
 
-  '<label class="fl"><span class="pcol">PURPOSE</span> &nbsp;이 말하기의 목적</label>'+
+  '<div class="p3"><div class="p3h"><span class="pn">첫째</span><span class="pcol">PURPOSE</span> 이 말하기의 목적</div>'+
   chipRow(PURPOSE,p.purpose,"data-purpose")+
   (p.purpose?'<p class="body" style="font-size:13px;margin:4px 0 0">'+
     esc((PURPOSE.filter(function(x){return x.k===p.purpose;})[0]||{}).hint||"")+'</p>':'')+
   '<label class="fl" for="purposeLine">한 줄로 풀어 쓰기</label>'+
   '<textarea class="ta sm" id="purposeLine" data-f="pre.purposeLine" placeholder="이 발표가 끝나면 친구들이 무엇을 얻었으면 좋겠나요?">'+esc(p.purposeLine)+'</textarea>'+
+  '</div>'+
 
-  '<label class="fl"><span class="pcol">PEOPLE</span> &nbsp;듣는 사람은 우리 반 친구들</label>'+
+  '<div class="p3"><div class="p3h"><span class="pn">둘째</span><span class="pcol">PEOPLE</span> 듣는 사람 &mdash; 우리 반 친구들</div>'+
   '<label class="fl" for="know" style="margin-top:8px">친구들이 이미 알고 있는 것</label>'+
   '<textarea class="ta sm" id="know" data-f="pre.know" placeholder="예) 김장이 뭔지는 다들 안다.">'+esc(p.know)+'</textarea>'+
   '<label class="fl" for="wonder">친구들이 궁금해할 것</label>'+
   '<textarea class="ta sm" id="wonder" data-f="pre.wonder" placeholder="예) 중2가 김장을 왜 도왔는지, 얼마나 힘들었는지">'+esc(p.wonder)+'</textarea>'+
   '<label class="fl" for="hook">첫 15초에 관심을 끌 한마디</label>'+
   '<textarea class="ta sm" id="hook" data-f="pre.hook" placeholder="예) 여러분, 배추 삼십 포기를 씻어 본 적 있나요?">'+esc(p.hook)+'</textarea>'+
+  '</div>'+
 
-  '<label class="fl"><span class="pcol">PLACE</span> &nbsp;말하는 자리의 조건<span>해당하는 것을 모두</span></label>'+
+  '<div class="p3"><div class="p3h"><span class="pn">셋째</span><span class="pcol">PLACE</span> 말하는 자리의 조건</div>'+
+  '<label class="fl">해당하는 것을 모두 고르세요</label>'+
   '<div class="chips">'+places+'</div>'+
   '<textarea class="ta sm" id="placeLine" data-f="pre.placeLine" style="margin-top:8px" placeholder="그래서 조정할 것 &mdash; 예) 마이크가 없으니 뒷자리까지 들리게 목소리를 크게 낸다.">'+esc(p.placeLine)+'</textarea>'+
+  '</div>'+
   '</div>'+
 
   '<div class="sub3"><h4 class="h">2) 말하기 불안 점검</h4>'+
@@ -1298,8 +1322,8 @@ function cuePanelSet(){
   var paraSel = PARA.filter(function(x){return x.k===c.para;})[0];
   var nonSel = NONPARA.filter(function(x){return x.k===c.nonpara;})[0];
   return '<div class="panel dur" style="margin-top:22px">'+
-  '<div class="ph"><h3>점검 신호 정하기</h3></div>'+
-  '<p class="plede">발표하는 동안에는 글을 쓸 수 없습니다. 그래서 <strong>미리 점검 신호를 두 개만</strong> 정해 둡니다. 준언어에서 하나, 비언어에서 하나입니다.</p>'+
+  '<div class="ph"><h3>점검 사항 확인하기</h3></div>'+
+  '<p class="plede">발표하는 동안 <strong>내가 무엇을 점검할지</strong> 미리 확인해 둡니다. 준언어에서 하나, 비언어에서 하나. 두 가지만 정해야 말하면서 실제로 확인할 수 있습니다.</p>'+
 
   '<label class="fl">준언어 &mdash; 말에 얹히는 소리<span>하나만</span></label>'+
   chipRow(PARA,c.para,"data-para","am")+
@@ -1330,7 +1354,7 @@ function viewTalk(){
   return '<div class="fade">'+
   '<div class="phase">3단계</div>'+
   '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">대본 쓰기</h2>'+
-  '<p class="lede">말할 내용을 글로 한 번 정리합니다. <strong style="color:#15222D">외우려고 쓰는 것이 아닙니다.</strong> 쓰면서 순서를 잡고 길이를 재어 보는 것, 그리고 말하는 동안 지킬 신호를 두 개 정해 두는 것이 목적입니다.</p>'+
+  '<p class="lede">말할 내용을 글로 한 번 정리합니다. <strong style="color:#15222D">외우려고 쓰는 것이 아닙니다.</strong> 쓰면서 순서를 잡고 길이를 재어 보는 것, 그리고 말하는 동안 점검할 사항을 두 가지 확인해 두는 것이 목적입니다.</p>'+
 
   '<h3 class="sf h">대본</h3>'+
   '<p class="body" style="font-size:13.5px;margin-bottom:8px">완성된 문장이 아니어도 됩니다. 말할 순서대로 죽 적어 보세요. 아래 숫자를 보며 선생님이 정해 준 시간 안쪽으로 줄입니다.</p>'+
@@ -1351,7 +1375,7 @@ function viewTalk(){
 function cueCopyBox(){
   var pl = PARA.filter(function(x){return x.k===S.cue.para;})[0];
   var nl = NONPARA.filter(function(x){return x.k===S.cue.nonpara;})[0];
-  if(!pl && !nl) return '<div class="empty">위에서 점검 신호를 두 개 고르면 여기에 뜹니다.</div>';
+  if(!pl && !nl) return '<div class="empty">위에서 점검 사항을 두 가지 고르면 여기에 뜹니다.</div>';
   return '<div class="card">'+
     (pl?'<p class="body" style="margin:0 0 8px"><b>'+esc(pl.label)+'</b> &mdash; '+esc(S.cue.paraFix||pl.fix)+'</p>':'')+
     (nl?'<p class="body" style="margin:0"><b>'+esc(nl.label)+'</b> &mdash; '+esc(S.cue.nonparaFix||nl.fix)+'</p>':'')+
@@ -1374,18 +1398,21 @@ function viewPresent(){
   return '<div class="fade">'+
   '<div class="phase">4단계</div>'+
   '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">발표 및 성찰</h2>'+
-  '<p class="lede">여기서부터는 화면이 아니라 <strong style="color:#15222D">사람을 보고</strong> 합니다. 이 화면은 <strong style="color:#15222D">모둠에 한 대만</strong> 켜 두고 시간과 기준을 함께 봅니다. 쓰는 것은 모두 종이 활동지에 합니다.</p>'+
+  '<p class="lede">여기서부터는 화면이 아니라 <strong style="color:#15222D">서로의 얼굴을 마주봅니다.</strong></p>'+
 
-  '<h3 class="sf h">시간 재기</h3>'+
+  '<h3 class="sf h">타이머</h3>'+
   '<div id="timerzone">'+timerBarHTML()+'</div>'+
 
   '<h3 class="sf h">동료 피드백 기준</h3>'+
-  '<p class="body" style="font-size:13.5px;margin-bottom:10px">친구의 발표가 끝나면 아래 네 가지에 맞추어 말합니다. 하나라도 빠지면 “잘했어”로 끝납니다.</p>'+
   '<div class="card"><ul class="rules">'+rules+'</ul></div>'+
 
   '<h3 class="sf h">성찰하기</h3>'+
-  '<p class="body" style="font-size:13.5px">발표가 끝나면 <b>30초 동안 각자 조용히</b> 활동지를 채웁니다. 듣는 사람은 친구의 것을, 발표한 사람은 자기 것을 적습니다. 그다음 말로 주고받습니다.</p>'+
-  '<p class="body" style="font-size:13.5px">활동지에는 <b>C &rarr; 잘한 점</b>과 <b>S &dashv; C &rarr; P</b>를 적습니다. 친구들의 말을 다 듣고 나면, 내가 본 나와 친구들이 본 나를 나란히 놓고 <strong style="color:#15222D">왜 다르게 보였는지</strong>를 한 줄로 적습니다. 거기서 나온 것이 다음 발표에서 바꿀 한 가지입니다.</p>'+
+  '<ul class="nums">'+
+  '<li><span class="nn">①</span><b>발표가 끝나면 30초 동안 각자 조용히 적습니다.</b> 듣는 사람은 친구의 활동지 칸을, 발표한 사람은 자기 칸을 채웁니다. 아직 말하지 않습니다.</li>'+
+  '<li><span class="nn">②</span><b>말로 주고받습니다.</b> 발표한 사람이 자기 점검을 먼저 말하고, 그다음 친구들이 위 기준에 맞추어 말합니다.</li>'+
+  '<li><span class="nn">③</span><b>내가 본 나와 친구들이 본 나를 견줍니다.</b> 같았던 것과 달랐던 것을 적고, 왜 다르게 보였는지를 한 줄로 씁니다.</li>'+
+  '<li><span class="nn">④</span><b>다음 발표에서 바꿀 한 가지를 정합니다.</b> 다짐이 아니라 할 수 있는 행동으로 적습니다.</li>'+
+  '</ul>'+
 
   '<div class="btnrow">'+
   '<button class="ghost" id="presentPad">패들렛 열기</button>'+
@@ -1441,7 +1468,7 @@ function buildSheet(){
 
   h += '<section><h2>3단계 · 대본 쓰기</h2>'+
   '<p><span class="k">대본 길이</span> '+(S.talk.script||"").replace(/\s/g,"").length+'자 · 예상 '+mmss(speakSeconds(S.talk.script))+'</p>'+
-  '<h3>말하기 중 점검 신호</h3>'+
+  '<h3>말하기 중 점검 사항</h3>'+
   '<table><tr><th>준언어</th><td>'+(pl?esc(pl.label):'<span class="blank">(비어 있음)</span>')+
   ' — '+v(S.cue.paraFix||(pl?pl.fix:""))+'</td></tr>'+
   '<tr><th>비언어</th><td>'+(nl?esc(nl.label):'<span class="blank">(비어 있음)</span>')+
