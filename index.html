@@ -1237,13 +1237,13 @@ function viewPlan(){
 
   actOpen(1,"말할 경험 고르기",null)+
   '<label class="fl" for="topic" style="margin-top:14px">말하고 싶은 경험<span>한 가지만</span></label>'+
-  '<input class="inp" id="topic" data-f="pre.topic" placeholder="예) 처음으로 김장을 도운 날" value="'+esc(p.topic)+'">'+
+  '<input class="inp" id="topic" data-f="pre.topic" placeholder="예) 처음으로 수영을 배우러 간 날" value="'+esc(p.topic)+'">'+
   (S.ui.seeds
     ? '<div class="seedbox"><p>마음에 드는 것을 눌러 보세요. 그대로 쓰는 것이 아니라 <b>내 이야기로 고쳐 쓰는 출발점</b>입니다.</p><div class="chips">'+seeds+'</div>'+
       '<button class="seedbtn" id="seedClose" style="margin-top:4px">닫기</button></div>'
     : '<button class="seedbtn" id="seedOpen">주제가 안 떠올라요</button>')+
   '<label class="fl" for="why">이 경험을 고른 까닭</label>'+
-  '<textarea class="ta sm" id="why" data-f="pre.why" placeholder="예) 힘들었지만 그날 이후로 가족을 보는 눈이 달라졌기 때문이다.">'+esc(p.why)+'</textarea>'+
+  '<textarea class="ta sm" id="why" data-f="pre.why" placeholder="예) 처음엔 모든 게 낯설어 두려웠지만 이내 익숙해졌기 때문이다.">'+esc(p.why)+'</textarea>'+
   actEnd()+
 
   actOpen(2,'<span class="pcol">3P</span> 말하기 상황 분석',
@@ -1259,15 +1259,15 @@ function viewPlan(){
 
   '<div class="p3"><div class="p3h"><span class="pn">둘째</span><span class="pcol">PEOPLE</span> 듣는 사람 &mdash; 우리 반 친구들</div>'+
   '<label class="fl" for="wonder" style="margin-top:8px">친구들이 궁금해할 것</label>'+
-  '<textarea class="ta sm" id="wonder" data-f="pre.wonder" placeholder="예) 중2가 김장을 왜 도왔는지, 얼마나 힘들었는지">'+esc(p.wonder)+'</textarea>'+
+  '<textarea class="ta sm" id="wonder" data-f="pre.wonder" placeholder="예) 수영을 배우기로 마음먹은 이유가 무엇인지">'+esc(p.wonder)+'</textarea>'+
   '<label class="fl" for="hook">처음에 관심을 끌 한마디</label>'+
-  '<textarea class="ta sm" id="hook" data-f="pre.hook" placeholder="예) 여러분, 배추 삼십 포기를 씻어 본 적 있나요?">'+esc(p.hook)+'</textarea>'+
+  '<textarea class="ta sm" id="hook" data-f="pre.hook" placeholder="예) 여러분은 새로운 일을 해 보고 싶다가도, 겁이 나서 미루고 싶었던 적이 있나요?">'+esc(p.hook)+'</textarea>'+
   '</div>'+
 
   '<div class="p3"><div class="p3h"><span class="pn">셋째</span><span class="pcol">PLACE</span> 말하는 자리의 조건</div>'+
   '<label class="fl">해당하는 것을 모두 고르세요</label>'+
   '<div class="chips">'+places+'</div>'+
-  '<textarea class="ta sm" id="placeLine" data-f="pre.placeLine" style="margin-top:8px" placeholder="그래서 조정할 것 &mdash; 예) 마이크가 없으니 뒷자리까지 들리게 목소리를 크게 낸다.">'+esc(p.placeLine)+'</textarea>'+
+  '<textarea class="ta sm" id="placeLine" data-f="pre.placeLine" style="margin-top:8px" placeholder="그래서 조정할 것 &mdash; 예) 모둠원 모두와 시선을 골고루 마주친다.">'+esc(p.placeLine)+'</textarea>'+
   '</div>'+
   actEnd()+
 
@@ -1277,7 +1277,7 @@ function viewPlan(){
   '<label class="fl">내 긴장의 가장 큰 원인은</label>'+
   chipRow(ANXCAUSE.map(function(x){return {k:x,label:x};}),p.anxCause,"data-anxcause","pl")+
   '<label class="fl" for="warmup">발표 직전에 할 나의 예열 루틴<span>한 가지만, 순서까지</span></label>'+
-  '<textarea class="ta sm" id="warmup" data-f="pre.warmup" placeholder="예) 자리에서 4초 들이마시고 6초 내쉬기를 세 번 하고, 첫 문장만 속으로 한 번 말해 본다.">'+esc(p.warmup)+'</textarea>'+
+  '<textarea class="ta sm" id="warmup" data-f="pre.warmup" placeholder="예) 발표 전체 흐름을 머릿속에 그린 후 발표를 시작한다.">'+esc(p.warmup)+'</textarea>'+
   '<p class="tip">긴장을 지우는 것이 목표가 아닙니다. 긴장한 채로도 할 수 있는 <b>순서</b>를 만들어 두는 것이 목표입니다.</p>'+
   actEnd()+
 
@@ -1430,7 +1430,7 @@ function viewTalk(){
            {n:3,label:"종이로 옮기기"}])+
 
   actOpen(1,"대본 작성하기",null)+
-  '<textarea class="plan" id="script" data-f="talk.script" style="min-height:190px;margin-top:14px" placeholder="예) 작년 김장 날 이야기를 하고 싶다. 아침부터 배추를 씻었다. 손이 시려서 그만하고 싶었다. 그런데 할머니가 웃으면서 양념을 묻혀 주셨다. ...">'+esc(t.script)+'</textarea>'+
+  '<textarea class="plan" id="script" data-f="talk.script" style="min-height:190px;margin-top:14px" placeholder="예) 여러분은 새로운 일을 해 보고 싶다가도, 겁이 나서 미루고 싶었던 적이 있나요? 저는 수영을 시작할 때 그랬습니다. 작년 1월 2일, 저는 수영장 탈의실 앞에 한참 서 있었습니다. ...">'+esc(t.script)+'</textarea>'+
   '<div class="meter" id="meter">'+meterHTML()+'</div>'+
   '<div class="gauge '+gcls+'" id="gauge"><i style="width:'+gw+'%"></i></div>'+
   actEnd()+
