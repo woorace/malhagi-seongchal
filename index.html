@@ -736,7 +736,7 @@ function paintFullTimer(){
   var f=document.getElementById("tfull");
   if(!TIMER.full){ f.className="off"; f.innerHTML=""; return; }
   f.className="";
-  var st="", i, mins="", mn=[1,2,3,5];
+  var st="", i, mins="", mn=[1,2,4,5];
   for(i=0;i<ROUND.length;i++)
     st += '<li><span class="sn">'+(i+1)+'</span><span class="st">'+esc(ROUND[i][0])+
           '<span class="sd">'+esc(ROUND[i][1])+'</span></span></li>';
