@@ -1425,11 +1425,11 @@ function viewTalk(){
   '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">대본 쓰기</h2>'+
   '<p class="lede">말할 내용을 글로 한 번 정리합니다. <strong style="color:#15222D">외우려고 쓰는 것이 아닙니다.</strong> 쓰면서 순서를 잡고 길이를 재어 보는 것, 그리고 말하는 동안 점검할 사항을 두 가지 확인해 두는 것이 목적입니다.</p>'+
 
-  jumpBar([{n:1,label:"대본"},
+  jumpBar([{n:1,label:"대본 작성하기"},
            {n:2,label:"점검 사항 확인하기"},
            {n:3,label:"종이로 옮기기"}])+
 
-  actOpen(1,"대본",null)+
+  actOpen(1,"대본 작성하기",null)+
   '<textarea class="plan" id="script" data-f="talk.script" style="min-height:190px;margin-top:14px" placeholder="예) 작년 김장 날 이야기를 하고 싶다. 아침부터 배추를 씻었다. 손이 시려서 그만하고 싶었다. 그런데 할머니가 웃으면서 양념을 묻혀 주셨다. ...">'+esc(t.script)+'</textarea>'+
   '<div class="meter" id="meter">'+meterHTML()+'</div>'+
   '<div class="gauge '+gcls+'" id="gauge"><i style="width:'+gw+'%"></i></div>'+
