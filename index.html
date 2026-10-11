@@ -1247,9 +1247,9 @@ function viewPlan(){
   actEnd()+
 
   actOpen(2,'<span class="pcol">3P</span> 분석',
-    "말하기 상황은 세 가지로 이루어집니다. <b>목적</b>, <b>청중</b>, <b>자리</b>를 차례로 봅니다.")+
+    "말하기 상황은 세 가지로 이루어집니다. <b>목적</b>, <b>청중</b>, <b>장소</b>를 차례로 분석하세요.")+
 
-  '<div class="p3"><div class="p3h"><span class="pn">첫째</span><span class="pcol">PURPOSE</span> 이 말하기의 목적</div>'+
+  '<div class="p3"><div class="p3h"><span class="pn">첫째</span><span class="pcol">PURPOSE</span> 목적</div>'+
   chipRow(PURPOSE,p.purpose,"data-purpose")+
   (p.purpose?'<p class="body" style="font-size:13px;margin:4px 0 0">'+
     esc((PURPOSE.filter(function(x){return x.k===p.purpose;})[0]||{}).hint||"")+'</p>':'')+
@@ -1257,7 +1257,7 @@ function viewPlan(){
   '<textarea class="ta sm" id="purposeLine" data-f="pre.purposeLine" placeholder="이 발표가 끝나면 친구들이 무엇을 얻었으면 좋겠나요?">'+esc(p.purposeLine)+'</textarea>'+
   '</div>'+
 
-  '<div class="p3"><div class="p3h"><span class="pn">둘째</span><span class="pcol">PEOPLE</span> 듣는 사람 &mdash; 우리 반 친구들</div>'+
+  '<div class="p3"><div class="p3h"><span class="pn">둘째</span><span class="pcol">PEOPLE</span> 청중</div>'+
   '<label class="fl" for="wonder" style="margin-top:8px">친구들이 궁금해할 것</label>'+
   '<textarea class="ta sm" id="wonder" data-f="pre.wonder" placeholder="예) 수영을 배우기로 마음먹은 이유가 무엇인지">'+esc(p.wonder)+'</textarea>'+
   '<label class="fl" for="hook">처음에 관심을 끌 한마디</label>'+
