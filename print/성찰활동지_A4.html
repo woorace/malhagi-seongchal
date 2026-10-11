@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>듣기·말하기 성찰 활동지</title>
+<style>
+  @page { size: A4; margin: 11mm 13mm 9mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { font-family: "Noto Sans CJK KR", "Malgun Gothic", sans-serif;
+               color: #15222D; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-size: 10pt; line-height: 1.45; }
+  .page { width: 184mm; min-height: 273mm; display: flex; flex-direction: column;
+          page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+
+  /* ── 시트 머리 ── */
+  .top { display: flex; align-items: flex-end; justify-content: space-between;
+         border-bottom: 1mm solid #15222D; padding-bottom: 2mm; }
+  .top h1 { font-size: 15pt; font-weight: 700; letter-spacing: -0.4pt; }
+  .top .sub { font-size: 8.5pt; color: #64747F; margin-top: 1.2mm; }
+  .idbox { text-align: right; font-size: 9pt; white-space: nowrap; }
+  .u { display: inline-block; border-bottom: 0.3mm solid #15222D; }
+  .u.w7 { width: 7mm; } .u.w24 { width: 24mm; }
+
+  .legend { margin-top: 2mm; font-size: 8.2pt; color: #64747F;
+            display: flex; gap: 5mm; }
+  .legend b { color: #15222D; }
+
+  /* ── 블록 ── */
+  .bk { margin-top: 5mm; border: 0.4mm solid #C3CDD4; border-radius: 2mm;
+        padding: 3.5mm 5mm 4mm; flex: 1; display: flex; flex-direction: column; }
+  .bk.self { border: 0.7mm solid #C98A0E; }
+
+  .bh { display: flex; align-items: baseline; justify-content: space-between; }
+  .bh .tag { font-size: 8.5pt; font-weight: 700; color: #fff; background: #4A5A66;
+             border-radius: 1mm; padding: 0.6mm 2.2mm; letter-spacing: 0.3pt; }
+  .bk.self .bh .tag { background: #C98A0E; }
+  .bh .goal { font-size: 9.5pt; margin-left: 3mm; flex: 1; }
+  .bh .goal .u { width: 72mm; }
+  .bh .who { font-size: 9pt; white-space: nowrap; }
+  .bh .who .u { width: 20mm; }
+
+  /* ── 도식 ── */
+  .dg { flex: 1; display: flex; flex-direction: column; justify-content: center;
+        gap: 7mm; padding: 2mm 0; }
+  .rw { display: grid; grid-template-columns: 24mm 20mm 24mm 20mm 24mm;
+        justify-content: center; align-items: center; }
+  .cc { width: 24mm; height: 24mm; border-radius: 50%; border: 0.4mm solid #44525C;
+        background: #EFF2F4; display: flex; align-items: center; justify-content: center;
+        font-size: 15pt; font-weight: 700; color: #44525C; }
+  .bk.self .cc { border-color: #C98A0E; background: #FDF6E7; color: #9A6A08; }
+  .cc.emo { font-size: 16pt; }
+  .cn { display: flex; align-items: center; justify-content: center; }
+  .cn svg { width: 17mm; height: 7mm; }
+  .cn svg path { stroke: #15222D; fill: none; stroke-linecap: butt; }
+  .bk.self .cn svg path { stroke: #9A6A08; }
+
+  /* ── 근거 줄 ── */
+  .ev { margin-top: 1mm; }
+  .ev .lab { font-size: 9pt; font-weight: 700; }
+  .ev .lab span { font-size: 8.2pt; font-weight: 400; color: #64747F; }
+  .ev .ln { height: 7.6mm; border-bottom: 0.25mm solid #B9C4CC; }
+
+  /* ── 비교 ── */
+  .cmp { margin-top: 5mm; border: 0.5mm solid #24645F; border-radius: 2mm;
+         padding: 3mm 5mm 4mm; }
+  .cmp h2 { font-size: 11pt; display: flex; align-items: center; gap: 2mm; }
+  .cmp h2 .d { font-size: 8.5pt; font-weight: 400; color: #64747F; }
+  .cmp .q { margin-top: 2.5mm; }
+  .cmp .q .lab { font-size: 9.5pt; font-weight: 700; }
+  .cmp .q .lab span { font-size: 8.2pt; font-weight: 400; color: #64747F; }
+  .cmp .ln { height: 7.6mm; border-bottom: 0.25mm solid #9FB3AF; }
+
+  .foot { margin-top: 2mm; flex: none; font-size: 8pt; color: #8A95A0;
+          display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ 앞면 ══════════ -->
+<div class="page">
+
+  <div class="top">
+    <div>
+      <h1>친구 발표를 듣고</h1>
+      <div class="sub">발표가 끝나면 <b>30초 동안 각자 조용히</b> 적습니다. 그다음 말로 주고받습니다.</div>
+    </div>
+    <div class="idbox">
+      <span class="u w7"></span>모둠 · 2학년 <span class="u w7"></span>반 <span class="u w7"></span>번<br>
+      이름 <span class="u w24"></span>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><b>😊</b> 잘한 점</span><span><b>C</b> 까닭 · 원인</span>
+    <span><b>P</b> 문제</span><span><b>S</b> 해결</span>
+  </div>
+
+  <div class="bk">
+    <div class="bh">
+      <span class="tag">1</span>
+      <span class="goal">발표 목표 <span class="u"></span></span>
+      <span class="who">발표자 <span class="u"></span></span>
+    </div>
+    <div class="dg">
+      <div class="rw">
+        <div></div><div></div>
+        <div class="cc">C</div>
+        <div class="cn"><svg viewBox="0 0 60 24"><path d="M2 12 H36" stroke-width="5"/><path d="M34 3 L56 12 L34 21" stroke-width="6" stroke-linejoin="round"/></svg></div>
+        <div class="cc emo">😊</div>
+      </div>
+      <div class="rw">
+        <div class="cc">S</div>
+        <div class="cn"><svg viewBox="0 0 60 24"><path d="M2 12 H44" stroke-width="5"/><path d="M48 2 V22" stroke-width="7"/></svg></div>
+        <div class="cc">C</div>
+        <div class="cn"><svg viewBox="0 0 60 24"><path d="M2 12 H36" stroke-width="5"/><path d="M34 3 L56 12 L34 21" stroke-width="6" stroke-linejoin="round"/></svg></div>
+        <div class="cc">P</div>
+      </div>
+    </div>
+    <div class="ev">
+      <div class="lab">내가 본 장면 <span>— 느낌이 아니라, 눈으로 본 것 한 가지</span></div>
+      <div class="ln"></div>
+    </div>
+  </div>
+
+  <div class="bk">
+    <div class="bh">
+      <span class="tag">2</span>
+      <span class="goal">발표 목표 <span class="u"></span></span>
+      <span class="who">발표자 <span class="u"></span></span>
+    </div>
+    <div class="dg">
+      <div class="rw">
+        <div></div><div></div>
+        <div class="cc">C</div>
+        <div class="cn"><svg viewBox="0 0 60 24"><path d="M2 12 H36" stroke-width="5"/><path d="M34 3 L56 12 L34 21" stroke-width="6" stroke-linejoin="round"/></svg></div>
+        <div class="cc emo">😊</div>
+      </div>
+      <div class="rw">
+        <div class="cc">S</div>
+        <div class="cn"><svg viewBox="0 0 60 24"><path d="M2 12 H44" stroke-width="5"/><path d="M48 2 V22" stroke-width="7"/></svg></div>
+        <div class="cc">C</div>
+        <div class="cn"><svg viewBox="0 0 60 24"><path d="M2 12 H36" stroke-width="5"/><path d="M34 3 L56 12 L34 21" stroke-width="6" stroke-linejoin="round"/></svg></div>
+        <div class="cc">P</div>
+      </div>
+    </div>
+    <div class="ev">
+      <div class="lab">내가 본 장면 <span>— 느낌이 아니라, 눈으로 본 것 한 가지</span></div>
+      <div class="ln"></div>
+    </div>
+  </div>
+
+  <div class="foot"><span>듣기·말하기 성찰 활동지 (1/2)</span><span>2학년 국어 · 3단원 (2)</span></div>
+</div>
+
+<!-- ══════════ 뒷면 ══════════ -->
+<div class="page">
+
+  <div class="top">
+    <div>
+      <h1>친구 발표를 듣고 · 내 발표를 돌아보고</h1>
+      <div class="sub">아래 칸은 <b>내 발표가 끝난 직후</b>, 친구들의 말을 듣기 전에 먼저 적습니다.</div>
+    </div>
+    <div class="idbox">
+      <span class="u w7"></span>모둠 · 2학년 <span class="u w7"></span>반 <span class="u w7"></span>번<br>
+      이름 <span class="u w24"></span>
+    </div>
+  </div>
+
+  <div class="bk">
+    <div class="bh">
+      <span class="tag">3</span>
+      <span class="goal">발표 목표 <span class="u"></span></span>
+      <span class="who">발표자 <span class="u"></span></span>
+    </div>
+    <div class="dg">
+      <div class="rw">
+        <div></div><div></div>
+        <div class="cc">C</div>
+        <div class="cn"><svg viewBox="0 0 60 24"><path d="M2 12 H36" stroke-width="5"/><path d="M34 3 L56 12 L34 21" stroke-width="6" stroke-linejoin="round"/></svg></div>
+        <div class="cc emo">😊</div>
+      </div>
+      <div class="rw">
+        <div class="cc">S</div>
+        <div class="cn"><svg viewBox="0 0 60 24"><path d="M2 12 H44" stroke-width="5"/><path d="M48 2 V22" stroke-width="7"/></svg></div>
+        <div class="cc">C</div>
+        <div class="cn"><svg viewBox="0 0 60 24"><path d="M2 12 H36" stroke-width="5"/><path d="M34 3 L56 12 L34 21" stroke-width="6" stroke-linejoin="round"/></svg></div>
+        <div class="cc">P</div>
+      </div>
+    </div>
+    <div class="ev">
+      <div class="lab">내가 본 장면 <span>— 느낌이 아니라, 눈으로 본 것 한 가지</span></div>
+      <div class="ln"></div>
+    </div>
+  </div>
+
+  <div class="bk self">
+    <div class="bh">
+      <span class="tag">내 발표를 돌아보고</span>
+      <span class="goal">내 발표 목표 <span class="u"></span></span>
+      <span class="who">발표자 <b>나</b></span>
+    </div>
+    <div class="dg">
+      <div class="rw">
+        <div></div><div></div>
+        <div class="cc">C</div>
+        <div class="cn"><svg viewBox="0 0 60 24"><path d="M2 12 H36" stroke-width="5"/><path d="M34 3 L56 12 L34 21" stroke-width="6" stroke-linejoin="round"/></svg></div>
+        <div class="cc emo">😊</div>
+      </div>
+      <div class="rw">
+        <div class="cc">S</div>
+        <div class="cn"><svg viewBox="0 0 60 24"><path d="M2 12 H44" stroke-width="5"/><path d="M48 2 V22" stroke-width="7"/></svg></div>
+        <div class="cc">C</div>
+        <div class="cn"><svg viewBox="0 0 60 24"><path d="M2 12 H36" stroke-width="5"/><path d="M34 3 L56 12 L34 21" stroke-width="6" stroke-linejoin="round"/></svg></div>
+        <div class="cc">P</div>
+      </div>
+    </div>
+    <div class="ev">
+      <div class="lab">내가 느낀 순간 <span>— 말하는 동안 실제로 있었던 일 한 가지</span></div>
+      <div class="ln"></div>
+    </div>
+  </div>
+
+  <div class="cmp">
+    <h2>내 눈과 친구들의 눈 <span class="d">친구들 이야기를 다 듣고 나서</span></h2>
+    <div class="q">
+      <div class="lab">같았던 것</div>
+      <div class="ln"></div>
+    </div>
+    <div class="q">
+      <div class="lab">달랐던 것 <span>— 그리고 왜 그렇게 보였을까</span></div>
+      <div class="ln"></div>
+    </div>
+    <div class="q">
+      <div class="lab">그래서 내가 정한 해결 (S) <span>— 다짐이 아니라 다음에 할 행동 하나</span></div>
+      <div class="ln"></div>
+    </div>
+  </div>
+
+  <div class="foot"><span>듣기·말하기 성찰 활동지 (2/2)</span><span>2학년 국어 · 3단원 (2)</span></div>
+</div>
+
+</body>
+</html>
