@@ -1229,7 +1229,7 @@ function viewPlan(){
   return '<div class="fade">'+
   '<div class="phase">2단계</div>'+
   '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">말하기 계획 세우기</h2>'+
-  '<p class="lede" style="margin-bottom:6px">친구들에게 말하고 싶은 <strong style="color:#15222D">나의 경험</strong>을 하나 골라, 말하기 상황을 분석하고 긴장을 점검합니다.</p>'+
+  '<p class="lede" style="margin-bottom:6px">친구들에게 말하고 싶은 <strong style="color:#15222D">나의 경험</strong>을 하나 골라 말하기 상황을 분석하고 긴장을 점검합니다.</p>'+
   peakLine+
 
   jumpBar([{n:1,label:"말할 경험 고르기"},
@@ -1256,7 +1256,7 @@ function viewPlan(){
   (p.purpose?'<p class="body" style="font-size:13px;margin:4px 0 0">'+
     esc((PURPOSE.filter(function(x){return x.k===p.purpose;})[0]||{}).hint||"")+'</p>':'')+
   '<label class="fl" for="purposeLine">한 줄로 풀어 쓰기</label>'+
-  '<textarea class="ta sm" id="purposeLine" data-f="pre.purposeLine" placeholder="이 발표가 끝나면 친구들이 무엇을 얻었으면 좋겠나요? &mdash; 예) 어떤 일이든 하고 싶은 게 있다면 겁먹지 말고 도전하면 좋겠다">'+esc(p.purposeLine)+'</textarea>'+
+  '<textarea class="ta sm" id="purposeLine" data-f="pre.purposeLine" placeholder="이 발표가 끝나면 친구들이 무엇을 얻었으면 좋겠나요?&#10;&mdash; 예) 어떤 일이든 하고 싶은 게 있다면 겁먹지 말고 도전하면 좋겠다.">'+esc(p.purposeLine)+'</textarea>'+
   '</div>'+
 
   '<div class="p3"><div class="p3h"><span class="pn">둘째</span><span class="pcol">PEOPLE</span> 청중</div>'+
@@ -1443,7 +1443,7 @@ function viewTalk(){
   actEnd()+
 
   actOpen(3,"종이로 옮기기",
-    "발표할 때는 발표문이 아니라 <strong style=\"color:#15222D\">친구들의 눈</strong>을 바라봅니다. 아래 두 줄과 발표문을 손으로 옮겨 적어 두세요. 옮겨 적다 보면 발표문이 저절로 줄고, 줄어든 그것만 손에 쥐고 발표합니다.")+
+    "발표할 때는 발표문이 아니라 <strong style=\"color:#15222D\">친구들의 눈</strong>을 바라봅니다. 아래 목표와 점검 사항, 발표문을 손으로 옮겨 적어 두세요. 옮겨 적다 보면 발표문이 저절로 줄고, 줄어든 그것만 손에 쥐고 발표합니다.")+
   cueCopyBox()+
   actEnd()+
 
@@ -1455,8 +1455,11 @@ function viewTalk(){
 function cueCopyBox(){
   var pl = PARA.filter(function(x){return x.k===S.cue.para;})[0];
   var nl = NONPARA.filter(function(x){return x.k===S.cue.nonpara;})[0];
-  if(!pl && !nl) return '<div class="empty" style="margin-top:14px">위에서 점검 사항을 두 가지 고르면 여기에 뜹니다.</div>';
+  var g = S.goals[0], gt = g ? (g.refined||g.text) : "";
+  if(!pl && !nl && !gt) return '<div class="empty" style="margin-top:14px">1단계에서 목표를 정하고, 위에서 점검 사항을 두 가지 고르면 여기에 뜹니다.</div>';
   return '<div class="card" style="margin-top:14px">'+
+    (gt?'<p class="body" style="margin:0 0 8px"><b>나의 발표 목표</b> &mdash; '+esc(gt)+'</p>':'')+
+    (!pl && !nl ? '<p class="hint" style="margin:0">위에서 점검 사항을 두 가지 고르면 여기에 뜹니다.</p>' : '')+
     (pl?'<p class="body" style="margin:0 0 8px"><b>'+esc(pl.label)+'</b> &mdash; '+esc(S.cue.paraFix||pl.fix)+'</p>':'')+
     (nl?'<p class="body" style="margin:0"><b>'+esc(nl.label)+'</b> &mdash; '+esc(S.cue.nonparaFix||nl.fix)+'</p>':'')+
     '</div>';
