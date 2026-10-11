@@ -1157,12 +1157,10 @@ function viewPlan(){
     seeds += '<button class="chip" data-seed="'+esc(SEEDS[i4])+'">'+esc(SEEDS[i4])+'</button>';
   return '<div class="fade">'+
   '<div class="phase">2단계</div>'+
-  '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">1~3분 말하기 계획 세우기</h2>'+
+  '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">말하기 계획 세우기</h2>'+
   '<p class="lede" style="margin-bottom:6px">친구들에게 말하고 싶은 <strong style="color:#15222D">나의 경험</strong>을 하나 골라, 말하기 상황을 분석하고 긴장을 점검합니다. 여기서 세운 계획이 그대로 발표 자료가 됩니다.</p>'+
   peakLine+
-  '<p class="body" style="font-size:13.5px;margin:14px 0 0">무엇을, 누구에게, 어떤 자리에서 말하는지 먼저 정해 둡니다. 이것을 정하지 않으면 대본이 길어지기만 합니다.</p>'+
-
-  '<label class="fl" for="topic">말하고 싶은 경험<span>한 가지만</span></label>'+
+  '<label class="fl" for="topic" style="margin-top:20px">말하고 싶은 경험<span>한 가지만</span></label>'+
   '<input class="inp" id="topic" data-f="pre.topic" placeholder="예) 처음으로 김장을 도운 날" value="'+esc(p.topic)+'">'+
   (S.ui.seeds
     ? '<div class="seedbox"><p>마음에 드는 것을 눌러 보세요. 그대로 쓰는 것이 아니라 <b>내 이야기로 고쳐 쓰는 출발점</b>입니다.</p><div class="chips">'+seeds+'</div>'+
@@ -1187,7 +1185,7 @@ function viewPlan(){
   '<textarea class="ta sm" id="know" data-f="pre.know" placeholder="예) 김장이 뭔지는 다들 안다.">'+esc(p.know)+'</textarea>'+
   '<label class="fl" for="wonder">친구들이 궁금해할 것</label>'+
   '<textarea class="ta sm" id="wonder" data-f="pre.wonder" placeholder="예) 중2가 김장을 왜 도왔는지, 얼마나 힘들었는지">'+esc(p.wonder)+'</textarea>'+
-  '<label class="fl" for="hook">첫 15초에 관심을 끌 한마디</label>'+
+  '<label class="fl" for="hook">처음에 관심을 끌 한마디</label>'+
   '<textarea class="ta sm" id="hook" data-f="pre.hook" placeholder="예) 여러분, 배추 삼십 포기를 씻어 본 적 있나요?">'+esc(p.hook)+'</textarea>'+
   '</div>'+
 
@@ -1403,6 +1401,10 @@ function viewPresent(){
   '<h3 class="sf h">타이머</h3>'+
   '<div id="timerzone">'+timerBarHTML()+'</div>'+
 
+  '<h3 class="sf h">발표하기</h3>'+
+  '<p class="body" style="font-size:13.5px;margin-bottom:12px">차례가 된 사람이 패들렛에서 <b>자기 발표 자료</b>를 띄우고, 목표 한 줄을 소리 내어 읽은 뒤 말합니다. 듣는 사람도 그 목표를 함께 읽고 나서 듣기 시작합니다.</p>'+
+  '<div class="btnrow" style="margin-top:0"><button class="ghost" id="presentPad">패들렛 열기</button></div>'+
+
   '<h3 class="sf h">동료 피드백 기준</h3>'+
   '<div class="card"><ul class="rules">'+rules+'</ul></div>'+
 
@@ -1415,7 +1417,6 @@ function viewPresent(){
   '</ul>'+
 
   '<div class="btnrow">'+
-  '<button class="ghost" id="presentPad">패들렛 열기</button>'+
   '<button class="ghost" id="backTalk">3단계로 돌아가기</button>'+
   '<button class="ghost" id="presentDl">내 일지 내려받기</button></div>'+
   '</div>';
