@@ -1147,7 +1147,7 @@ function viewResult(){
 
   jumpBar([{n:1,label:"검사 결과 읽기"},
            {n:2,label:"나의 발표 목표"},
-           {n:3,label:"학번과 이름"}])+
+           {n:3,label:"학번과 이름 적기"}])+
 
   actOpen(1,"검사 결과 읽기",
     "점수가 높고 낮은 것은 잘하고 못하고가 아닙니다. 지금 내 말하기가 어느 쪽에 치우쳐 있는지를 보여 줄 뿐입니다.")+
@@ -1170,7 +1170,7 @@ function viewResult(){
   goalCards+
   actEnd()+
 
-  actOpen(3,"학번과 이름",null)+
+  actOpen(3,"학번과 이름 적기",null)+
   '<input class="inp" id="sid" placeholder="학번 (예: 20301)" aria-label="학번" style="margin:14px 0 8px" value="'+esc(S.sid)+'">'+
   '<input class="inp" id="sname" placeholder="이름" aria-label="이름" value="'+esc(S.sname)+'">'+
   actEnd()+
