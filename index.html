@@ -173,7 +173,7 @@ label.fl span{font-weight:400;color:var(--mut);margin-left:6px;font-size:12.5px;
 .pcol{font-family:'Noto Serif KR',serif;font-weight:700;font-size:13px;
   color:var(--teal);letter-spacing:.04em;}
 
-/* ── 대본 / 키워드 ── */
+/* ── 발표문 / 키워드 ── */
 .meter{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:9px;font-size:13px;color:var(--mut);}
 .meter b{font-size:20px;font-family:'Noto Serif KR',serif;color:var(--ink);font-variant-numeric:tabular-nums;}
 .gauge{height:7px;background:var(--line);border-radius:4px;margin-top:9px;position:relative;overflow:hidden;}
@@ -452,7 +452,7 @@ label.fl span{font-weight:400;color:var(--mut);margin-left:6px;font-size:12.5px;
    듣기·말하기 성찰일지
    1단계 나의 성향과 목표   (발표 성향 검사 + 꼭 지킬 목표 하나)
    2단계 말하기 계획        (3P / 말하기 불안 / 발표 자료 카드)
-   3단계 대본 쓰기          (대본 + 예상 시간 + 말하기 중 점검 사항)
+   3단계 발표문 작성          (발표문 + 예상 시간 + 말하기 중 점검 사항)
    4단계 발표 및 성찰       (타이머 · 피드백 유의사항 · 성찰 활동지 안내)
    발표와 성찰은 화면이 아니라 종이 활동지(P-C-S)와 친구들 앞에서 한다.
    성취기준 [9국01-11]
@@ -537,7 +537,7 @@ var TYPES = {
   turtle:{icon:"🐢",name:"준비 철저형",tagline:"준비하면 강해지는 발표자",
     voice:"“발표가 싫은 건 아닌데, 준비가 부족하면 불안해져요.”",
     read:"긴장이 높은 편이지만 준비하는 힘이 그것을 받쳐 줍니다. 다만 준비한 대로 흘러가지 않을 때 바꿔 나갈 방법은 아직 적어서, 준비를 많이 할수록 부담도 함께 커지는 경향이 있습니다.",
-    next:"필요한 것은 더 많이 외우기가 아니라 덜 외우고 핵심어로 말하는 연습입니다. 대본을 문장으로 외우면 잊을 것이 늘어납니다. 핵심어 세 개만 남기고, 나머지는 그 자리에서 말로 채우는 연습을 해 보세요."},
+    next:"필요한 것은 더 많이 외우기가 아니라 덜 외우고 핵심어로 말하는 연습입니다. 발표문을 문장으로 외우면 잊을 것이 늘어납니다. 핵심어 세 개만 남기고, 나머지는 그 자리에서 말로 채우는 연습을 해 보세요."},
   owl:{icon:"🦉",name:"분석 관찰형",tagline:"머릿속에서 이미 발표를 끝낸 발표자",
     voice:"“이렇게 말하면 이상하지 않을까를 많이 생각해요.”",
     read:"상황을 살피고 스스로를 점검하는 힘이 뛰어납니다. 그런데 준비 절차는 상대적으로 얇아서, 그 점검이 발표 전에는 걱정으로, 발표 후에는 되새김으로 이어질 때가 많습니다.",
@@ -906,7 +906,7 @@ function goalList(){
 function paintTop(){
   var box = document.getElementById("topbarIn");
   var now = stepOf();
-  var names = [["1","나의 성향과 목표"],["2","말하기 계획"],["3","대본 쓰기"],["4","발표 및 성찰"]];
+  var names = [["1","나의 성향과 목표"],["2","말하기 계획"],["3","발표문 작성"],["4","발표 및 성찰"]];
   var done = [ !!S.goals.length, !!(S.pre.topic&&S.pre.purpose), !!S.talk.script, false ];
   var h = '<div class="steps">';
   names.forEach(function(n,i){
@@ -1026,7 +1026,7 @@ function viewIntro(){
   '<h4 class="h" style="margin-top:0">이 일지에서 할 일</h4>'+
   '<p class="body" style="font-size:13.5px;margin:0"><strong>1단계</strong> 나의 발표 성향을 검사하고, 이번에 지킬 목표 하나를 고른다.<br>'+
   '<strong>2단계</strong> 3P와 말하기 불안을 점검해 말하기 계획을 세운다.<br>'+
-  '<strong>3단계</strong> 대본을 작성하고, 내 말하기를 점검·조정하며 연습한다.<br>'+
+  '<strong>3단계</strong> 발표문을 작성하고, 내 말하기를 점검·조정하며 연습한다.<br>'+
   '<strong>4단계</strong> 모둠 앞에서 발표하고, 친구들의 피드백을 바탕으로 성찰한다.</p></div>'+
 
   '<p class="note">이 검사에는 정답도 점수도 없습니다. 있는 그대로 답해 보세요.</p>'+
@@ -1291,7 +1291,7 @@ function viewPlan(){
     : '<p class="hint">말하고 싶은 경험과 말하기의 목적을 채우면 자료를 만들 수 있습니다.</p>')+
   actEnd()+
 
-  '<div class="btnrow"><button class="ghost" id="toTalk">3단계로 &mdash; 대본 쓰기</button></div>'+
+  '<div class="btnrow"><button class="ghost" id="toTalk">3단계로 &mdash; 발표문 작성</button></div>'+
   '</div>';
 }
 
@@ -1403,7 +1403,7 @@ function cuePanelSet(){
   (nonSel?'<textarea class="ta sm" id="nonparaFix" data-f="cue.nonparaFix" style="margin-top:8px">'+esc(c.nonparaFix||nonSel.fix)+'</textarea>':'')+
   '';
 }
-/* =================== 3단계 : 대본 쓰기 =================== */
+/* =================== 3단계 : 발표문 작성 =================== */
 function lenMsg(sec){
   return sec<60 ? "1분보다 짧습니다 — 조금 더 채워 보세요"
        : (sec>180 ? "3분을 넘습니다 — 덜 중요한 대목을 덜어 내세요" : "1~3분 안에 들어옵니다");
@@ -1422,14 +1422,14 @@ function viewTalk(){
 
   return '<div class="fade">'+
   '<div class="phase">3단계</div>'+
-  '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">대본 쓰기</h2>'+
+  '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">발표문 작성</h2>'+
   '<p class="lede">말할 내용을 글로 한 번 정리합니다. <strong style="color:#15222D">외우려고 쓰는 것이 아닙니다.</strong> 쓰면서 순서를 잡고 길이를 재어 보는 것, 그리고 말하는 동안 점검할 사항을 두 가지 확인해 두는 것이 목적입니다.</p>'+
 
-  jumpBar([{n:1,label:"대본 작성하기"},
+  jumpBar([{n:1,label:"발표문 작성하기"},
            {n:2,label:"점검 사항 확인하기"},
            {n:3,label:"종이로 옮기기"}])+
 
-  actOpen(1,"대본 작성하기",null)+
+  actOpen(1,"발표문 작성하기",null)+
   '<textarea class="plan" id="script" data-f="talk.script" style="min-height:190px;margin-top:14px" placeholder="예) 여러분은 새로운 일을 해 보고 싶다가도, 겁이 나서 미루고 싶었던 적이 있나요? 저는 수영을 시작할 때 그랬습니다. 작년 1월 2일, 저는 수영장 탈의실 앞에 한참 서 있었습니다. ...">'+esc(t.script)+'</textarea>'+
   '<div class="meter" id="meter">'+meterHTML()+'</div>'+
   '<div class="gauge '+gcls+'" id="gauge"><i style="width:'+gw+'%"></i></div>'+
@@ -1441,7 +1441,7 @@ function viewTalk(){
   actEnd()+
 
   actOpen(3,"종이로 옮기기",
-    "발표할 때는 대본이 아니라 <strong style=\"color:#15222D\">친구들의 눈</strong>을 바라봅니다. 아래 두 줄과 대본을 손으로 옮겨 적어 두세요. 옮겨 적다 보면 대본이 저절로 줄고, 줄어든 그것만 손에 쥐고 발표합니다.")+
+    "발표할 때는 발표문이 아니라 <strong style=\"color:#15222D\">친구들의 눈</strong>을 바라봅니다. 아래 두 줄과 발표문을 손으로 옮겨 적어 두세요. 옮겨 적다 보면 발표문이 저절로 줄고, 줄어든 그것만 손에 쥐고 발표합니다.")+
   cueCopyBox()+
   actEnd()+
 
@@ -1562,14 +1562,14 @@ function buildSheet(){
   '<p><span class="k">가장 큰 원인</span> '+v(S.pre.anxCause)+'</p>'+
   '<p><span class="k">예열 루틴</span> '+v(S.pre.warmup)+'</p></section>';
 
-  h += '<section><h2>3단계 · 대본 쓰기</h2>'+
-  '<p><span class="k">대본 길이</span> '+(S.talk.script||"").replace(/\s/g,"").length+'자 · 예상 '+mmss(speakSeconds(S.talk.script))+'</p>'+
+  h += '<section><h2>3단계 · 발표문 작성</h2>'+
+  '<p><span class="k">발표문 길이</span> '+(S.talk.script||"").replace(/\s/g,"").length+'자 · 예상 '+mmss(speakSeconds(S.talk.script))+'</p>'+
   '<h3>말하기 중 점검 사항</h3>'+
   '<table><tr><th>준언어</th><td>'+(pl?esc(pl.label):'<span class="blank">(비어 있음)</span>')+
   ' — '+v(S.cue.paraFix||(pl?pl.fix:""))+'</td></tr>'+
   '<tr><th>비언어</th><td>'+(nl?esc(nl.label):'<span class="blank">(비어 있음)</span>')+
   ' — '+v(S.cue.nonparaFix||(nl?nl.fix:""))+'</td></tr></table>'+
-  '<h3>대본</h3><p>'+v(S.talk.script)+'</p></section>';
+  '<h3>발표문</h3><p>'+v(S.talk.script)+'</p></section>';
 
   h += '<section><h2>발표와 성찰</h2>'+
   '<p>발표와 성찰은 종이 활동지에서 합니다. 이 일지에는 준비한 내용까지만 담깁니다.</p></section>';
