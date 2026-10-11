@@ -450,7 +450,7 @@ label.fl span{font-weight:400;color:var(--mut);margin-left:6px;font-size:12.5px;
 <script>
 /* ===========================================================
    듣기·말하기 성찰일지
-   1단계 나의 성향과 목표   (발표 성향 검사 + 꼭 지킬 목표 하나)
+   1단계 목표 설정   (발표 성향 검사 + 꼭 지킬 목표 하나)
    2단계 말하기 계획        (3P / 말하기 불안 / 발표 자료 카드)
    3단계 발표문 작성          (발표문 + 예상 시간 + 말하기 중 점검 사항)
    4단계 발표 및 성찰       (타이머 · 피드백 유의사항 · 성찰 활동지 안내)
@@ -906,7 +906,7 @@ function goalList(){
 function paintTop(){
   var box = document.getElementById("topbarIn");
   var now = stepOf();
-  var names = [["1","나의 성향과 목표"],["2","말하기 계획"],["3","발표문 작성"],["4","발표 및 성찰"]];
+  var names = [["1","목표 설정"],["2","말하기 계획"],["3","발표문 작성"],["4","발표 및 성찰"]];
   var done = [ !!S.goals.length, !!(S.pre.topic&&S.pre.purpose), !!S.talk.script, false ];
   var h = '<div class="steps">';
   names.forEach(function(n,i){
@@ -1246,7 +1246,7 @@ function viewPlan(){
   '<textarea class="ta sm" id="why" data-f="pre.why" placeholder="예) 처음엔 모든 게 낯설어 두려웠지만 이내 익숙해졌기 때문이다.">'+esc(p.why)+'</textarea>'+
   actEnd()+
 
-  actOpen(2,'<span class="pcol">3P</span> 말하기 상황 분석',
+  actOpen(2,'<span class="pcol">3P</span> 분석',
     "말하기 상황은 세 가지로 이루어집니다. <b>목적</b>, <b>청중</b>, <b>자리</b>를 차례로 봅니다.")+
 
   '<div class="p3"><div class="p3h"><span class="pn">첫째</span><span class="pcol">PURPOSE</span> 이 말하기의 목적</div>'+
