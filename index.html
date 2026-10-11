@@ -370,12 +370,22 @@ label.fl span{font-weight:400;color:var(--mut);margin-left:6px;font-size:12.5px;
   color:var(--mut);margin-bottom:10px;}
 .nums li b{color:var(--ink);}
 .nums li .nn{position:absolute;left:0;top:0;color:var(--teal);font-weight:700;}
-.tfrules{list-style:none;padding:0;margin:0;max-width:640px;text-align:left;}
-.tfrules li{position:relative;padding-left:22px;font-size:clamp(13px,2.6vw,17px);
-  line-height:1.75;color:#C8D6DE;margin-bottom:7px;}
-.tfrules li::before{content:"\2022";position:absolute;left:5px;color:#C98A0E;font-weight:700;}
+.tfsteps{list-style:none;padding:0;margin:0;max-width:760px;width:100%;text-align:left;}
+.tfsteps li{display:flex;align-items:baseline;gap:12px;margin-bottom:11px;}
+.tfsteps li .sn{flex:none;width:clamp(24px,4.4vw,32px);height:clamp(24px,4.4vw,32px);
+  border-radius:50%;background:#24645F;color:#fff;font-weight:700;
+  font-size:clamp(12px,2.2vw,15px);display:flex;align-items:center;justify-content:center;}
+.tfsteps li .st{font-size:clamp(15px,3vw,22px);font-weight:700;color:#F2F6F8;line-height:1.45;}
+.tfsteps li .sd{font-size:clamp(12px,2.2vw,16px);color:#9FB2BD;line-height:1.5;
+  display:block;font-weight:400;margin-top:2px;}
 .tftitle{font-size:clamp(12px,2.4vw,15px);letter-spacing:1px;color:#7E93A0;
-  font-weight:700;margin-bottom:10px;text-align:left;max-width:640px;width:100%;}
+  font-weight:700;margin-bottom:12px;text-align:left;max-width:760px;width:100%;}
+.tfset{display:flex;align-items:center;gap:7px;color:#9FB2BD;
+  font-size:clamp(12px,2.4vw,15px);}
+.tfset input{width:58px;font-family:inherit;font-size:clamp(13px,2.6vw,16px);
+  text-align:center;color:#F2F6F8;background:#16242D;border:1px solid #2C3D48;
+  border-radius:9px;padding:7px 6px;}
+.tfset input:focus{outline:none;border-color:#C8D6DE;}
 .jump{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 2px;}
 .jump a{font-size:12.5px;color:var(--mut);background:var(--sf);border:1px solid var(--line);
   border-radius:999px;padding:7px 14px;text-decoration:none;display:inline-flex;
@@ -707,26 +717,9 @@ function timerToggle(){
 function timerReset(){ timerStop(); TIMER.run=false; TIMER.sec=TIMER.total; paintTimer(); }
 function paintClock(){
   var a=document.getElementById("tclock");
-  if(a){ a.textContent=tfmt(TIMER.sec); a.className="tclock "+tstate(); }
+  if(a){ a.textContent=tfmt(TIMER.sec); a.className="tc "+tstate(); }
   var b=document.getElementById("tbig");
   if(b){ b.textContent=tfmt(TIMER.sec); b.className="tbig "+tstate(); }
-}
-function timerBarHTML(){
-  var mins=[1,2,3,5], h='<div class="tbar">', i;
-  h += '<span class="tclock '+tstate()+'" id="tclock">'+tfmt(TIMER.sec)+'</span>';
-  h += '<button id="tgo">'+(TIMER.run?"멈춤":"시작")+'</button>'+
-       '<button id="treset">되돌리기</button>'+
-       '<span class="tsp"></span>'+
-       '<button id="tbigbtn">크게 보기</button>';
-  for(i=0;i<mins.length;i++)
-    h += '<button data-tmin="'+mins[i]+'" class="'+(TIMER.total===mins[i]*60?"on":"")+'">'+mins[i]+'분</button>';
-  h += '<span class="tdiv"></span>'+
-       '<span class="tcust">'+
-       '<input type="number" id="tcm" min="0" max="99" inputmode="numeric" value="'+TIMER.cmin+'" aria-label="분">분'+
-       '<input type="number" id="tcs" min="0" max="59" step="5" inputmode="numeric" value="'+TIMER.csec+'" aria-label="초">초'+
-       '<button id="tset">맞춤</button></span>';
-  h += '</div>';
-  return h;
 }
 function tminiHTML(){
   return '<div class="tmini">'+
@@ -744,21 +737,36 @@ function paintFullTimer(){
   var f=document.getElementById("tfull");
   if(!TIMER.full){ f.className="off"; f.innerHTML=""; return; }
   f.className="";
-  var rl="", i, mins="", mn=[1,2,3,5];
-  for(i=0;i<FBRULE.length;i++) rl += '<li>'+esc(FBRULE[i])+'</li>';
+  var st="", i, mins="", mn=[1,2,3,5];
+  for(i=0;i<ROUND.length;i++)
+    st += '<li><span class="sn">'+(i+1)+'</span><span class="st">'+esc(ROUND[i][0])+
+          '<span class="sd">'+esc(ROUND[i][1])+'</span></span></li>';
   for(i=0;i<mn.length;i++)
     mins += '<button data-tmin="'+mn[i]+'" class="'+(TIMER.total===mn[i]*60?"on":"")+'">'+mn[i]+'분</button>';
   f.innerHTML = '<div class="tbig '+tstate()+'" id="tbig">'+tfmt(TIMER.sec)+'</div>'+
     (TIMER.sec<=0 ? '<div class="tlab">시간이 끝났습니다</div>' : '')+
-    '<div class="tftitle">동료 피드백 기준</div>'+
-    '<ul class="tfrules">'+rl+'</ul>'+
-    '<div class="tfmins">'+mins+'</div>'+
+    '<div class="tftitle">한 사람의 차례</div>'+
+    '<ul class="tfsteps">'+st+'</ul>'+
+    '<div class="tfmins">'+mins+
+      '<span class="tfset"><input type="number" id="tcm" min="0" max="99" inputmode="numeric" value="'+TIMER.cmin+'" aria-label="분">분'+
+      '<input type="number" id="tcs" min="0" max="59" step="5" inputmode="numeric" value="'+TIMER.csec+'" aria-label="초">초'+
+      '<button id="tset" class="dx">맞춤</button></span>'+
+    '</div>'+
     '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">'+
     '<button class="dx" id="tfgo">'+(TIMER.run?"멈춤":"시작")+'</button>'+
     '<button class="dx" id="tfreset">되돌리기</button>'+
     '<button class="dx" id="tfclose">닫기 (ESC)</button></div>';
   f.querySelectorAll("[data-tmin]").forEach(function(b){
     b.addEventListener("click", function(){ timerSet(+this.getAttribute("data-tmin")); });
+  });
+  document.getElementById("tset").addEventListener("click", timerApplyCustom);
+  ["tcm","tcs"].forEach(function(id){
+    var n=document.getElementById(id);
+    if(!n) return;
+    n.addEventListener("keydown", function(e){
+      if(e.key==="Enter"){ e.preventDefault(); timerApplyCustom(); }
+    });
+    n.addEventListener("focus", function(){ this.select(); });
   });
   document.getElementById("tfreset").addEventListener("click", timerReset);
   document.getElementById("tfgo").addEventListener("click", timerToggle);
@@ -1492,6 +1500,13 @@ function cueCopyBox(){
 
 /* =================== 4단계 : 발표 및 성찰 =================== */
 var PADLET_URL = "https://padlet.com/woorace/padlet-s0248qwl985nvt5mpqcq";
+/* 크게 보기에 띄우는 한 바퀴 순서. 4단계 본문의 설명을 줄여 쓴 것이다. */
+var ROUND = [
+  ["발표하기","차례가 된 사람이 자기 목표를 알리고 1~3분 동안 말합니다."],
+  ["성찰 활동지 작성하기","30초 동안 각자 조용히 적습니다. 아직 말하지 않습니다."],
+  ["발표자가 자기 점검 사항 말하기","정해 둔 점검 사항 두 가지를 지켰는지부터 짚습니다."],
+  ["청자들이 피드백하기","동료 피드백 기준에 맞추어 말합니다."]
+];
 var FBRULE = [
   "친구가 설정한 말하기 목표와 관련하여 피드백한다.",
   "실제로 관찰한 발언이나 행동을 근거로 제시한다.",
