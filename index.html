@@ -361,6 +361,23 @@ label.fl span{font-weight:400;color:var(--mut);margin-left:6px;font-size:12.5px;
 .tfrules li::before{content:"\2022";position:absolute;left:5px;color:#C98A0E;font-weight:700;}
 .tftitle{font-size:clamp(12px,2.4vw,15px);letter-spacing:1px;color:#7E93A0;
   font-weight:700;margin-bottom:10px;text-align:left;max-width:640px;width:100%;}
+.jump{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 2px;}
+.jump a{font-size:12.5px;color:var(--mut);background:var(--sf);border:1px solid var(--line);
+  border-radius:999px;padding:7px 14px;text-decoration:none;display:inline-flex;
+  align-items:center;gap:8px;}
+.jump a:hover{border-color:var(--mut);color:var(--ink);}
+.jump a .jd{width:7px;height:7px;border-radius:50%;background:var(--line);flex:none;}
+.jump a .jd.on{background:var(--teal);}
+.act{background:var(--sf);border:1px solid var(--line);border-radius:16px;
+  padding:20px 22px 24px;margin-top:26px;scroll-margin-top:118px;}
+.act .ah{display:flex;align-items:center;gap:11px;}
+.act .ah .an{width:27px;height:27px;border-radius:50%;background:var(--teal);color:#fff;
+  font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none;}
+.act .ah h3{font-size:18.5px;font-weight:700;letter-spacing:-.2px;margin:0;flex:1;}
+.act .ah .dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--line);flex:none;}
+.act .ah .dot.on{background:var(--teal);border-color:var(--teal);}
+.act .alede{font-size:13.5px;line-height:1.8;color:var(--mut);margin:9px 0 2px;}
+.act .h:first-of-type{margin-top:14px;}
 .cmp2{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
 .cmp2 div{flex:1 1 130px;background:var(--sf);border:1px solid var(--line);
   border-radius:12px;padding:14px 16px;}
@@ -1082,6 +1099,9 @@ function viewResult(){
     goalCards = '<div class="empty">위 처방전에서 <b>하나</b>를 눌러 고르면 여기에 목표 칸이 생깁니다.<br>여러 개를 고르면 하나도 못 지킵니다. 이번 말하기에서는 딱 하나만 노립니다.</div>';
   }
 
+  var hasGoal = !!S.goals.length;
+  var hasName = !!(String(S.sid||"").trim() && String(S.sname||"").trim());
+
   return '<div class="fade">'+
   (S.flat?'<p class="warn">스무 문항에 모두 같은 번호로 답했습니다. 문항 중에는 <strong>반대로 물어보는 것</strong>도 섞여 있어서, 이대로는 결과가 실제 나와 다를 수 있습니다. 시간이 되면 다시 한번 천천히 해 보세요.</p>':'')+
   '<div class="phase">1단계 &middot; 검사 결과</div>'+
@@ -1091,40 +1111,89 @@ function viewResult(){
   '<p class="voice">'+T.voice+'</p>'+
   '<p class="body">'+T.read+'</p>'+
 
-  '<h3 class="sf h">나의 발표 성향 분석표</h3>'+bars+
+  jumpBar([{n:1,label:"검사 결과 읽기",done:true},
+           {n:2,label:"나의 발표 목표",done:hasGoal},
+           {n:3,label:"학번과 이름",done:hasName}])+
+
+  actOpen(1,"검사 결과 읽기",true,
+    "점수가 높고 낮은 것은 잘하고 못하고가 아닙니다. 지금 내 말하기가 어느 쪽에 치우쳐 있는지를 보여 줄 뿐입니다.")+
+  '<h4 class="h">나의 발표 성향 분석표</h4>'+bars+
   '<p class="body" style="font-size:13.5px">불안도만 높다고 발표를 못하는 것이 아닙니다. 네 영역을 나누어 보는 이유는, 같은 불안도라도 준비력과 조절력에 따라 결과가 크게 달라지기 때문입니다. 지금 나의 가장 든든한 힘은 <strong>'+DIM[strong].name+'</strong>이고, 가장 얇은 쪽은 <strong>'+DIM[weak].name+'</strong>입니다.</p>'+
+  '<h4 class="h">나의 긴장 곡선</h4>'+
+  curveSVG(s.pre,s.during,s.post)+
+  '<p class="body" style="margin-top:10px;font-size:13.5px">점선은 중간 지점입니다. 세 구간 중 <strong>'+peak.k+'</strong>에서 긴장이 가장 높게 나왔습니다. 발표 전체를 통째로 고치려 하기보다 이 구간부터 다루는 편이 효율적입니다.</p>'+
+  '<h4 class="h">지금 나에게 필요한 것</h4><p class="body" style="font-size:13.5px">'+T.next+'</p>'+
+  (s.anx>78?'<p class="note">긴장이 상당히 높게 나왔습니다. 혼자 견디는 것보다 선생님이나 믿을 만한 어른에게 이야기해 두면 발표 순서나 방식을 조정해 볼 수 있습니다. 도움을 요청하는 것도 조절력의 하나입니다.</p>':'')+
+  actEnd()+
 
-  '<h3 class="sf h">나의 긴장 곡선</h3>'+
-  '<div class="card">'+curveSVG(s.pre,s.during,s.post)+
-  '<p class="body" style="margin-top:10px;font-size:13.5px">점선은 중간 지점입니다. 세 구간 중 <strong>'+peak.k+'</strong>에서 긴장이 가장 높게 나왔습니다. 발표 전체를 통째로 고치려 하기보다 이 구간부터 다루는 편이 효율적입니다.</p></div>'+
-
-  '<h3 class="sf h">💊 나의 발표 처방전</h3>'+
-  '<p class="body" style="margin-bottom:14px">점수에 맞춰 뽑은 것이라 사람마다 내용이 다릅니다. 이 가운데 <strong>이번 말하기에서 꼭 지킬 것 하나</strong>를 눌러 고르세요. 고른 것이 나의 발표 목표가 됩니다. 다른 것을 누르면 그것으로 바뀝니다.</p>'+
+  actOpen(2,"나의 발표 목표",hasGoal,
+    "점수에 맞춰 뽑은 처방이라 사람마다 다릅니다. 이 가운데 <strong style=\"color:#15222D\">이번 말하기에서 꼭 지킬 것 하나</strong>를 눌러 고르세요. 다른 것을 누르면 그것으로 바뀝니다.")+
   block("BEFORE","발표 전",rx.before,"발표 전")+
   block("DURING","발표 중",rx.during,"발표 중")+
   block("AFTER","발표 후",rx.after,"발표 후")+
-
-  '<h3 class="sf h">나만의 발표 목표</h3>'+
-  '<p class="body" style="margin-bottom:12px">목표는 하나만 세웁니다. 여러 개를 노리면 발표 중에 아무것도 떠오르지 않습니다. “긴장하지 말자”처럼 마음가짐을 적으면 지켰는지 확인할 수 없으니, <strong>친구들이 보고 판단할 수 있는 행동</strong>으로 적으세요. 그래야 발표가 끝난 뒤 친구들과 함께 목표가 이루어졌는지 짚어 볼 수 있습니다.</p>'+
+  '<h4 class="h">나의 말로 다듬기</h4>'+
+  '<p class="body" style="font-size:13.5px;margin-bottom:12px">목표는 하나만 세웁니다. “긴장하지 말자”처럼 마음가짐을 적으면 지켰는지 확인할 수 없으니, <strong>친구들이 보고 판단할 수 있는 행동</strong>으로 적으세요.</p>'+
   goalCards+
+  actEnd()+
 
-  (s.anx>78?'<p class="note">긴장이 상당히 높게 나왔습니다. 혼자 견디는 것보다 선생님이나 믿을 만한 어른에게 이야기해 두면 발표 순서나 방식을 조정해 볼 수 있습니다. 도움을 요청하는 것도 조절력의 하나입니다.</p>':'')+
-
-  '<h3 class="sf h">지금 나에게 필요한 것</h3><p class="body">'+T.next+'</p>'+
-
-  '<h3 class="sf h">학번과 이름</h3>'+
-  '<div class="card"><p class="body" style="font-size:13.5px;margin:0 0 12px">일지를 내거나 인쇄할 때 쓰입니다.</p>'+
-  '<input class="inp" id="sid" placeholder="학번 (예: 20301)" aria-label="학번" style="margin-bottom:8px" value="'+esc(S.sid)+'">'+
-  '<input class="inp" id="sname" placeholder="이름" aria-label="이름" value="'+esc(S.sname)+'"></div>'+
+  actOpen(3,"학번과 이름",hasName,"일지를 내거나 인쇄할 때 쓰입니다.")+
+  '<input class="inp" id="sid" placeholder="학번 (예: 20301)" aria-label="학번" style="margin:14px 0 8px" value="'+esc(S.sid)+'">'+
+  '<input class="inp" id="sname" placeholder="이름" aria-label="이름" value="'+esc(S.sname)+'">'+
+  actEnd()+
 
   '<div class="btnrow">'+
-  '<button class="btn" id="toPlan"'+(S.goals.length?"":" disabled")+'>2단계로 &mdash; 말하기 계획 세우기</button>'+
+  '<button class="btn" id="toPlan"'+(hasGoal?"":" disabled")+'>2단계로 &mdash; 말하기 계획 세우기</button>'+
   '<button class="ghost" id="again">검사 다시 하기</button></div>'+
-  (S.goals.length?'':'<p class="hint">처방전에서 목표를 한 개 이상 골라야 다음 단계로 넘어갈 수 있습니다.</p>')+
+  (hasGoal?'':'<p class="hint">처방전에서 목표를 한 개 이상 골라야 다음 단계로 넘어갈 수 있습니다.</p>')+
   '</div>';
 }
 
 /* =================== 2단계 : 말하기 전 / 중 / 후 =================== */
+/* 하위 활동 한 덩어리. done 이 null 이면 완료 점을 달지 않는다. */
+function actOpen(n,title,done,lede){
+  return '<div class="act" id="act'+n+'"><div class="ah">'+
+    '<span class="an">'+n+'</span><h3 class="sf">'+title+'</h3>'+
+    (done===null ? '' : '<span class="dot'+(done?" on":"")+'"></span>')+
+    '</div>'+(lede ? '<p class="alede">'+lede+'</p>' : '');
+}
+function actEnd(){ return '</div>'; }
+/* 화면마다 하위 활동이 채워졌는지. null 은 채울 것이 없는 활동. */
+function doneList(){
+  var p=S.pre, t=S.talk;
+  if(S.view==="result")
+    return [true, !!S.goals.length,
+            !!(String(S.sid||"").trim() && String(S.sname||"").trim())];
+  if(S.view==="plan")
+    return [!!String(p.topic||"").trim(), !!p.purpose,
+            !!(p.anxLevel || String(p.warmup||"").trim()), null];
+  if(S.view==="talk")
+    return [!!String(t.script||"").trim(), !!(S.cue.para && S.cue.nonpara), null];
+  return [];
+}
+/* 글자를 치는 동안 전체를 다시 그리지 않고 점만 갱신한다 */
+function refreshDots(){
+  var d = doneList();
+  if(!d.length) return;
+  var dots = app.querySelectorAll(".act .ah .dot");
+  var jds  = app.querySelectorAll(".jump a .jd");
+  var di=0, i;
+  for(i=0;i<d.length;i++){
+    if(d[i]===null) continue;
+    if(dots[di]) dots[di].className = "dot" + (d[i] ? " on" : "");
+    if(jds[di])  jds[di].className  = "jd"  + (d[i] ? " on" : "");
+    di++;
+  }
+}
+function jumpBar(items){
+  var h='<div class="jump">', i, it;
+  for(i=0;i<items.length;i++){
+    it = items[i];
+    h += '<a href="#act'+it.n+'">'+
+         (it.done===null ? '' : '<span class="jd'+(it.done?" on":"")+'"></span>')+
+         it.n+' '+esc(it.label)+'</a>';
+  }
+  return h+'</div>';
+}
 function chipRow(list,cur,attr,cls){
   var h='<div class="chips">',i;
   for(i=0;i<list.length;i++){
@@ -1155,12 +1224,23 @@ function viewPlan(){
   var seeds="",i4;
   for(i4=0;i4<SEEDS.length;i4++)
     seeds += '<button class="chip" data-seed="'+esc(SEEDS[i4])+'">'+esc(SEEDS[i4])+'</button>';
+  var dTopic = !!String(p.topic||"").trim();
+  var d3p = !!p.purpose;
+  var dAnx = !!(p.anxLevel || String(p.warmup||"").trim());
+
   return '<div class="fade">'+
   '<div class="phase">2단계</div>'+
   '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">말하기 계획 세우기</h2>'+
   '<p class="lede" style="margin-bottom:6px">친구들에게 말하고 싶은 <strong style="color:#15222D">나의 경험</strong>을 하나 골라, 말하기 상황을 분석하고 긴장을 점검합니다. 여기서 세운 계획이 그대로 발표 자료가 됩니다.</p>'+
   peakLine+
-  '<label class="fl" for="topic" style="margin-top:20px">말하고 싶은 경험<span>한 가지만</span></label>'+
+
+  jumpBar([{n:1,label:"말할 경험 고르기",done:dTopic},
+           {n:2,label:"3P 분석",done:d3p},
+           {n:3,label:"말하기 불안 점검",done:dAnx},
+           {n:4,label:"발표 자료 만들기",done:null}])+
+
+  actOpen(1,"말할 경험 고르기",dTopic,null)+
+  '<label class="fl" for="topic" style="margin-top:14px">말하고 싶은 경험<span>한 가지만</span></label>'+
   '<input class="inp" id="topic" data-f="pre.topic" placeholder="예) 처음으로 김장을 도운 날" value="'+esc(p.topic)+'">'+
   (S.ui.seeds
     ? '<div class="seedbox"><p>마음에 드는 것을 눌러 보세요. 그대로 쓰는 것이 아니라 <b>내 이야기로 고쳐 쓰는 출발점</b>입니다.</p><div class="chips">'+seeds+'</div>'+
@@ -1168,9 +1248,10 @@ function viewPlan(){
     : '<button class="seedbtn" id="seedOpen">주제가 안 떠올라요</button>')+
   '<label class="fl" for="why">이 경험을 고른 까닭</label>'+
   '<textarea class="ta sm" id="why" data-f="pre.why" placeholder="예) 힘들었지만 그날 이후로 가족을 보는 눈이 달라졌기 때문이다.">'+esc(p.why)+'</textarea>'+
+  actEnd()+
 
-  '<div class="sub3"><h4 class="h">1) <span class="pcol">3P</span> 말하기 상황 분석</h4>'+
-  '<p class="plede">말하기 상황은 세 가지로 이루어집니다. <b>목적</b>, <b>청중</b>, <b>자리</b>를 차례로 봅니다.</p>'+
+  actOpen(2,'<span class="pcol">3P</span> 말하기 상황 분석',d3p,
+    "말하기 상황은 세 가지로 이루어집니다. <b>목적</b>, <b>청중</b>, <b>자리</b>를 차례로 봅니다.")+
 
   '<div class="p3"><div class="p3h"><span class="pn">첫째</span><span class="pcol">PURPOSE</span> 이 말하기의 목적</div>'+
   chipRow(PURPOSE,p.purpose,"data-purpose")+
@@ -1194,10 +1275,10 @@ function viewPlan(){
   '<div class="chips">'+places+'</div>'+
   '<textarea class="ta sm" id="placeLine" data-f="pre.placeLine" style="margin-top:8px" placeholder="그래서 조정할 것 &mdash; 예) 마이크가 없으니 뒷자리까지 들리게 목소리를 크게 낸다.">'+esc(p.placeLine)+'</textarea>'+
   '</div>'+
-  '</div>'+
+  actEnd()+
 
-  '<div class="sub3"><h4 class="h">2) 말하기 불안 점검</h4>'+
-  '<label class="fl" for="anxLevel">지금 내 긴장은 어느 정도<span>'+(p.anxLevel||"-")+' / 5</span></label>'+
+  actOpen(3,"말하기 불안 점검",dAnx,null)+
+  '<label class="fl" for="anxLevel" style="margin-top:14px">지금 내 긴장은 어느 정도<span>'+(p.anxLevel||"-")+' / 5</span></label>'+
   '<input type="range" id="anxLevel" min="0" max="5" step="1" value="'+(p.anxLevel||0)+'" style="width:100%">'+
   '<label class="fl">긴장하면 내 몸에 나타나는 것<span>해당하는 것을 모두</span></label>'+
   '<div class="chips">'+signs+'</div>'+
@@ -1206,17 +1287,19 @@ function viewPlan(){
   '<label class="fl" for="warmup">발표 직전에 할 나의 예열 루틴<span>한 가지만, 순서까지</span></label>'+
   '<textarea class="ta sm" id="warmup" data-f="pre.warmup" placeholder="예) 자리에서 4초 들이마시고 6초 내쉬기를 세 번 하고, 첫 문장만 속으로 한 번 말해 본다.">'+esc(p.warmup)+'</textarea>'+
   '<p class="tip">긴장을 지우는 것이 목표가 아닙니다. 긴장한 채로도 할 수 있는 <b>순서</b>를 만들어 두는 것이 목표입니다.</p>'+
-  '</div>'+
+  actEnd()+
 
-  '<h3 class="sf h">발표 자료 만들기</h3>'+
-  '<p class="body" style="font-size:13.5px;margin-bottom:12px">세운 계획이 그대로 발표 자료가 됩니다. 두 장이 나옵니다. <strong>발표 자료</strong>는 캡처해 패들렛에 올려 발표하는 동안 모둠이 함께 보고, <strong>내 준비 카드</strong>는 준비한 것이 다 담겨 있어 발표 직전에 나만 봅니다. 자료를 꾸미는 데 시간을 쓰지 않는 것이 목적입니다.</p>'+
-  '<div class="btnrow">'+
+  actOpen(4,"발표 자료 만들기",null,
+    "세운 계획이 그대로 발표 자료가 됩니다. 두 장이 나옵니다. <strong style=\"color:#15222D\">발표 자료</strong>는 캡처해 패들렛에 올려 발표하는 동안 모둠이 함께 보고, <strong style=\"color:#15222D\">내 준비 카드</strong>는 발표 직전에 나만 봅니다.")+
+  '<div class="btnrow" style="margin-top:14px">'+
   '<button class="btn" id="openPlanCard"'+(planCardReady()?"":" disabled")+'>발표 자료 만들기</button>'+
-  '<button class="ghost" id="planPad">패들렛에 올리기</button>'+
-  '<button class="ghost" id="toTalk">3단계로 &mdash; 대본 쓰기</button></div>'+
+  '<button class="ghost" id="planPad">패들렛에 올리기</button></div>'+
   (planCardReady()
     ? '<p class="hint">카드 아래에서 두 장을 바꿔 가며 볼 수 있습니다. 패들렛에 올리는 것은 <b>발표 자료</b>이고, <b>자기 모둠 칸</b>에 올립니다.</p>'
     : '<p class="hint">말하고 싶은 경험과 말하기의 목적을 채우면 자료를 만들 수 있습니다.</p>')+
+  actEnd()+
+
+  '<div class="btnrow"><button class="ghost" id="toTalk">3단계로 &mdash; 대본 쓰기</button></div>'+
   '</div>';
 }
 
@@ -1319,10 +1402,7 @@ function cuePanelSet(){
   var c=S.cue;
   var paraSel = PARA.filter(function(x){return x.k===c.para;})[0];
   var nonSel = NONPARA.filter(function(x){return x.k===c.nonpara;})[0];
-  return '<h3 class="sf h">점검 사항 확인하기</h3>'+
-  '<p class="body" style="font-size:13.5px;margin-bottom:12px">발표하는 동안 <strong>내가 무엇을 점검할지</strong> 미리 확인해 둡니다. 준언어에서 하나, 비언어에서 하나. 두 가지만 정해야 말하면서 실제로 확인할 수 있습니다.</p>'+
-
-  '<label class="fl">준언어 &mdash; 말에 얹히는 소리<span>하나만</span></label>'+
+  return '<label class="fl" style="margin-top:14px">준언어 &mdash; 말에 얹히는 소리<span>하나만</span></label>'+
   chipRow(PARA,c.para,"data-para")+
   (paraSel?'<textarea class="ta sm" id="paraFix" data-f="cue.paraFix" style="margin-top:8px">'+esc(c.paraFix||paraSel.fix)+'</textarea>':'')+
 
@@ -1347,22 +1427,34 @@ function viewTalk(){
   var sec = speakSeconds(t.script);
   var gcls = sec<60 ? "lo" : (sec>180 ? "hi" : "");
   var gw = Math.max(2, Math.min(100, Math.round(sec/210*100)));
+  var dScript = !!String(t.script||"").trim();
+  var dCue = !!(S.cue.para && S.cue.nonpara);
 
   return '<div class="fade">'+
   '<div class="phase">3단계</div>'+
   '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">대본 쓰기</h2>'+
   '<p class="lede">말할 내용을 글로 한 번 정리합니다. <strong style="color:#15222D">외우려고 쓰는 것이 아닙니다.</strong> 쓰면서 순서를 잡고 길이를 재어 보는 것, 그리고 말하는 동안 점검할 사항을 두 가지 확인해 두는 것이 목적입니다.</p>'+
 
-  '<h3 class="sf h">대본</h3>'+
-  '<textarea class="plan" id="script" data-f="talk.script" style="min-height:190px" placeholder="예) 작년 김장 날 이야기를 하고 싶다. 아침부터 배추를 씻었다. 손이 시려서 그만하고 싶었다. 그런데 할머니가 웃으면서 양념을 묻혀 주셨다. ...">'+esc(t.script)+'</textarea>'+
+  jumpBar([{n:1,label:"대본",done:dScript},
+           {n:2,label:"점검 사항 확인하기",done:dCue},
+           {n:3,label:"종이로 옮기기",done:null}])+
+
+  actOpen(1,"대본",dScript,null)+
+  '<textarea class="plan" id="script" data-f="talk.script" style="min-height:190px;margin-top:14px" placeholder="예) 작년 김장 날 이야기를 하고 싶다. 아침부터 배추를 씻었다. 손이 시려서 그만하고 싶었다. 그런데 할머니가 웃으면서 양념을 묻혀 주셨다. ...">'+esc(t.script)+'</textarea>'+
   '<div class="meter" id="meter">'+meterHTML()+'</div>'+
   '<div class="gauge '+gcls+'" id="gauge"><i style="width:'+gw+'%"></i></div>'+
+  actEnd()+
 
+  actOpen(2,"점검 사항 확인하기",dCue,
+    "발표하는 동안 <strong style=\"color:#15222D\">내가 무엇을 점검할지</strong> 미리 확인해 둡니다. 준언어에서 하나, 비언어에서 하나. 두 가지만 정해야 말하면서 실제로 확인할 수 있습니다.")+
   cuePanelSet()+
+  actEnd()+
 
-  '<h3 class="sf h">종이로 옮기기</h3>'+
-  '<p class="body" style="font-size:13.5px;margin-bottom:10px">발표할 때는 화면을 보지 않습니다. 아래 두 줄과 대본을 <strong>손으로</strong> 옮겨 적어 두세요. 옮겨 적다 보면 대본이 저절로 줄고, 줄어든 그것이 발표할 때 손에 쥐는 종이가 됩니다.</p>'+
+  actOpen(3,"종이로 옮기기",null,
+    "발표할 때는 화면을 보지 않습니다. 아래 두 줄과 대본을 <strong style=\"color:#15222D\">손으로</strong> 옮겨 적어 두세요. 옮겨 적다 보면 대본이 저절로 줄고, 줄어든 그것이 발표할 때 손에 쥐는 종이가 됩니다.")+
   cueCopyBox()+
+  actEnd()+
+
   '<div class="btnrow"><button class="btn" id="toPresent">4단계로 &mdash; 발표하고 성찰하기</button>'+
   '<button class="ghost" id="talkDl">내 일지 내려받기</button></div>'+
   '</div>';
@@ -1371,8 +1463,8 @@ function viewTalk(){
 function cueCopyBox(){
   var pl = PARA.filter(function(x){return x.k===S.cue.para;})[0];
   var nl = NONPARA.filter(function(x){return x.k===S.cue.nonpara;})[0];
-  if(!pl && !nl) return '<div class="empty">위에서 점검 사항을 두 가지 고르면 여기에 뜹니다.</div>';
-  return '<div class="card">'+
+  if(!pl && !nl) return '<div class="empty" style="margin-top:14px">위에서 점검 사항을 두 가지 고르면 여기에 뜹니다.</div>';
+  return '<div class="card" style="margin-top:14px">'+
     (pl?'<p class="body" style="margin:0 0 8px"><b>'+esc(pl.label)+'</b> &mdash; '+esc(S.cue.paraFix||pl.fix)+'</p>':'')+
     (nl?'<p class="body" style="margin:0"><b>'+esc(nl.label)+'</b> &mdash; '+esc(S.cue.nonparaFix||nl.fix)+'</p>':'')+
     '</div>';
@@ -1396,11 +1488,17 @@ function viewPresent(){
   '<h2 class="sf" style="font-size:clamp(24px,5.6vw,32px);margin:6px 0 8px">발표 및 성찰</h2>'+
   '<p class="lede">여기서부터는 화면이 아니라 <strong style="color:#15222D">서로의 얼굴을 마주봅니다.</strong></p>'+
 
-  '<h3 class="sf h">타이머</h3>'+
-  '<div id="timerzone">'+timerBarHTML()+'</div>'+
+  jumpBar([{n:1,label:"타이머",done:null},
+           {n:2,label:"발표하기",done:null},
+           {n:3,label:"성찰하기",done:null},
+           {n:4,label:"동료 피드백 기준",done:null}])+
 
-  '<h3 class="sf h">발표하기</h3>'+
-  '<p class="body" style="font-size:13.5px;margin-bottom:12px">차례가 된 사람이 패들렛에서 <b>자기 발표 자료</b>를 띄우고, 목표 한 줄을 소리 내어 읽은 뒤 발표합니다. 한 사람의 차례는 네 걸음으로 돕니다.</p>'+
+  actOpen(1,"타이머",null,null)+
+  '<div id="timerzone" style="margin-top:14px">'+timerBarHTML()+'</div>'+
+  actEnd()+
+
+  actOpen(2,"발표하기",null,
+    "차례가 된 사람이 패들렛에서 <b>자기 발표 자료</b>를 띄우고, 목표 한 줄을 소리 내어 읽은 뒤 발표합니다. 한 사람의 차례는 네 걸음으로 돕니다.")+
   '<ul class="nums">'+
   '<li><span class="nn">①</span><b>발표하기</b> &mdash; 차례가 된 사람이 자기 목표를 알리고 1~3분 동안 말합니다.</li>'+
   '<li><span class="nn">②</span><b>성찰 활동지 작성하기</b> &mdash; 발표가 끝나면 <b>30초 동안 각자 조용히</b> 적습니다. 듣는 사람은 친구의 칸을, 발표한 사람은 자기 칸을 채웁니다. 아직 말하지 않습니다.</li>'+
@@ -1408,16 +1506,18 @@ function viewPresent(){
   '<li><span class="nn">④</span><b>청자들이 피드백하기</b> &mdash; 아래 <b>동료 피드백 기준</b>에 맞추어 말합니다. 발표자는 들은 말을 활동지에 한 줄로 받아 적습니다.</li>'+
   '</ul>'+
   '<div class="btnrow"><button class="ghost" id="presentPad">패들렛 열기</button></div>'+
+  actEnd()+
 
-  '<h3 class="sf h">성찰하기</h3>'+
-  '<p class="body" style="font-size:13.5px;margin-bottom:4px">모둠이 한 바퀴를 다 돌면 합니다.</p>'+
+  actOpen(3,"성찰하기",null,"모둠이 한 바퀴를 다 돌면 합니다.")+
   '<ul class="nums">'+
   '<li><span class="nn">①</span><b>내가 본 나의 발표와 친구들이 본 나의 발표를 비교하기</b> &mdash; 활동지에 적은 내 점검과 친구들이 해 준 말을 나란히 놓고, 같았던 것과 달랐던 것을 찾습니다.</li>'+
   '<li><span class="nn">②</span><b>성찰하기</b> &mdash; 왜 다르게 보였는지 생각해 보고, 다음 말하기에 적용할 세 가지를 활동지에 정리합니다.</li>'+
   '</ul>'+
+  actEnd()+
 
-  '<h3 class="sf h">동료 피드백 기준</h3>'+
-  '<div class="card"><ul class="rules">'+rules+'</ul></div>'+
+  actOpen(4,"동료 피드백 기준",null,null)+
+  '<ul class="rules" style="margin-top:14px">'+rules+'</ul>'+
+  actEnd()+
 
   '<div class="btnrow">'+
   '<button class="ghost" id="backTalk">3단계로 돌아가기</button>'+
@@ -1514,6 +1614,7 @@ function bindFields(){
     el.addEventListener("input", function(){
       setPath(this.getAttribute("data-f"), this.value);
       save();
+      refreshDots();
       if(this.id==="script") queueTalkRepaint();
     });
   });
@@ -1599,9 +1700,9 @@ function bind(){
       });
     });
     el=document.getElementById("sid");
-    if(el) el.addEventListener("input", function(){ S.sid=this.value; save(); });
+    if(el) el.addEventListener("input", function(){ S.sid=this.value; save(); refreshDots(); });
     el=document.getElementById("sname");
-    if(el) el.addEventListener("input", function(){ S.sname=this.value; save(); });
+    if(el) el.addEventListener("input", function(){ S.sname=this.value; save(); refreshDots(); });
     el=document.getElementById("toPlan");
     if(el) el.addEventListener("click", function(){ S.view="plan"; render(); });
     el=document.getElementById("again");
@@ -1639,6 +1740,7 @@ function bind(){
     if(el) el.addEventListener("input", function(){ S.pre.anxLevel=+this.value; save();
       var lab=app.querySelector('label[for="anxLevel"] span');
       if(lab) lab.textContent = this.value + " / 5";
+      refreshDots();
     });
     el=document.getElementById("seedOpen");
     if(el) el.addEventListener("click", function(){ S.ui.seeds=true; render(); });
