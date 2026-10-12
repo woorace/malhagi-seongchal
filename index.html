@@ -1476,8 +1476,8 @@ function cueCopyBox(){
   return '<div class="card" style="margin-top:14px">'+
     (gt?'<p class="body" style="margin:0 0 8px"><b>나의 발표 목표</b> &mdash; '+esc(gt)+'</p>':'')+
     (!pl && !nl ? '<p class="hint" style="margin:0">위에서 점검 사항을 두 가지 고르면 여기에 뜹니다.</p>' : '')+
-    (pl?'<p class="body" style="margin:0 0 8px"><b>'+esc(pl.label)+'</b> &mdash; '+esc(S.cue.paraFix||pl.fix)+'</p>':'')+
-    (nl?'<p class="body" style="margin:0"><b>'+esc(nl.label)+'</b> &mdash; '+esc(S.cue.nonparaFix||nl.fix)+'</p>':'')+
+    (pl?'<p class="body" style="margin:0 0 8px"><b>준언어</b> &mdash; '+esc(pl.label)+': '+esc(S.cue.paraFix||pl.fix)+'</p>':'')+
+    (nl?'<p class="body" style="margin:0"><b>비언어</b> &mdash; '+esc(nl.label)+': '+esc(S.cue.nonparaFix||nl.fix)+'</p>':'')+
     '</div>';
 }
 
