@@ -421,20 +421,21 @@ label.fl span{font-weight:400;color:var(--mut);margin-left:6px;font-size:12.5px;
 /* ── 인쇄 : 전 단계를 한 장의 일지로 ── */
 #sheet{display:none;}
 
-/* 왼쪽 책갈피 목차 */
-#rail{position:fixed;top:50%;left:max(8px,calc((100vw - 660px)/2 - 58px));transform:translateY(-50%);
-  z-index:40;display:flex;flex-direction:column;gap:6px;}
+/* 왼쪽 책갈피 목차: 흰 카드의 왼쪽 가장자리에 붙인 포스트잇 */
+#rail{position:fixed;top:50%;right:calc((100vw + 660px)/2);transform:translateY(-50%);
+  z-index:40;display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
 #rail.off{display:none;}
-#rail a{position:relative;display:flex;align-items:center;justify-content:center;width:34px;height:38px;
-  border:1px solid var(--line);border-left:none;border-radius:0 12px 12px 0;background:var(--sf);
-  color:var(--mut);font-weight:700;font-size:14px;text-decoration:none;transition:width .15s,background .15s;}
-#rail a:hover,#rail a:focus-visible{width:42px;color:var(--ink);border-color:var(--mut);outline:none;}
-#rail a.on{background:var(--teal);border-color:var(--teal);color:#fff;}
-#rail a .rt{position:absolute;left:calc(100% + 8px);top:50%;transform:translateY(-50%);white-space:nowrap;
+#rail a{position:relative;display:flex;align-items:center;justify-content:center;width:32px;height:38px;
+  border:1px solid var(--line);border-right:none;border-radius:12px 0 0 12px;background:var(--sf);
+  color:var(--mut);font-weight:700;font-size:14px;text-decoration:none;transition:width .15s,background .15s;
+  box-shadow:-2px 1px 4px rgba(21,34,45,.08);}
+#rail a:hover,#rail a:focus-visible{width:40px;color:var(--ink);border-color:var(--mut);outline:none;}
+#rail a.on{width:40px;background:var(--teal);border-color:var(--teal);color:#fff;}
+#rail a .rt{position:absolute;right:calc(100% + 8px);top:50%;transform:translateY(-50%);white-space:nowrap;
   background:var(--ink);color:#fff;font-size:12.5px;font-weight:500;padding:6px 11px;border-radius:8px;
   opacity:0;pointer-events:none;transition:opacity .12s;}
 #rail a:hover .rt,#rail a:focus-visible .rt{opacity:1;}
-@media (max-width:780px){ #rail{display:none;} }
+@media (max-width:900px){ #rail{display:none;} }
 @media print{ #rail{display:none;} }
 @media print{
   body{background:#fff;padding:0;font-size:11pt;}
