@@ -420,6 +420,22 @@ label.fl span{font-weight:400;color:var(--mut);margin-left:6px;font-size:12.5px;
 
 /* ── 인쇄 : 전 단계를 한 장의 일지로 ── */
 #sheet{display:none;}
+
+/* 왼쪽 책갈피 목차 */
+#rail{position:fixed;top:50%;left:max(8px,calc((100vw - 660px)/2 - 58px));transform:translateY(-50%);
+  z-index:40;display:flex;flex-direction:column;gap:6px;}
+#rail.off{display:none;}
+#rail a{position:relative;display:flex;align-items:center;justify-content:center;width:34px;height:38px;
+  border:1px solid var(--line);border-left:none;border-radius:0 12px 12px 0;background:var(--sf);
+  color:var(--mut);font-weight:700;font-size:14px;text-decoration:none;transition:width .15s,background .15s;}
+#rail a:hover,#rail a:focus-visible{width:42px;color:var(--ink);border-color:var(--mut);outline:none;}
+#rail a.on{background:var(--teal);border-color:var(--teal);color:#fff;}
+#rail a .rt{position:absolute;left:calc(100% + 8px);top:50%;transform:translateY(-50%);white-space:nowrap;
+  background:var(--ink);color:#fff;font-size:12.5px;font-weight:500;padding:6px 11px;border-radius:8px;
+  opacity:0;pointer-events:none;transition:opacity .12s;}
+#rail a:hover .rt,#rail a:focus-visible .rt{opacity:1;}
+@media (max-width:780px){ #rail{display:none;} }
+@media print{ #rail{display:none;} }
 @media print{
   body{background:#fff;padding:0;font-size:11pt;}
   .topbar,#app,#deck,.toast{display:none !important;}
@@ -1583,6 +1599,40 @@ function buildSheet(){
 
 /* =================== 렌더 =================== */
 var lastView = null;
+
+/* 왼쪽 책갈피 목차: 지금 화면의 카드(.act)를 번호로 보여 주고, 눌러서 이동한다 */
+function paintRail(){
+  var r=document.getElementById("rail");
+  if(!r){ r=document.createElement("nav"); r.id="rail"; r.setAttribute("aria-label","이 화면의 목차"); document.body.appendChild(r); }
+  var acts=app.querySelectorAll(".act"), h="", i;
+  for(i=0;i<acts.length;i++){
+    var id=acts[i].id, t=acts[i].querySelector(".ah h3"), name=t?t.textContent.trim():"";
+    var n=id.replace("act","");
+    h+='<a href="#'+id+'" data-rail="'+id+'" aria-label="'+n+' '+esc(name)+'">'+n+'<span class="rt">'+esc(name)+'</span></a>';
+  }
+  r.innerHTML=h; r.className = acts.length ? "" : "off";
+  r.querySelectorAll("a").forEach(function(a){
+    a.addEventListener("click",function(e){
+      e.preventDefault();
+      var t=document.getElementById(this.getAttribute("data-rail"));
+      if(t) t.scrollIntoView({behavior:"smooth",block:"start"});
+    });
+  });
+  markRail();
+}
+function markRail(){
+  var r=document.getElementById("rail"); if(!r) return;
+  var acts=app.querySelectorAll(".act"), cur="", i;
+  for(i=0;i<acts.length;i++){ if(acts[i].getBoundingClientRect().top<=150) cur=acts[i].id; }
+  if(!cur && acts.length) cur=acts[0].id;
+  if(acts.length && window.innerHeight+(window.pageYOffset||0)>=document.documentElement.scrollHeight-4) cur=acts[acts.length-1].id;
+  r.querySelectorAll("a").forEach(function(a){ a.className = a.getAttribute("data-rail")===cur ? "on" : ""; });
+}
+var railTick=false;
+window.addEventListener("scroll",function(){
+  if(railTick) return; railTick=true;
+  requestAnimationFrame(function(){ railTick=false; markRail(); });
+},{passive:true});
 function render(){
   /* 같은 화면을 다시 그릴 때는 보던 자리를 지킨다.
      (선택지 하나 눌렀다고 맨 위로 튀어 올라가지 않도록) */
@@ -1596,6 +1646,7 @@ function render(){
   else app.innerHTML = viewPresent();
   paintTop();
   bind();
+  paintRail();
   save();
   window.scrollTo(0, keep ? y : 0);
   lastView = S.view;
